@@ -37,7 +37,22 @@ export default function ReviewerQueuePage() {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [readyCount, setReadyCount] = useState(0);
+  const [exceptionCount, setExceptionCount] = useState(0);
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+  async function loadStatusCounts() {
+    try {
+      const [ready, exception] = await Promise.all([
+        getReviewQueue({ statuses: ["READY_FOR_REVIEW"], limit: 1, offset: 0 }),
+        getReviewQueue({ statuses: ["EXCEPTION"], limit: 1, offset: 0 }),
+      ]);
+      setReadyCount(ready.total);
+      setExceptionCount(exception.total);
+    } catch {
+      // Ignore count failures to keep table usable.
+    }
+  }
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -71,6 +86,7 @@ export default function ReviewerQueuePage() {
     try {
       await approveReviewInvoice(invoice.id, undefined, invoice.version);
       await loadQueue(page);
+      await loadStatusCounts();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal menyetujui invoice.");
     } finally {
@@ -91,6 +107,7 @@ export default function ReviewerQueuePage() {
     try {
       await rejectReviewInvoice(invoice.id, note.trim(), invoice.version);
       await loadQueue(page);
+      await loadStatusCounts();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal menolak invoice.");
     } finally {
@@ -108,6 +125,13 @@ export default function ReviewerQueuePage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, statusFilter, page]);
+
+  useEffect(() => {
+    if (user?.role === "FINANCE_REVIEWER") {
+      void loadStatusCounts();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   if (isLoading || !user) {
     return (
@@ -148,10 +172,10 @@ export default function ReviewerQueuePage() {
             </div>
             <div className="flex items-center gap-2 p-1.5 bg-white rounded-lg border border-[#CBD5E1] shadow-xs text-xs">
               <span className="px-3 py-1 bg-[#CCFBF1] text-[#115E59] font-bold rounded">
-                {queue.filter((i) => i.status === "READY_FOR_REVIEW").length} Siap Review
+                {readyCount} Siap Review
               </span>
               <span className="px-3 py-1 bg-[#FEF3C7] text-[#92400E] font-bold rounded">
-                {queue.filter((i) => i.status === "EXCEPTION").length} Perlu Koreksi
+                {exceptionCount} Perlu Koreksi
               </span>
             </div>
           </div>
@@ -225,7 +249,7 @@ export default function ReviewerQueuePage() {
                     <td className="px-4 py-2 text-right">
                       <div className="flex items-center justify-end gap-1.5 flex-wrap">
                         <Link
-                          href={`/dashboard/reviewer/${inv.id}`}
+                          href={`/dashboard/reviewer/${inv.id}?from=queue`}
                           className="px-2.5 py-1 bg-[#1E3A8A] text-white rounded text-[11px] font-semibold hover:bg-[#1B3380]"
                         >
                           Periksa

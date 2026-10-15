@@ -17,7 +17,22 @@ export default function ReviewerHistoryPage() {
   const pageSize = 10;
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [approvedCount, setApprovedCount] = useState(0);
+  const [rejectedCount, setRejectedCount] = useState(0);
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+  async function loadStatusCounts() {
+    try {
+      const [approved, rejected] = await Promise.all([
+        getReviewQueue({ statuses: ["AMIGA_REVIEWED"], limit: 1, offset: 0 }),
+        getReviewQueue({ statuses: ["REJECTED"], limit: 1, offset: 0 }),
+      ]);
+      setApprovedCount(approved.total);
+      setRejectedCount(rejected.total);
+    } catch {
+      // Ignore
+    }
+  }
 
   useEffect(() => {
     if (!isLoading && !user) router.push("/login");
@@ -50,6 +65,10 @@ export default function ReviewerHistoryPage() {
     if (user?.role === "FINANCE_REVIEWER") void load(page);
   }, [user, statusFilter, page]);
 
+  useEffect(() => {
+    if (user?.role === "FINANCE_REVIEWER") void loadStatusCounts();
+  }, [user]);
+
   if (isLoading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
@@ -63,7 +82,7 @@ export default function ReviewerHistoryPage() {
       activeTab="riwayat"
       onTabChange={(tab) => {
         if (tab === "reviews") router.push("/dashboard/reviewer");
-        if (tab === "riwayat") router.push("/dashboard/reviewer/history");
+        if (tab == "riwayat") router.push("/dashboard/reviewer/history");
       }}
       renderContent={() => (
         <div className="space-y-4">
@@ -89,10 +108,9 @@ export default function ReviewerHistoryPage() {
             </div>
             <div className="flex items-center gap-2 p-1.5 bg-white rounded-lg border border-[#CBD5E1] shadow-xs text-xs">
               <span className="px-3 py-1 bg-[#DCFCE7] text-[#166534] font-bold rounded">
-                {rows.filter((r) => r.status === "AMIGA_REVIEWED").length} Disetujui
-              </span>
+                {approvedCount} Disetujui              </span>
               <span className="px-3 py-1 bg-[#FEE2E2] text-[#991B1B] font-bold rounded">
-                {rows.filter((r) => r.status === "REJECTED").length} Ditolak
+                {rejectedCount} Ditolak
               </span>
             </div>
           </div>
@@ -148,7 +166,7 @@ export default function ReviewerHistoryPage() {
                       </span>
                     </td>
                     <td className="px-4 py-2 text-right">
-                      <Link href={`/dashboard/reviewer/${r.id}`} className="px-2.5 py-1 bg-[#1E3A8A] text-white rounded text-[11px] font-semibold hover:bg-[#1B3380]">
+                      <Link href={`/dashboard/reviewer/${r.id}?from=history`} className="px-2.5 py-1 bg-[#1E3A8A] text-white rounded text-[11px] font-semibold hover:bg-[#1B3380]">
                         Audit
                       </Link>
                     </td>
