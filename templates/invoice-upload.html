@@ -1,0 +1,1598 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="web_dashboard" name="shell-type" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              error: '#ba1a1a',
+              'status-ready-border': '#5EEAD4',
+              outline: '#757682',
+              'status-processing-fg': '#1E40AF',
+              warning: '#92400E',
+              'status-vouchered-bg': '#E0E7FF',
+              'status-processing-bg': '#DBEAFE',
+              surface: '#FFFFFF',
+              'secondary-container': '#99efe5',
+              'accent-subtle': '#CCFBF1',
+              border: '#CBD5E1',
+              'warning-subtle': '#FEF3C7',
+              'status-queued-fg': '#334155',
+              'on-primary-container': '#90a8ff',
+              'surface-container-low': '#f4f3fa',
+              'on-error-container': '#93000a',
+              'status-duplicate-fg': '#FFFFFF',
+              'status-sent-border': '#C4B5FD',
+              'diff-new-bg': '#DCFCE7',
+              info: '#1E40AF',
+              'inverse-primary': '#b6c4ff',
+              'success-subtle': '#DCFCE7',
+              tertiary: '#4b1c00',
+              background: '#F8FAFC',
+              'surface-container-highest': '#e3e1e9',
+              'text-link': '#1E40AF',
+              'primary-subtle': '#E0E7FF',
+              success: '#166534',
+              'accent-hover': '#0D625B',
+              'surface-container': '#eeedf4',
+              'on-tertiary-container': '#f39461',
+              'on-primary-fixed': '#00164e',
+              'tertiary-fixed-dim': '#ffb691',
+              'status-vouchered-fg': '#3730A3',
+              danger: '#B91C1C',
+              'status-vouchered-border': '#A5B4FC',
+              'on-primary-fixed-variant': '#264191',
+              'on-tertiary-fixed-variant': '#773205',
+              'inverse-on-surface': '#f1f0f7',
+              'on-secondary-container': '#006f67',
+              'on-primary': '#ffffff',
+              'surface-muted': '#F1F5F9',
+              'status-rejected-fg': '#991B1B',
+              'primary-fixed-dim': '#b6c4ff',
+              'surface-container-high': '#e9e7ef',
+              'tertiary-container': '#6e2c00',
+              'info-subtle': '#DBEAFE',
+              'secondary-fixed': '#9cf2e8',
+              'on-secondary': '#ffffff',
+              'status-queued-bg': '#F1F5F9',
+              'surface-tint': '#4059aa',
+              'primary-hover': '#1B3380',
+              'tertiary-fixed': '#ffdbcb',
+              'status-ready-fg': '#115E59',
+              'status-ready-bg': '#CCFBF1',
+              'surface-container-lowest': '#ffffff',
+              'status-processing-border': '#93C5FD',
+              'text-secondary': '#475569',
+              overlay: 'rgba(15, 23, 42, 0.55)',
+              'primary-active': '#172B6B',
+              'surface-dim': '#dad9e1',
+              secondary: '#006a63',
+              'status-reviewed-bg': '#DCFCE7',
+              'on-background': '#1a1b21',
+              'on-surface': '#1a1b21',
+              'on-accent': '#FFFFFF',
+              'on-error': '#ffffff',
+              'status-exception-border': '#FCD34D',
+              'status-rejected-bg': '#FFFFFF',
+              'status-duplicate-bg': '#B91C1C',
+              'on-surface-variant': '#444651',
+              'status-sent-fg': '#5B21B6',
+              'diff-new-fg': '#166534',
+              'status-reviewed-border': '#86EFAC',
+              'secondary-fixed-dim': '#80d5cb',
+              'status-queued-border': '#CBD5E1',
+              'surface-sunken': '#E2E8F0',
+              'status-sent-bg': '#EDE9FE',
+              'focus-ring': '#2563EB',
+              'diff-old-bg': '#FEE2E2',
+              'inverse-surface': '#2f3036',
+              'on-tertiary-fixed': '#341100',
+              'on-secondary-fixed-variant': '#00504a',
+              primary: '#00236f',
+              'border-strong': '#94A3B8',
+              'outline-variant': '#c5c5d3',
+              'primary-container': '#1e3a8a',
+              'status-reviewed-fg': '#166534',
+              'text-primary': '#0F172A',
+              'diff-old-fg': '#991B1B',
+              'on-tertiary': '#ffffff',
+              'surface-bright': '#faf8ff',
+              'text-disabled': '#94A3B8',
+              'status-duplicate-border': '#7F1D1D',
+              'danger-subtle': '#FEE2E2',
+              'surface-variant': '#e3e1e9',
+              'status-rejected-border': '#991B1B',
+              'status-exception-fg': '#92400E',
+              'status-exception-bg': '#FEF3C7',
+              'on-secondary-fixed': '#00201d',
+              'primary-fixed': '#dce1ff',
+              'error-container': '#ffdad6',
+            },
+            borderRadius: {
+              DEFAULT: '0.25rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              full: '9999px',
+            },
+            spacing: {
+              10: '40px',
+              16: '64px',
+              gutter: '1.5rem',
+              2: '8px',
+              1: '4px',
+              8: '32px',
+              'gutter-mobile': '0.75rem',
+              'space-md': '1rem',
+              5: '20px',
+              6: '24px',
+              margin: '1.5rem',
+              12: '48px',
+              'margin-tablet': '1rem',
+              'margin-mobile': '0.75rem',
+              'space-xl': '2rem',
+              3: '12px',
+              'gutter-laptop': '1rem',
+              'space-sm': '0.5rem',
+              'gutter-tablet': '1rem',
+              'space-xs': '0.25rem',
+              'base-unit': '4px',
+              'space-lg': '1.5rem',
+              4: '16px',
+              0: '0px',
+            },
+            fontFamily: {
+              'headline-sm': ['Inter'],
+              'table-header': ['Inter'],
+              'body-strong': ['Inter'],
+              display: ['Inter'],
+              'code-mono': ['JetBrains Mono'],
+              'amount-lg': ['JetBrains Mono'],
+              'body-default': ['Inter'],
+              'amount-default': ['JetBrains Mono'],
+              caption: ['Inter'],
+              'headline-md': ['Inter'],
+              'label-firm': ['Inter'],
+              'headline-lg': ['Inter'],
+            },
+            fontSize: {
+              'headline-sm': [
+                '16px',
+                { lineHeight: '24px', fontWeight: '600' },
+              ],
+              'table-header': [
+                '12px',
+                {
+                  lineHeight: '16px',
+                  letterSpacing: '0.04em',
+                  fontWeight: '600',
+                },
+              ],
+              'body-strong': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '600' },
+              ],
+              display: [
+                '28px',
+                {
+                  lineHeight: '36px',
+                  letterSpacing: '-0.01em',
+                  fontWeight: '700',
+                },
+              ],
+              'code-mono': ['13px', { lineHeight: '20px', fontWeight: '500' }],
+              'amount-lg': ['24px', { lineHeight: '32px', fontWeight: '700' }],
+              'body-default': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '400' },
+              ],
+              'amount-default': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '600' },
+              ],
+              caption: ['12px', { lineHeight: '16px', fontWeight: '400' }],
+              'headline-md': [
+                '20px',
+                { lineHeight: '28px', fontWeight: '600' },
+              ],
+              'label-firm': [
+                '12px',
+                {
+                  lineHeight: '16px',
+                  letterSpacing: '0.02em',
+                  fontWeight: '600',
+                },
+              ],
+              'headline-lg': [
+                '24px',
+                { lineHeight: '32px', fontWeight: '700' },
+              ],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="bg-background font-body-default text-body-default text-text-primary antialiased"
+  >
+    <header
+      class="fixed top-0 left-0 right-0 h-14 bg-surface z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"
+    >
+      <div class="h-14 w-full px-4 lg:px-6 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary shadow-sm"
+          >
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+              <path
+                d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h4a2 2 0 0 1 2 2v2h1a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-1v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3H3a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h1V9a2 2 0 0 1 2-2h4V5.73A2 2 0 0 1 10 4a2 2 0 0 1 2-2zm-4 7H6v10h12V9h-2v1H8V9zm1 3h2v2H9v-2zm4 0h2v2h-2v-2zm-4 4h6v1H9v-1z"
+              ></path>
+            </svg>
+          </div>
+          <div class="flex items-center gap-2">
+            <span
+              class="font-headline-sm text-headline-sm text-text-primary tracking-tight"
+              >AMIGA Robot Admin</span
+            ><span
+              class="hidden sm:inline-block font-caption text-caption text-text-secondary"
+              >| Portal Invoice-to-Voucher</span
+            >
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
+            <span
+              class="inline-flex items-center px-2 py-0.5 rounded font-label-firm text-label-firm bg-accent-subtle text-status-ready-fg"
+              >Intake</span
+            ><span
+              class="hidden md:inline-flex items-center px-2 py-0.5 rounded font-label-firm text-label-firm bg-surface-muted text-text-secondary"
+              >Finance Reviewer</span
+            >
+          </div>
+          <div class="h-6 w-px bg-surface-sunken hidden sm:block"></div>
+          <div class="flex items-center gap-3 pl-1">
+            <div class="text-right hidden sm:block">
+              <div
+                class="font-body-strong text-body-strong text-text-primary leading-tight"
+              >
+                Siti Rahmawati
+              </div>
+              <div
+                class="font-caption text-caption text-text-secondary leading-tight"
+              >
+                Staf Intake • ID #8841
+              </div>
+            </div>
+            <div
+              class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary font-body-strong text-body-strong"
+            >
+              <span
+                class="material-symbols-outlined text-on-primary text-[18px]"
+                >person</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <aside
+      class="fixed left-0 top-14 bottom-0 w-16 md:w-16 lg:w-60 bg-surface z-30 shadow-[0_1px_8px_rgba(0,0,0,0.04)] flex flex-col justify-between transition-all duration-200"
+    >
+      <div class="py-4">
+        <div class="px-4 mb-3 hidden lg:block">
+          <span
+            class="font-label-firm text-label-firm uppercase text-text-secondary tracking-wider"
+            >Menu Intake</span
+          >
+        </div>
+        <nav
+          class="px-2 flex flex-col gap-1"
+          data-active-classes="bg-primary-subtle text-primary font-bold rounded-lg"
+        >
+          <a
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+            data-path="antrean-invoice"
+            href="#"
+            title="Antrean Invoice"
+            ><span class="material-symbols-outlined text-[20px]">inbox</span
+            ><span class="font-body-default text-body-default hidden lg:inline"
+              >Antrean</span
+            ><span
+              class="ml-auto hidden lg:inline-flex items-center px-1.5 py-0.5 rounded font-label-firm text-[10px] bg-status-ready-bg text-status-ready-fg"
+              >24</span
+            ></a
+          ><a
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+            data-path="upload-invoice"
+            href="#"
+            title="Upload Invoice"
+            ><span class="material-symbols-outlined text-[20px]"
+              >upload_file</span
+            ><span class="font-body-default text-body-default hidden lg:inline"
+              >Upload Invoice</span
+            ></a
+          ><a
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+            data-path="buat-voucher"
+            href="#"
+            title="Buat Voucher"
+            ><span class="material-symbols-outlined text-[20px]">post_add</span
+            ><span class="font-body-default text-body-default hidden lg:inline"
+              >Buat Voucher</span
+            ></a
+          ><a
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+            data-path="daftar-voucher"
+            href="#"
+            title="Daftar Voucher"
+            ><span class="material-symbols-outlined text-[20px]"
+              >receipt_long</span
+            ><span class="font-body-default text-body-default hidden lg:inline"
+              >Daftar Voucher</span
+            ></a
+          >
+        </nav>
+        <div class="my-4 mx-3 h-px bg-surface-sunken"></div>
+        <div class="px-4 mb-3 hidden lg:block">
+          <span
+            class="font-label-firm text-label-firm uppercase text-text-secondary tracking-wider"
+            >Finance Reviewer</span
+          >
+        </div>
+        <nav
+          class="px-2 flex flex-col gap-1"
+          data-active-classes="bg-primary-subtle text-primary font-bold rounded-lg"
+        >
+          <a
+            class="flex items-center gap-3 px-3 py-2.5 transition-colors text-on-surface-variant"
+            data-path="antrean-finance-reviewer"
+            href="#"
+            title="Antrean Finance Reviewer"
+            ><span class="material-symbols-outlined text-[20px]">verified</span
+            ><span class="font-body-default text-body-default hidden lg:inline"
+              >Antrean Review</span
+            ><span
+              class="ml-auto hidden lg:inline-flex items-center px-1.5 py-0.5 rounded font-label-firm text-[10px] bg-warning-subtle text-warning"
+              >12</span
+            ></a
+          >
+        </nav>
+      </div>
+      <div
+        class="p-3 bg-surface-container-low mx-2 mb-3 rounded-lg hidden lg:block"
+      >
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px] text-success"
+            >smart_toy</span
+          ><span class="font-label-firm text-label-firm text-text-primary"
+            >Robot OCR Status</span
+          >
+        </div>
+        <div class="mt-1 font-caption text-caption text-text-secondary">
+          Engine aktif • Presisi 99.4%
+        </div>
+      </div>
+    </aside>
+    <div class="pl-16 lg:pl-60">
+      <main class="relative pt-14 w-full min-h-screen bg-background">
+        <div class="flex flex-col w-full">
+          <!-- Simulation State Switcher Bar (Interactive Prototype Control) -->
+          <aside
+            aria-label="Simulator Status Layar"
+            class="w-full bg-surface shadow-sm px-4 py-2.5 mb-6"
+          >
+            <div
+              class="max-w-[1120px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3"
+            >
+              <div class="flex items-center gap-2 text-text-secondary">
+                <span class="material-symbols-outlined text-primary text-[18px]"
+                  >tune</span
+                >
+                <span
+                  class="font-label-firm text-label-firm uppercase text-text-primary tracking-wider"
+                  >Simulator Status Upload:</span
+                >
+              </div>
+              <div
+                class="flex flex-wrap items-center gap-1.5"
+                id="state-toggle-group"
+              >
+                <button
+                  class="state-btn px-2.5 py-1 rounded font-caption text-caption font-medium bg-primary text-on-primary transition-colors"
+                  data-state="default"
+                  onclick="switchState('default')"
+                  type="button"
+                >
+                  1. Default Siap Isi
+                </button>
+                <button
+                  class="state-btn px-2.5 py-1 rounded font-caption text-caption font-medium bg-surface-muted text-text-secondary hover:text-text-primary transition-colors"
+                  data-state="reupload"
+                  onclick="switchState('reupload')"
+                  type="button"
+                >
+                  2. Re-upload REJECTED
+                </button>
+                <button
+                  class="state-btn px-2.5 py-1 rounded font-caption text-caption font-medium bg-surface-muted text-text-secondary hover:text-text-primary transition-colors"
+                  data-state="validation-error"
+                  onclick="switchState('validation-error')"
+                  type="button"
+                >
+                  3. Validasi Error (HEIC &amp; 10MB)
+                </button>
+                <button
+                  class="state-btn px-2.5 py-1 rounded font-caption text-caption font-medium bg-surface-muted text-text-secondary hover:text-text-primary transition-colors"
+                  data-state="uploading"
+                  onclick="switchState('uploading')"
+                  type="button"
+                >
+                  4. Uploading (68%)
+                </button>
+                <button
+                  class="state-btn px-2.5 py-1 rounded font-caption text-caption font-medium bg-surface-muted text-text-secondary hover:text-text-primary transition-colors"
+                  data-state="success"
+                  onclick="switchState('success')"
+                  type="button"
+                >
+                  5. Sukses (Request ID)
+                </button>
+                <button
+                  class="state-btn px-2.5 py-1 rounded font-caption text-caption font-medium bg-surface-muted text-text-secondary hover:text-text-primary transition-colors"
+                  data-state="revoked"
+                  onclick="switchState('revoked')"
+                  type="button"
+                >
+                  6. Penugasan Dicabut
+                </button>
+              </div>
+            </div>
+          </aside>
+          <!-- Main Container: 720px Max-Width Standard Content Area -->
+          <div class="w-full px-4 sm:px-6 pb-16">
+            <div class="max-w-[720px] mx-auto flex flex-col gap-5">
+              <!-- Breadcrumbs & Document Lifecycle Sub-heading -->
+              <div class="flex flex-col gap-1">
+                <div
+                  class="flex items-center gap-2 font-caption text-caption text-text-secondary"
+                >
+                  <span>Menu Intake</span>
+                  <span class="material-symbols-outlined text-[14px]"
+                    >chevron_right</span
+                  >
+                  <span class="text-text-primary font-medium"
+                    >Upload Invoice</span
+                  >
+                </div>
+                <h1
+                  class="font-headline-lg text-headline-lg text-text-primary tracking-tight"
+                >
+                  Upload Invoice
+                </h1>
+                <p
+                  class="font-body-default text-body-default text-text-secondary"
+                >
+                  Unggah dokumen invoice dari vendor. Sistem AI AMIGA akan
+                  mengekstraksi data secara otomatis di latar belakang.
+                </p>
+              </div>
+              <!-- State Notice: Revoked Client Assignment Banner -->
+              <section
+                class="hidden flex-col gap-2 p-4 rounded-lg bg-danger-subtle shadow-sm"
+                id="banner-revoked"
+                role="alert"
+              >
+                <div class="flex items-start gap-3">
+                  <span
+                    class="material-symbols-outlined text-danger text-[22px] flex-shrink-0"
+                    >gpp_bad</span
+                  >
+                  <div class="flex-1">
+                    <h2 class="font-body-strong text-body-strong text-danger">
+                      Akses Penugasan Klien Tidak Ditemukan
+                    </h2>
+                    <p
+                      class="font-body-default text-body-default text-status-rejected-fg mt-0.5"
+                    >
+                      Penugasan Anda untuk klien ini telah dicabut. Perubahan
+                      tidak disimpan. Silakan hubungi koordinator Intake atau
+                      Supervisor Finance untuk pembaruan izin operasional.
+                    </p>
+                  </div>
+                </div>
+              </section>
+              <!-- State Notice: Server Storage Failure Banner -->
+              <section
+                class="hidden flex-col gap-2 p-4 rounded-lg bg-danger-subtle shadow-sm"
+                id="banner-storage-error"
+                role="alert"
+              >
+                <div class="flex items-start justify-between gap-3">
+                  <div class="flex items-start gap-3">
+                    <span
+                      class="material-symbols-outlined text-danger text-[22px] flex-shrink-0"
+                      >cloud_off</span
+                    >
+                    <div>
+                      <h2 class="font-body-strong text-body-strong text-danger">
+                        Penyimpanan Berkas Gagal
+                      </h2>
+                      <p
+                        class="font-body-default text-body-default text-status-rejected-fg mt-0.5"
+                      >
+                        Gagal menyimpan berkas ke server. Request ID belum
+                        dibuat. Silakan periksa koneksi intranet dan coba
+                        beberapa saat lagi.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-danger text-on-error rounded font-label-firm text-label-firm hover:bg-red-800 transition-colors shadow-sm flex-shrink-0"
+                    onclick="retryUpload()"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-[16px]"
+                      >refresh</span
+                    >
+                    Coba lagi
+                  </button>
+                </div>
+              </section>
+              <!-- State Notice: Re-upload Context Banner (REQ-2026-000098) -->
+              <section
+                aria-label="Informasi Unggah Ulang"
+                class="hidden p-4 rounded-lg bg-primary-subtle shadow-sm"
+                id="banner-reupload"
+              >
+                <div class="flex flex-col gap-3">
+                  <div
+                    class="flex flex-wrap items-center justify-between gap-2"
+                  >
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="material-symbols-outlined text-primary text-[20px]"
+                        >history_edu</span
+                      >
+                      <span
+                        class="font-body-strong text-body-strong text-primary"
+                        >Konteks Unggah Ulang Berkas</span
+                      >
+                    </div>
+                    <div
+                      class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded font-label-firm text-label-firm bg-surface text-danger shadow-sm"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[14px] text-danger"
+                        >cancel</span
+                      >
+                      REJECTED
+                    </div>
+                  </div>
+                  <div
+                    class="text-body-default text-text-primary flex flex-col gap-1.5 bg-surface/75 p-3 rounded-md"
+                  >
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span
+                        class="text-text-secondary font-caption text-caption"
+                        >Referensi Request ID Sebelumnya:</span
+                      >
+                      <span
+                        class="font-code-mono text-code-mono font-bold text-primary tracking-wide bg-surface-muted px-2 py-0.5 rounded"
+                        >REQ-2026-000098</span
+                      >
+                    </div>
+                    <div
+                      class="flex items-start gap-1.5 text-status-exception-fg bg-warning-subtle/80 px-2.5 py-1.5 rounded"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[16px] text-warning flex-shrink-0 mt-0.5"
+                        >warning</span
+                      >
+                      <span class="font-caption text-caption"
+                        ><strong class="font-semibold"
+                          >Catatan Reviewer Sebelumnya:</strong
+                        >
+                        “Cap vendor terpotong pada scan halaman utama. Mohon
+                        scan ulang dengan margin utuh &amp; orientasi
+                        tegak.”</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <!-- Main Form Wrapper -->
+              <section
+                class="bg-surface rounded-lg shadow-sm p-6 flex flex-col gap-6"
+                id="form-card"
+              >
+                <form
+                  class="flex flex-col gap-5"
+                  id="invoice-intake-form"
+                  novalidate=""
+                  onsubmit="handleFormSubmit(event)"
+                >
+                  <!-- Hidden Previous Request ID for Re-upload logic -->
+                  <input
+                    id="previous-request-id-val"
+                    name="previous_request_id"
+                    type="hidden"
+                    value=""
+                  />
+                  <!-- Field 1: Klien * -->
+                  <div class="flex flex-col gap-1.5" id="field-klien-container">
+                    <label
+                      class="font-label-firm text-label-firm text-text-primary flex items-center justify-between"
+                      for="klien-select"
+                    >
+                      <span
+                        >Klien
+                        <span aria-hidden="true" class="text-error"
+                          >*</span
+                        ></span
+                      >
+                      <span
+                        class="font-caption text-caption text-text-secondary font-normal"
+                        id="klien-assigned-note"
+                        >4 klien terdaftar dalam penugasan Anda</span
+                      >
+                    </label>
+                    <div class="relative">
+                      <select
+                        class="w-full h-10 px-3 pr-10 rounded font-body-default text-body-default text-text-primary bg-surface shadow-sm focus:outline-none focus:ring-2 focus:ring-focus-ring disabled:bg-surface-muted disabled:text-text-disabled transition-all appearance-none cursor-pointer"
+                        id="klien-select"
+                        name="klien"
+                        required=""
+                      >
+                        <option disabled="" selected="" value="">
+                          Pilih salah satu klien penugasan...
+                        </option>
+                        <option value="klien-a">
+                          Klien A - Retail Mandiri
+                        </option>
+                        <option value="klien-b">
+                          Klien B - Logistik Cepat
+                        </option>
+                        <option value="klien-c">
+                          Klien C - Mitra Sejahtera
+                        </option>
+                        <option value="klien-d">
+                          Klien D - Konstruksi Unggul (Belum ada reviewer)
+                        </option>
+                      </select>
+                      <span
+                        class="material-symbols-outlined pointer-events-none absolute right-3 top-2.5 text-text-secondary text-[20px]"
+                      >
+                        expand_more
+                      </span>
+                    </div>
+                    <!-- Notification when Klien D is chosen -->
+                    <div
+                      class="hidden items-center gap-2 p-2 rounded bg-warning-subtle text-status-exception-fg font-caption text-caption"
+                      id="klien-d-warning"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[16px] text-warning flex-shrink-0"
+                        >person_off</span
+                      >
+                      <span
+                        >Klien D saat ini belum memiliki reviewer aktif. Invoice
+                        tetap dapat diproses dan akan masuk antrean
+                        cadangan.</span
+                      >
+                    </div>
+                  </div>
+                  <!-- Grid: Field 2 (Jenis Permintaan) & Field 3 (Saluran) -->
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Field 2: Jenis Permintaan * -->
+                    <div class="flex flex-col gap-1.5">
+                      <label
+                        class="font-label-firm text-label-firm text-text-primary"
+                        for="jenis-permintaan-input"
+                      >
+                        Jenis Permintaan
+                        <span aria-hidden="true" class="text-error">*</span>
+                      </label>
+                      <div class="relative">
+                        <input
+                          class="w-full h-10 px-3 pl-9 rounded font-body-default text-body-default text-text-primary bg-surface-muted shadow-sm cursor-not-allowed select-none"
+                          id="jenis-permintaan-input"
+                          name="jenis_permintaan"
+                          readonly=""
+                          type="text"
+                          value="Pembayaran Vendor"
+                        />
+                        <span
+                          class="material-symbols-outlined pointer-events-none absolute left-3 top-2.5 text-text-secondary text-[18px]"
+                        >
+                          lock
+                        </span>
+                        <span
+                          class="material-symbols-outlined pointer-events-none absolute right-3 top-2.5 text-success text-[18px]"
+                        >
+                          verified
+                        </span>
+                      </div>
+                      <span
+                        class="font-caption text-caption text-text-secondary"
+                        >Terkunci otomatis untuk modul pembayaran invoice.</span
+                      >
+                    </div>
+                    <!-- Field 3: Saluran * -->
+                    <div class="flex flex-col gap-1.5">
+                      <label
+                        class="font-label-firm text-label-firm text-text-primary"
+                        for="saluran-select"
+                      >
+                        Saluran Masuk
+                        <span aria-hidden="true" class="text-error">*</span>
+                      </label>
+                      <div class="relative">
+                        <select
+                          class="w-full h-10 px-3 pr-10 rounded font-body-default text-body-default text-text-primary bg-surface shadow-sm focus:outline-none focus:ring-2 focus:ring-focus-ring disabled:bg-surface-muted disabled:text-text-disabled transition-all appearance-none cursor-pointer"
+                          id="saluran-select"
+                          name="saluran"
+                          required=""
+                        >
+                          <option selected="" value="WhatsApp">WhatsApp</option>
+                          <option value="Email">Email</option>
+                          <option value="Lainnya">
+                            Lainnya (Kurir/Fisik/Portal Eksternal)
+                          </option>
+                        </select>
+                        <span
+                          class="material-symbols-outlined pointer-events-none absolute right-3 top-2.5 text-text-secondary text-[20px]"
+                        >
+                          expand_more
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Field 4: Tanggal * -->
+                  <div class="flex flex-col gap-1.5">
+                    <label
+                      class="font-label-firm text-label-firm text-text-primary"
+                      for="tanggal-input"
+                    >
+                      Tanggal Penerimaan Dokumen
+                      <span aria-hidden="true" class="text-error">*</span>
+                    </label>
+                    <div class="relative max-w-sm">
+                      <input
+                        class="w-full h-10 px-3 pr-10 rounded font-code-mono text-code-mono text-text-primary bg-surface shadow-sm focus:outline-none focus:ring-2 focus:ring-focus-ring disabled:bg-surface-muted disabled:text-text-disabled transition-all"
+                        id="tanggal-input"
+                        name="tanggal"
+                        placeholder="dd/mm/yyyy"
+                        type="text"
+                        value="24/02/2026"
+                      />
+                      <button
+                        aria-label="Buka kalender"
+                        class="absolute right-3 top-2.5 text-text-secondary hover:text-text-primary transition-colors"
+                        onclick="
+                          document.getElementById('tanggal-input').focus()
+                        "
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-[20px]"
+                          >calendar_today</span
+                        >
+                      </button>
+                    </div>
+                    <span class="font-caption text-caption text-text-secondary"
+                      >Format: dd/mm/yyyy. Default adalah tanggal operasional
+                      hari ini.</span
+                    >
+                  </div>
+                  <!-- Field 5: File Invoice * -->
+                  <div class="flex flex-col gap-2">
+                    <div class="flex items-center justify-between">
+                      <label
+                        class="font-label-firm text-label-firm text-text-primary"
+                      >
+                        Berkas Invoice
+                        <span aria-hidden="true" class="text-error">*</span>
+                      </label>
+                      <span
+                        class="font-caption text-caption text-text-secondary"
+                        >Maks. 1 berkas • PDF/JPG/PNG • ≤10 MB</span
+                      >
+                    </div>
+                    <!-- Dropzone: Default Empty State -->
+                    <div
+                      class="relative group cursor-pointer flex flex-col items-center justify-center p-8 rounded-lg bg-surface hover:bg-surface-muted/50 transition-all text-center"
+                      id="dropzone-empty"
+                    >
+                      <input
+                        accept=".pdf,.png,.jpg,.jpeg,.heic"
+                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                        id="file-uploader"
+                        onchange="handleFileSelected(event)"
+                        type="file"
+                      />
+                      <div
+                        class="w-12 h-12 rounded-full bg-info-subtle flex items-center justify-center text-info mb-3 group-hover:scale-105 transition-transform"
+                      >
+                        <span class="material-symbols-outlined text-[26px]"
+                          >upload_file</span
+                        >
+                      </div>
+                      <p
+                        class="font-body-strong text-body-strong text-text-primary"
+                      >
+                        Seret file ke sini atau
+                        <span
+                          class="text-text-link underline hover:text-primary-hover"
+                          >pilih file</span
+                        >
+                      </p>
+                      <p
+                        class="font-caption text-caption text-text-secondary mt-1"
+                      >
+                        Format yang diterima: PDF, JPG, atau PNG. Maksimal 10
+                        MB. Satu file per request.
+                      </p>
+                    </div>
+                    <!-- Dropzone: Selected File Preview State -->
+                    <div
+                      class="hidden flex-col p-4 rounded-lg bg-surface shadow-sm"
+                      id="dropzone-selected"
+                    >
+                      <div class="flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3 min-w-0">
+                          <div
+                            class="w-10 h-10 rounded bg-info-subtle text-info flex items-center justify-center flex-shrink-0"
+                          >
+                            <span
+                              class="material-symbols-outlined text-[22px]"
+                              id="preview-file-icon"
+                              >picture_as_pdf</span
+                            >
+                          </div>
+                          <div class="flex flex-col min-w-0">
+                            <div class="flex items-center gap-2">
+                              <span
+                                class="font-body-strong text-body-strong text-text-primary truncate"
+                                id="preview-file-name"
+                                >INV-9921_Bahtera_Logistik.pdf</span
+                              >
+                              <span
+                                class="inline-flex items-center px-1.5 py-0.5 rounded font-label-firm text-[11px] bg-status-ready-bg text-status-ready-fg flex-shrink-0"
+                                >Siap</span
+                              >
+                            </div>
+                            <div
+                              class="flex items-center gap-2 font-caption text-caption text-text-secondary"
+                            >
+                              <span id="preview-file-size">1.4 MB</span>
+                              <span>•</span>
+                              <span>Lolos verifikasi format lokal</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                          <button
+                            aria-label="Hapus file"
+                            class="p-1.5 text-text-secondary hover:text-danger hover:bg-danger-subtle rounded transition-colors"
+                            onclick="resetFilePicker()"
+                            title="Hapus file"
+                            type="button"
+                          >
+                            <span class="material-symbols-outlined text-[20px]"
+                              >delete</span
+                            >
+                          </button>
+                        </div>
+                      </div>
+                      <!-- Uploading progress inside selected state (shown during upload) -->
+                      <div
+                        class="hidden flex-col gap-2 mt-4 pt-3 bg-surface-muted/60 p-3 rounded"
+                        id="upload-progress-container"
+                      >
+                        <div
+                          class="flex items-center justify-between font-caption text-caption"
+                        >
+                          <span
+                            class="font-medium text-text-primary flex items-center gap-1.5"
+                          >
+                            <span
+                              class="w-2 h-2 rounded-full bg-info animate-pulse"
+                            ></span>
+                            Mengunggah berkas ke penyimpanan aman...
+                          </span>
+                          <span
+                            class="font-code-mono text-code-mono font-bold text-primary"
+                            id="progress-percent-label"
+                            >68%</span
+                          >
+                        </div>
+                        <div
+                          class="w-full bg-surface-sunken h-2 rounded-full overflow-hidden"
+                        >
+                          <div
+                            class="bg-primary-container h-full rounded-full transition-all duration-300"
+                            id="progress-bar-fill"
+                            style="width: 68%"
+                          ></div>
+                        </div>
+                        <span
+                          class="font-caption text-caption text-text-secondary text-right"
+                          >Estimasi tersisa: ∼ 1 detik</span
+                        >
+                      </div>
+                    </div>
+                    <!-- Inline Specific Error Alerts -->
+                    <div
+                      class="hidden items-start gap-2 p-3 rounded bg-danger-subtle text-status-rejected-fg font-caption text-caption"
+                      id="error-heic"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[18px] text-danger flex-shrink-0 mt-0.5"
+                        >error</span
+                      >
+                      <div class="flex-1">
+                        <strong>Format tidak didukung:</strong> Format HEIC
+                        belum didukung, ubah ke JPG atau PNG.
+                      </div>
+                      <button
+                        class="text-text-secondary hover:text-text-primary text-[14px]"
+                        onclick="hideError('error-heic')"
+                        type="button"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    <div
+                      class="hidden items-start gap-2 p-3 rounded bg-danger-subtle text-status-rejected-fg font-caption text-caption"
+                      id="error-oversize"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[18px] text-danger flex-shrink-0 mt-0.5"
+                        >warning</span
+                      >
+                      <div class="flex-1">
+                        <strong>Batas ukuran terlampaui:</strong> Ukuran berkas
+                        melebihi 10 MB. Unggah berkas yang lebih kecil.
+                      </div>
+                      <button
+                        class="text-text-secondary hover:text-text-primary text-[14px]"
+                        onclick="hideError('error-oversize')"
+                        type="button"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    <div
+                      class="hidden items-start gap-2 p-3 rounded bg-danger-subtle text-status-rejected-fg font-caption text-caption"
+                      id="error-multifile"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[18px] text-danger flex-shrink-0 mt-0.5"
+                        >stacks</span
+                      >
+                      <div class="flex-1">
+                        <strong>Jumlah berkas dibatasi:</strong> Hanya satu file
+                        per request. Hapus file tambahan.
+                      </div>
+                      <button
+                        class="text-text-secondary hover:text-text-primary text-[14px]"
+                        onclick="hideError('error-multifile')"
+                        type="button"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                  <!-- Bottom Form Actions: Strictly Single Primary Action -->
+                  <div
+                    class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3"
+                  >
+                    <div
+                      class="flex items-center gap-1.5 text-text-secondary font-caption text-caption order-2 sm:order-1"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[16px] text-success"
+                        >lock</span
+                      >
+                      <span
+                        >Enkripsi AES-256 saat transit &amp; penyimpanan</span
+                      >
+                    </div>
+                    <div
+                      class="flex items-center gap-3 w-full sm:w-auto order-1 sm:order-2"
+                    >
+                      <button
+                        class="hidden sm:inline-flex px-4 h-10 rounded font-body-strong text-body-strong text-text-secondary hover:bg-surface-muted transition-colors items-center justify-center"
+                        onclick="resetFullForm()"
+                        type="button"
+                      >
+                        Batal
+                      </button>
+                      <button
+                        class="w-full sm:w-auto px-6 h-10 rounded font-body-strong text-body-strong bg-primary-container text-on-primary hover:bg-primary-hover active:bg-primary-active disabled:bg-surface-sunken disabled:text-text-disabled disabled:cursor-not-allowed transition-all inline-flex items-center justify-center gap-2 shadow-sm"
+                        id="btn-submit-upload"
+                        type="submit"
+                      >
+                        <span
+                          class="material-symbols-outlined text-[20px]"
+                          id="submit-icon"
+                          >cloud_upload</span
+                        >
+                        <span id="submit-label">Upload dan Proses</span>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </section>
+              <!-- State Notice: Success Panel (Displays automatically or via switchState('success')) -->
+              <section
+                aria-live="polite"
+                class="hidden flex-col rounded-lg bg-surface shadow-md overflow-hidden animate-fadeIn"
+                id="panel-success"
+              >
+                <!-- Success Header Accent -->
+                <div
+                  class="bg-status-reviewed-bg px-6 py-4 flex items-center justify-between"
+                >
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-9 h-9 rounded-full bg-success text-on-primary flex items-center justify-center shadow-sm"
+                    >
+                      <span class="material-symbols-outlined text-[22px]"
+                        >check</span
+                      >
+                    </div>
+                    <div>
+                      <h2
+                        class="font-headline-sm text-headline-sm text-status-reviewed-fg"
+                      >
+                        Invoice Berhasil Diterima
+                      </h2>
+                      <span
+                        class="font-caption text-caption text-text-secondary"
+                        >Waktu terima: 24 Feb 2026, 14:32:10 WIB</span
+                      >
+                    </div>
+                  </div>
+                  <span
+                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded font-label-firm text-label-firm bg-status-queued-bg text-status-queued-fg shadow-sm"
+                  >
+                    <span class="material-symbols-outlined text-[14px]"
+                      >schedule</span
+                    >
+                    QUEUED
+                  </span>
+                </div>
+                <div class="p-6 flex flex-col gap-5">
+                  <!-- Request ID Box -->
+                  <div
+                    class="p-4 rounded-lg bg-surface-muted flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                  >
+                    <div class="flex flex-col gap-0.5">
+                      <span
+                        class="font-caption text-caption uppercase tracking-wider text-text-secondary"
+                        >Kode Identifikasi Antrean</span
+                      >
+                      <div class="flex items-center gap-2">
+                        <span
+                          class="font-code-mono text-[20px] font-bold text-text-primary tracking-wider"
+                          id="generated-req-id"
+                          >REQ-2026-000123</span
+                        >
+                        <button
+                          aria-label="Salin Request ID"
+                          class="p-1 text-primary hover:bg-primary-subtle rounded transition-colors"
+                          onclick="copyRequestId()"
+                          title="Salin Request ID"
+                          type="button"
+                        >
+                          <span
+                            class="material-symbols-outlined text-[18px]"
+                            id="copy-icon"
+                            >content_copy</span
+                          >
+                        </button>
+                        <span
+                          class="hidden font-caption text-caption text-success font-medium"
+                          id="copy-feedback"
+                          >Tersalin!</span
+                        >
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="font-caption text-caption text-text-secondary"
+                        >Klien:</span
+                      >
+                      <span
+                        class="font-body-strong text-body-strong text-text-primary"
+                        id="success-klien-name"
+                        >Klien A - Retail Mandiri</span
+                      >
+                    </div>
+                  </div>
+                  <!-- Missing Reviewer Notice (Shown if Klien D selected) -->
+                  <div
+                    class="hidden p-3 rounded-lg bg-surface-muted text-status-exception-fg flex items-start gap-2.5"
+                    id="success-no-reviewer-badge"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[20px] text-warning flex-shrink-0 mt-0.5"
+                      >person_off</span
+                    >
+                    <div class="flex flex-col gap-0.5">
+                      <span class="font-label-firm text-label-firm text-warning"
+                        >Belum Ada Reviewer Terdaftar</span
+                      >
+                      <p class="font-caption text-caption text-text-secondary">
+                        Dokumen tersimpan aman dalam status QUEUED. Ekstraksi AI
+                        akan selesai di latar belakang dan dokumen akan menunggu
+                        alokasi Finance Reviewer dari koordinator.
+                      </p>
+                    </div>
+                  </div>
+                  <!-- Description microcopy -->
+                  <div
+                    class="flex items-start gap-3 p-3.5 rounded-lg bg-info-subtle/50 text-text-primary"
+                  >
+                    <span
+                      class="material-symbols-outlined text-info text-[20px] flex-shrink-0 mt-0.5"
+                      >smart_toy</span
+                    >
+                    <p
+                      class="font-body-default text-body-default text-text-secondary leading-relaxed"
+                    >
+                      Dokumen telah masuk antrean pemrosesan AI di latar
+                      belakang. Data draft akan diekstraksi otomatis dan
+                      diteruskan ke Finance Reviewer. Anda dapat memantau
+                      progresnya di tab
+                      <strong class="text-text-primary font-semibold"
+                        >Antrean</strong
+                      >.
+                    </p>
+                  </div>
+                  <!-- Summary Meta Table -->
+                  <div class="flex flex-col gap-2 pt-2">
+                    <span
+                      class="font-label-firm text-label-firm text-text-secondary uppercase tracking-wider"
+                      >Rangkuman Penerimaan:</span
+                    >
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div class="p-2.5 rounded bg-surface-muted/50">
+                        <span
+                          class="block font-caption text-caption text-text-secondary"
+                          >File Terunggah</span
+                        >
+                        <span
+                          class="font-code-mono text-body-strong text-text-primary truncate block"
+                          id="success-file-name"
+                          >INV-9921_Bahtera_Logistik.pdf</span
+                        >
+                      </div>
+                      <div class="p-2.5 rounded bg-surface-muted/50">
+                        <span
+                          class="block font-caption text-caption text-text-secondary"
+                          >Saluran</span
+                        >
+                        <span
+                          class="font-body-strong text-body-strong text-text-primary"
+                          id="success-saluran-val"
+                          >WhatsApp</span
+                        >
+                      </div>
+                      <div class="p-2.5 rounded bg-surface-muted/50">
+                        <span
+                          class="block font-caption text-caption text-text-secondary"
+                          >Staf Penerima</span
+                        >
+                        <span
+                          class="font-body-strong text-body-strong text-text-primary"
+                          >Siti Rahmawati (#8841)</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Success Actions (Strict Primary + Secondary Rule) -->
+                  <div
+                    class="pt-3 flex flex-col sm:flex-row items-center justify-end gap-3"
+                  >
+                    <button
+                      class="w-full sm:w-auto px-5 h-10 rounded font-body-strong text-body-strong text-primary bg-surface hover:bg-surface-muted transition-colors inline-flex items-center justify-center gap-1.5 shadow-sm"
+                      onclick="uploadAnotherInvoice()"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[18px]"
+                        >add_circle</span
+                      >
+                      Upload invoice lain
+                    </button>
+                    <a
+                      class="w-full sm:w-auto px-6 h-10 rounded font-body-strong text-body-strong bg-primary-container text-on-primary hover:bg-primary-hover active:bg-primary-active transition-all inline-flex items-center justify-center gap-2 shadow-sm"
+                      href="#"
+                      onclick="
+                        switchState('default');
+                        return false;
+                      "
+                    >
+                      <span>Lihat request</span>
+                      <span class="material-symbols-outlined text-[18px]"
+                        >arrow_forward</span
+                      >
+                    </a>
+                  </div>
+                </div>
+              </section>
+              <!-- Standard Intake SLA & Security Footer -->
+              <footer
+                class="flex flex-col sm:flex-row items-center justify-between gap-2 px-2 py-3 text-text-secondary font-caption text-caption"
+              >
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-success"></span>
+                  <span>AMIGA Robot OCR v2.4 terhubung • Engine aktif</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span>SLA Pemrosesan Awal: ≤ 15 detik</span>
+                  <span>•</span>
+                  <a class="text-text-link hover:underline" href="#"
+                    >Panduan Intake</a
+                  >
+                </div>
+              </footer>
+            </div>
+          </div>
+        </div>
+        <!-- Inline Interaction Behavior -->
+        <script>
+          let currentState = 'default';
+
+          function switchState(stateName) {
+            currentState = stateName;
+
+            // Reset button styles in simulator switcher
+            document
+              .querySelectorAll('#state-toggle-group .state-btn')
+              .forEach((btn) => {
+                if (btn.getAttribute('data-state') === stateName) {
+                  btn.className =
+                    'state-btn px-2.5 py-1 rounded font-caption text-caption font-medium bg-primary text-on-primary transition-colors';
+                } else {
+                  btn.className =
+                    'state-btn px-2.5 py-1 rounded font-caption text-caption font-medium bg-surface-muted text-text-secondary hover:text-text-primary transition-colors';
+                }
+              });
+
+            // Reset components to base visibility
+            const bannerRevoked = document.getElementById('banner-revoked');
+            const bannerStorage = document.getElementById(
+              'banner-storage-error',
+            );
+            const bannerReupload = document.getElementById('banner-reupload');
+            const formCard = document.getElementById('form-card');
+            const panelSuccess = document.getElementById('panel-success');
+            const dropzoneEmpty = document.getElementById('dropzone-empty');
+            const dropzoneSelected =
+              document.getElementById('dropzone-selected');
+            const uploadProgress = document.getElementById(
+              'upload-progress-container',
+            );
+            const errorHeic = document.getElementById('error-heic');
+            const errorOversize = document.getElementById('error-oversize');
+            const errorMultifile = document.getElementById('error-multifile');
+            const klienSelect = document.getElementById('klien-select');
+            const saluranSelect = document.getElementById('saluran-select');
+            const tanggalInput = document.getElementById('tanggal-input');
+            const submitBtn = document.getElementById('btn-submit-upload');
+            const submitIcon = document.getElementById('submit-icon');
+            const submitLabel = document.getElementById('submit-label');
+            const klienDWarn = document.getElementById('klien-d-warning');
+
+            // Hide all alerts by default
+            bannerRevoked.classList.add('hidden');
+            bannerRevoked.classList.remove('flex');
+            bannerStorage.classList.add('hidden');
+            bannerStorage.classList.remove('flex');
+            bannerReupload.classList.add('hidden');
+            panelSuccess.classList.add('hidden');
+            panelSuccess.classList.remove('flex');
+            formCard.classList.remove('hidden');
+            errorHeic.classList.add('hidden');
+            errorHeic.classList.remove('flex');
+            errorOversize.classList.add('hidden');
+            errorOversize.classList.remove('flex');
+            errorMultifile.classList.add('hidden');
+            errorMultifile.classList.remove('flex');
+            uploadProgress.classList.add('hidden');
+            uploadProgress.classList.remove('flex');
+            klienDWarn.classList.add('hidden');
+            klienDWarn.classList.remove('flex');
+
+            // Reset Form Input states
+            klienSelect.disabled = false;
+            saluranSelect.disabled = false;
+            tanggalInput.disabled = false;
+            submitBtn.disabled = false;
+            submitLabel.textContent = 'Upload dan Proses';
+            submitIcon.textContent = 'cloud_upload';
+            submitIcon.classList.remove('animate-spin');
+
+            if (stateName === 'default') {
+              dropzoneEmpty.classList.remove('hidden');
+              dropzoneSelected.classList.add('hidden');
+              dropzoneSelected.classList.remove('flex');
+              klienSelect.value = '';
+            } else if (stateName === 'reupload') {
+              bannerReupload.classList.remove('hidden');
+              klienSelect.value = 'klien-b';
+              klienSelect.disabled = true; // Lock client as prescribed
+              dropzoneEmpty.classList.add('hidden');
+              dropzoneSelected.classList.remove('hidden');
+              dropzoneSelected.classList.add('flex');
+              document.getElementById('preview-file-name').textContent =
+                'INV-9921_Bahtera_Logistik_Rev2.pdf';
+              document.getElementById('preview-file-size').textContent =
+                '2.1 MB';
+            } else if (stateName === 'validation-error') {
+              dropzoneEmpty.classList.remove('hidden');
+              dropzoneSelected.classList.add('hidden');
+              errorHeic.classList.remove('hidden');
+              errorHeic.classList.add('flex');
+              errorOversize.classList.remove('hidden');
+              errorOversize.classList.add('flex');
+              errorMultifile.classList.remove('hidden');
+              errorMultifile.classList.add('flex');
+              klienSelect.value = 'klien-a';
+            } else if (stateName === 'uploading') {
+              dropzoneEmpty.classList.add('hidden');
+              dropzoneSelected.classList.remove('hidden');
+              dropzoneSelected.classList.add('flex');
+              uploadProgress.classList.remove('hidden');
+              uploadProgress.classList.add('flex');
+              document.getElementById('progress-bar-fill').style.width = '68%';
+              document.getElementById('progress-percent-label').textContent =
+                '68%';
+              klienSelect.value = 'klien-a';
+              submitBtn.disabled = true;
+              submitLabel.textContent = 'Mengunggah (68%)...';
+              submitIcon.textContent = 'progress_activity';
+              submitIcon.classList.add('animate-spin');
+            } else if (stateName === 'success') {
+              formCard.classList.add('hidden');
+              panelSuccess.classList.remove('hidden');
+              panelSuccess.classList.add('flex');
+              document.getElementById('generated-req-id').textContent =
+                'REQ-2026-000123';
+              document.getElementById('success-klien-name').textContent =
+                'Klien A - Retail Mandiri';
+              document.getElementById('success-file-name').textContent =
+                'INV-9921_Bahtera_Logistik.pdf';
+              document.getElementById('success-saluran-val').textContent =
+                document.getElementById('saluran-select').value || 'WhatsApp';
+              document
+                .getElementById('success-no-reviewer-badge')
+                .classList.add('hidden');
+            } else if (stateName === 'revoked') {
+              bannerRevoked.classList.remove('hidden');
+              bannerRevoked.classList.add('flex');
+              klienSelect.value = 'klien-a';
+              klienSelect.disabled = true;
+              saluranSelect.disabled = true;
+              tanggalInput.disabled = true;
+              submitBtn.disabled = true;
+              dropzoneEmpty.classList.remove('hidden');
+              dropzoneSelected.classList.add('hidden');
+            }
+          }
+
+          // File picker handler
+          function handleFileSelected(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            // Check HEIC
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (ext === 'heic') {
+              document.getElementById('error-heic').classList.remove('hidden');
+              document.getElementById('error-heic').classList.add('flex');
+              event.target.value = '';
+              return;
+            }
+
+            // Check Size > 10MB
+            if (file.size > 10 * 1024 * 1024) {
+              document
+                .getElementById('error-oversize')
+                .classList.remove('hidden');
+              document.getElementById('error-oversize').classList.add('flex');
+              event.target.value = '';
+              return;
+            }
+
+            // Populate preview
+            document.getElementById('preview-file-name').textContent =
+              file.name;
+            const mbSize = (file.size / (1024 * 1024)).toFixed(1);
+            document.getElementById('preview-file-size').textContent =
+              mbSize + ' MB';
+
+            const previewIcon = document.getElementById('preview-file-icon');
+            if (file.type.includes('pdf')) {
+              previewIcon.textContent = 'picture_as_pdf';
+            } else {
+              previewIcon.textContent = 'image';
+            }
+
+            document.getElementById('dropzone-empty').classList.add('hidden');
+            document
+              .getElementById('dropzone-selected')
+              .classList.remove('hidden');
+            document.getElementById('dropzone-selected').classList.add('flex');
+          }
+
+          function resetFilePicker() {
+            document.getElementById('file-uploader').value = '';
+            document
+              .getElementById('dropzone-empty')
+              .classList.remove('hidden');
+            const selected = document.getElementById('dropzone-selected');
+            selected.classList.add('hidden');
+            selected.classList.remove('flex');
+          }
+
+          function hideError(elementId) {
+            const el = document.getElementById(elementId);
+            if (el) {
+              el.classList.add('hidden');
+              el.classList.remove('flex');
+            }
+          }
+
+          // Monitor Client Selection changes
+          document
+            .getElementById('klien-select')
+            .addEventListener('change', function (e) {
+              const warn = document.getElementById('klien-d-warning');
+              if (e.target.value === 'klien-d') {
+                warn.classList.remove('hidden');
+                warn.classList.add('flex');
+              } else {
+                warn.classList.add('hidden');
+                warn.classList.remove('flex');
+              }
+            });
+
+          // Handle Form Submission with visual upload transition
+          function handleFormSubmit(e) {
+            e.preventDefault();
+            const klien = document.getElementById('klien-select').value;
+            if (!klien) {
+              alert('Silakan pilih Klien terlebih dahulu.');
+              document.getElementById('klien-select').focus();
+              return;
+            }
+
+            const fileSelectedBox =
+              document.getElementById('dropzone-selected');
+            const isFileChosen = !fileSelectedBox.classList.contains('hidden');
+            if (!isFileChosen) {
+              alert('Silakan pilih atau seret berkas invoice terlebih dahulu.');
+              return;
+            }
+
+            // Trigger uploading state
+            switchState('uploading');
+
+            // Simulate async network upload reaching 100% within 1.5 seconds then success
+            let pct = 68;
+            const interval = setInterval(() => {
+              pct += 12;
+              if (pct > 100) pct = 100;
+              document.getElementById('progress-bar-fill').style.width =
+                pct + '%';
+              document.getElementById('progress-percent-label').textContent =
+                pct + '%';
+
+              if (pct >= 100) {
+                clearInterval(interval);
+                setTimeout(() => {
+                  // Switch to Success
+                  switchState('success');
+                  // Fill success data
+                  const klienText =
+                    document.getElementById('klien-select').options[
+                      document.getElementById('klien-select').selectedIndex
+                    ].text;
+                  document.getElementById('success-klien-name').textContent =
+                    klienText;
+                  if (klien === 'klien-d') {
+                    document
+                      .getElementById('success-no-reviewer-badge')
+                      .classList.remove('hidden');
+                  }
+                }, 500);
+              }
+            }, 200);
+          }
+
+          function copyRequestId() {
+            const text =
+              document.getElementById('generated-req-id').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+              const feedback = document.getElementById('copy-feedback');
+              const icon = document.getElementById('copy-icon');
+              icon.textContent = 'check';
+              feedback.classList.remove('hidden');
+              setTimeout(() => {
+                icon.textContent = 'content_copy';
+                feedback.classList.add('hidden');
+              }, 2000);
+            });
+          }
+
+          function uploadAnotherInvoice() {
+            resetFullForm();
+            switchState('default');
+          }
+
+          function resetFullForm() {
+            document.getElementById('invoice-intake-form').reset();
+            resetFilePicker();
+            document.getElementById('tanggal-input').value = '24/02/2026';
+            document.getElementById('klien-d-warning').classList.add('hidden');
+            document.getElementById('klien-d-warning').classList.remove('flex');
+          }
+
+          function retryUpload() {
+            document
+              .getElementById('banner-storage-error')
+              .classList.add('hidden');
+            switchState('uploading');
+          }
+        </script>
+      </main>
+    </div>
+  </body>
+</html>

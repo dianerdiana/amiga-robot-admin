@@ -1,0 +1,47 @@
+{
+  "readable": true,
+  "vendor_name": "CV Bahtera Logistik",
+  "invoice_number": "BL-JKT-9921",
+  "invoice_date": "2026-02-20",
+  "bank_account": "BCA 523-019-8812",
+  "tax_amount": 220000,
+  "discount_amount": 100000,
+  "total_amount": 2120000,
+  "items": [
+    {
+      "line_no": 1,
+      "description": "Jasa pengiriman Jakarta-Surabaya",
+      "quantity": 1,
+      "unit_price": 1200000,
+      "amount": 1200000
+    },
+    {
+      "line_no": 2,
+      "description": "Asuransi barang",
+      "quantity": 1,
+      "unit_price": 150000,
+      "amount": 150000
+    },
+    {
+      "line_no": 3,
+      "description": "Packing kayu",
+      "quantity": 3,
+      "unit_price": 100000,
+      "amount": 300000
+    },
+    {
+      "line_no": 4,
+      "description": "Biaya bongkar muat",
+      "quantity": 2,
+      "unit_price": 75000,
+      "amount": 150000
+    },
+    {
+      "line_no": 5,
+      "description": "Biaya administrasi",
+      "quantity": 1,
+      "unit_price": 200000,
+      "amount": 200000
+    }
+  ]
+}

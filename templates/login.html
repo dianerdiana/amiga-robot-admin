@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Masuk - AMIGA Robot Admin</title>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                DEFAULT: '#1E3A8A',
+                hover: '#1B3380',
+                active: '#172B6B',
+                subtle: '#E0E7FF',
+              },
+              accent: {
+                DEFAULT: '#0F766E',
+                hover: '#0D625B',
+                subtle: '#CCFBF1',
+              },
+              surface: {
+                DEFAULT: '#FFFFFF',
+                muted: '#F1F5F9',
+                sunken: '#E2E8F0',
+              },
+              border: {
+                DEFAULT: '#CBD5E1',
+                strong: '#94A3B8',
+              },
+              text: {
+                primary: '#0F172A',
+                secondary: '#475569',
+                disabled: '#94A3B8',
+                link: '#1E40AF',
+              },
+              danger: {
+                DEFAULT: '#B91C1C',
+                subtle: '#FEE2E2',
+                text: '#991B1B',
+              },
+              success: {
+                DEFAULT: '#166534',
+                subtle: '#DCFCE7',
+              },
+              focus: {
+                ring: '#2563EB',
+              },
+            },
+            fontFamily: {
+              sans: [
+                "'Inter'",
+                "'Segoe UI'",
+                'system-ui',
+                '-apple-system',
+                'sans-serif',
+              ],
+              mono: ["'JetBrains Mono'", "'Fira Code'", 'monospace'],
+            },
+            boxShadow: {
+              sm: '0 1px 2px rgba(15,23,42,0.06)',
+              md: '0 4px 12px rgba(15,23,42,0.10)',
+              lg: '0 12px 32px rgba(15,23,42,0.16)',
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* Focus styles complying with WCAG AA and Design System */
+      .focus-ring:focus-visible {
+        outline: 2px solid #2563eb;
+        outline-offset: 2px;
+      }
+      /* Touch target guarantee */
+      .touch-target {
+        min-height: 44px;
+        min-width: 44px;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-[#F8FAFC] text-[#0F172A] font-sans min-h-screen flex flex-col justify-between antialiased selection:bg-[#E0E7FF] selection:text-[#1E3A8A]"
+  >
+    <!-- Top Minimal Branding Bar -->
+    <header
+      class="w-full h-14 bg-white border-b border-[#CBD5E1] px-4 sm:px-8 flex items-center justify-between"
+    >
+      <div class="flex items-center gap-3">
+        <div
+          class="w-8 h-8 rounded-md bg-[#1E3A8A] flex items-center justify-center text-white shrink-0 shadow-sm"
+          aria-hidden="true"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+            <circle cx="12" cy="5" r="2"></circle>
+            <path d="M12 7v4"></path>
+            <line x1="8" y1="16" x2="8" y2="16"></line>
+            <line x1="16" y1="16" x2="16" y2="16"></line>
+          </svg>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-[15px] tracking-tight text-[#0F172A]"
+            >AMIGA</span
+          >
+          <span
+            class="text-xs font-semibold px-2 py-0.5 rounded bg-[#F1F5F9] text-[#475569] border border-[#CBD5E1]"
+            >Robot Admin</span
+          >
+        </div>
+      </div>
+      <div class="flex items-center gap-2 text-xs text-[#475569]">
+        <span
+          class="inline-block w-2 h-2 rounded-full bg-emerald-500"
+          aria-hidden="true"
+        ></span>
+        <span class="hidden sm:inline font-medium"
+          >Sistem Operasional v1.0</span
+        >
+        <span class="sm:hidden font-medium">v1.0</span>
+      </div>
+    </header>
+
+    <!-- Main Viewport Area -->
+    <main
+      class="flex-1 flex items-center justify-center p-3 sm:p-6 w-full max-w-[1366px] mx-auto"
+    >
+      <!-- Centered Login Card (400px - 440px on desktop, fluid 12px margin on mobile) -->
+      <div
+        class="w-full max-w-[420px] bg-white rounded-lg border border-[#CBD5E1] shadow-md p-6 sm:p-8 relative"
+      >
+        <!-- Card Header -->
+        <div class="text-center mb-6">
+          <div
+            class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-[#E0E7FF] text-[#1E3A8A] mb-3"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <h1
+            class="text-xl sm:text-2xl font-bold text-[#0F172A] tracking-tight"
+          >
+            Masuk ke AMIGA Robot
+          </h1>
+          <p class="text-sm text-[#475569] mt-1.5 leading-snug">
+            Pengelolaan invoice dan voucher internal
+          </p>
+        </div>
+
+        <!-- Authentication Error Banner (Non-toast, cause + action, neutral error) -->
+        <div
+          id="authErrorBanner"
+          class="hidden mb-5 p-3.5 rounded-md bg-[#FEE2E2] border border-[#B91C1C] text-[#991B1B] text-xs leading-relaxed"
+          role="alert"
+          aria-live="assertive"
+        >
+          <div class="flex items-start gap-2.5">
+            <svg
+              class="w-4 h-4 text-[#B91C1C] shrink-0 mt-0.5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <div class="flex-1">
+              <span class="font-semibold block text-[13px]"
+                >Kredensial tidak valid</span
+              >
+              <span id="authErrorMessage" class="mt-0.5 block"
+                >Email atau kata sandi yang Anda masukkan salah. Periksa kembali
+                dan coba lagi.</span
+              >
+            </div>
+            <button
+              type="button"
+              onclick="dismissAuthError()"
+              class="text-[#991B1B] hover:text-[#7F1D1D] p-1 -mr-1 -mt-1 rounded focus-ring"
+              aria-label="Tutup pesan error"
+            >
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Login Form -->
+        <form
+          id="loginForm"
+          onsubmit="handleLoginSubmit(event)"
+          novalidate=""
+          class="space-y-4"
+        >
+          <!-- Field Email -->
+          <div>
+            <label
+              for="emailInput"
+              class="block text-xs font-semibold uppercase tracking-wider text-[#0F172A] mb-1.5"
+            >
+              Email <span class="text-[#B91C1C]" aria-hidden="true">*</span>
+              <span class="sr-only">(wajib)</span>
+            </label>
+            <div class="relative">
+              <input
+                type="email"
+                id="emailInput"
+                name="email"
+                tabindex="1"
+                required=""
+                autocomplete="email"
+                placeholder="nama@perusahaan.co.id"
+                class="w-full h-10 px-3 bg-white border border-[#94A3B8] rounded-md text-sm text-[#0F172A] placeholder:text-[#94A3B8] focus:border-[#1E3A8A] focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:ring-offset-1 transition-colors"
+                aria-describedby="emailError emailHelper"
+                oninput="handleInputValidate('email')"
+              />
+            </div>
+            <!-- Inline Error Message -->
+            <p
+              id="emailError"
+              class="hidden text-xs text-[#B91C1C] mt-1.5 flex items-center gap-1.5 font-medium"
+              role="alert"
+            >
+              <svg
+                class="w-3.5 h-3.5 shrink-0"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+              <span id="emailErrorText"
+                >Format email tidak valid. Masukkan alamat email yang
+                benar.</span
+              >
+            </p>
+            <p id="emailHelper" class="text-[11px] text-[#475569] mt-1">
+              Gunakan alamat email resmi staf internal AMIGA.
+            </p>
+          </div>
+
+          <!-- Field Kata Sandi -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label
+                for="passwordInput"
+                class="block text-xs font-semibold uppercase tracking-wider text-[#0F172A]"
+              >
+                Kata Sandi
+                <span class="text-[#B91C1C]" aria-hidden="true">*</span>
+                <span class="sr-only">(wajib)</span>
+              </label>
+            </div>
+            <div class="relative flex items-center">
+              <input
+                type="password"
+                id="passwordInput"
+                name="password"
+                tabindex="2"
+                required=""
+                autocomplete="current-password"
+                placeholder="Masukkan kata sandi Anda"
+                class="w-full h-10 pl-3 pr-11 bg-white border border-[#94A3B8] rounded-md text-sm text-[#0F172A] placeholder:text-[#94A3B8] focus:border-[#1E3A8A] focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:ring-offset-1 transition-colors font-mono tracking-normal"
+                aria-describedby="passwordError"
+                oninput="handleInputValidate('password')"
+              />
+              <!-- Password Visibility Toggle (Tabindex 3) -->
+              <button
+                type="button"
+                id="togglePasswordBtn"
+                tabindex="3"
+                onclick="togglePasswordVisibility()"
+                class="absolute right-0 top-0 bottom-0 px-3 flex items-center justify-center text-[#475569] hover:text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:ring-offset-1 rounded-r-md touch-target"
+                aria-label="Tampilkan kata sandi"
+                title="Tampilkan kata sandi"
+              >
+                <!-- Eye Icon (hidden by default) -->
+                <svg
+                  id="eyeIcon"
+                  class="w-5 h-5 hidden"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  ></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  ></path>
+                </svg>
+                <!-- Eye Slash Icon (visible by default) -->
+                <svg
+                  id="eyeSlashIcon"
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+            <!-- Inline Error Message -->
+            <p
+              id="passwordError"
+              class="hidden text-xs text-[#B91C1C] mt-1.5 flex items-center gap-1.5 font-medium"
+              role="alert"
+            >
+              <svg
+                class="w-3.5 h-3.5 shrink-0"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+              <span id="passwordErrorText">Kata sandi tidak boleh kosong.</span>
+            </p>
+          </div>
+
+          <!-- Submit Button (Tabindex 4) -->
+          <div class="pt-2">
+            <button
+              type="submit"
+              id="submitBtn"
+              tabindex="4"
+              class="w-full h-10 px-4 bg-[#1E3A8A] hover:bg-[#1B3380] active:bg-[#172B6B] disabled:bg-[#E2E8F0] disabled:text-[#94A3B8] disabled:cursor-not-allowed text-white text-sm font-semibold rounded-md shadow-sm transition-colors duration-150 flex items-center justify-center gap-2 focus-ring touch-target"
+            >
+              <!-- Spinner Icon (hidden by default) -->
+              <svg
+                id="submitSpinner"
+                class="hidden animate-spin h-4 w-4 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                ></path>
+              </svg>
+              <span id="submitText">Masuk</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Roles Access Notice Footer (Audited & Institutional) -->
+        <div class="mt-6 pt-5 border-t border-[#CBD5E1] text-center">
+          <p class="text-xs text-[#475569] leading-relaxed">
+            Hak akses dan menu navigasi ditentukan otomatis sesuai peran Anda:
+            <br />
+            <span class="font-medium text-[#0F172A]">Intake</span>,
+            <span class="font-medium text-[#0F172A]">Finance Reviewer</span>,
+            <span class="font-medium text-[#0F172A]">Service Lead</span>, atau
+            <span class="font-medium text-[#0F172A]">System Admin</span>.
+          </p>
+        </div>
+
+        <!-- Interactive Simulation Controls (For reviewing all specified states in prototype) -->
+        <div
+          class="mt-6 pt-3 bg-[#F1F5F9] rounded-md p-3 text-[11px] text-[#475569] border border-[#CBD5E1]"
+        >
+          <div
+            class="flex items-center justify-between mb-2 font-semibold text-[#0F172A]"
+          >
+            <span>Uji Coba Status (Prototipe):</span>
+            <span
+              class="text-[10px] bg-white px-1.5 py-0.5 rounded border border-[#CBD5E1] text-[#0F766E]"
+              >Interaktif</span
+            >
+          </div>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button
+              type="button"
+              onclick="simulateState('default')"
+              class="px-2 py-1 bg-white hover:bg-[#E0E7FF] border border-[#CBD5E1] rounded text-left truncate"
+            >
+              1. Default
+            </button>
+            <button
+              type="button"
+              onclick="simulateState('filled')"
+              class="px-2 py-1 bg-white hover:bg-[#E0E7FF] border border-[#CBD5E1] rounded text-left truncate"
+            >
+              2. Terisi (Valid)
+            </button>
+            <button
+              type="button"
+              onclick="simulateState('validation_error')"
+              class="px-2 py-1 bg-white hover:bg-[#E0E7FF] border border-[#CBD5E1] rounded text-left truncate"
+            >
+              3. Error Validasi
+            </button>
+            <button
+              type="button"
+              onclick="simulateState('auth_failed')"
+              class="px-2 py-1 bg-white hover:bg-[#E0E7FF] border border-[#CBD5E1] rounded text-left truncate"
+            >
+              4. Gagal Login (Banner)
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Global Footer -->
+    <footer
+      class="w-full py-4 px-4 text-center text-xs text-[#475569] border-t border-[#CBD5E1] bg-white"
+    >
+      <div
+        class="max-w-[1366px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2"
+      >
+        <p>© 2026 AMIGA. Khusus penggunaan internal staf yang berwenang.</p>
+        <div class="flex items-center gap-4 text-xs font-mono">
+          <span>ID Perangkat: DEV-1366X</span>
+          <span>Akses Terenkripsi</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- State & Behavior Scripts -->
+    <script>
+      const emailInput = document.getElementById('emailInput');
+      const passwordInput = document.getElementById('passwordInput');
+      const emailError = document.getElementById('emailError');
+      const emailErrorText = document.getElementById('emailErrorText');
+      const passwordError = document.getElementById('passwordError');
+      const passwordErrorText = document.getElementById('passwordErrorText');
+      const authErrorBanner = document.getElementById('authErrorBanner');
+      const submitBtn = document.getElementById('submitBtn');
+      const submitSpinner = document.getElementById('submitSpinner');
+      const submitText = document.getElementById('submitText');
+      const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+      const eyeIcon = document.getElementById('eyeIcon');
+      const eyeSlashIcon = document.getElementById('eyeSlashIcon');
+
+      // Toggle Password Visibility
+      function togglePasswordVisibility() {
+        const isPassword = passwordInput.getAttribute('type') === 'password';
+        if (isPassword) {
+          passwordInput.setAttribute('type', 'text');
+          eyeIcon.classList.remove('hidden');
+          eyeSlashIcon.classList.add('hidden');
+          togglePasswordBtn.setAttribute(
+            'aria-label',
+            'Sembunyikan kata sandi',
+          );
+          togglePasswordBtn.setAttribute('title', 'Sembunyikan kata sandi');
+        } else {
+          passwordInput.setAttribute('type', 'password');
+          eyeIcon.classList.add('hidden');
+          eyeSlashIcon.classList.remove('hidden');
+          togglePasswordBtn.setAttribute('aria-label', 'Tampilkan kata sandi');
+          togglePasswordBtn.setAttribute('title', 'Tampilkan kata sandi');
+        }
+      }
+
+      function dismissAuthError() {
+        authErrorBanner.classList.add('hidden');
+      }
+
+      // Inline validation logic
+      function handleInputValidate(field) {
+        if (field === 'email') {
+          const val = emailInput.value.trim();
+          if (val.length > 0) {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(val)) {
+              emailError.classList.remove('hidden');
+              emailInput.classList.add('border-[#B91C1C]');
+              emailInput.classList.remove('border-[#94A3B8]');
+            } else {
+              emailError.classList.add('hidden');
+              emailInput.classList.remove('border-[#B91C1C]');
+              emailInput.classList.add('border-[#94A3B8]');
+            }
+          } else {
+            emailError.classList.add('hidden');
+            emailInput.classList.remove('border-[#B91C1C]');
+            emailInput.classList.add('border-[#94A3B8]');
+          }
+        }
+
+        if (field === 'password') {
+          if (passwordInput.value.length > 0) {
+            passwordError.classList.add('hidden');
+            passwordInput.classList.remove('border-[#B91C1C]');
+            passwordInput.classList.add('border-[#94A3B8]');
+          }
+        }
+      }
+
+      // Form Submit Handler
+      function handleLoginSubmit(event) {
+        event.preventDefault();
+        authErrorBanner.classList.add('hidden');
+
+        let hasError = false;
+        const emailVal = emailInput.value.trim();
+        const passVal = passwordInput.value;
+
+        // Validate Email
+        if (!emailVal) {
+          emailErrorText.textContent = 'Email wajib diisi.';
+          emailError.classList.remove('hidden');
+          emailInput.classList.add('border-[#B91C1C]');
+          emailInput.classList.remove('border-[#94A3B8]');
+          hasError = true;
+        } else {
+          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailPattern.test(emailVal)) {
+            emailErrorText.textContent =
+              'Format email tidak valid. Masukkan alamat email yang benar.';
+            emailError.classList.remove('hidden');
+            emailInput.classList.add('border-[#B91C1C]');
+            emailInput.classList.remove('border-[#94A3B8]');
+            hasError = true;
+          } else {
+            emailError.classList.add('hidden');
+            emailInput.classList.remove('border-[#B91C1C]');
+            emailInput.classList.add('border-[#94A3B8]');
+          }
+        }
+
+        // Validate Password
+        if (!passVal) {
+          passwordErrorText.textContent = 'Kata sandi wajib diisi.';
+          passwordError.classList.remove('hidden');
+          passwordInput.classList.add('border-[#B91C1C]');
+          passwordInput.classList.remove('border-[#94A3B8]');
+          hasError = true;
+        } else {
+          passwordError.classList.add('hidden');
+          passwordInput.classList.remove('border-[#B91C1C]');
+          passwordInput.classList.add('border-[#94A3B8]');
+        }
+
+        if (hasError) {
+          return;
+        }
+
+        // Enter Loading State
+        setLoadingState(true);
+
+        // Simulate Authentication API call
+        setTimeout(() => {
+          setLoadingState(false);
+          // If testing non-existent dummy or demo invalid credentials
+          if (passVal === 'salah' || emailVal === 'salah@amiga.co.id') {
+            showAuthError();
+          } else {
+            // Success Feedback Modal/Alert Simulation
+            alert(
+              'Login Berhasil! Mengalihkan ke Antrean sesuai peran pengguna...',
+            );
+          }
+        }, 1200);
+      }
+
+      function setLoadingState(isLoading) {
+        if (isLoading) {
+          submitBtn.disabled = true;
+          submitSpinner.classList.remove('hidden');
+          submitText.textContent = 'Memverifikasi...';
+          emailInput.disabled = true;
+          passwordInput.disabled = true;
+          togglePasswordBtn.disabled = true;
+          emailInput.classList.add('bg-[#F1F5F9]', 'cursor-not-allowed');
+          passwordInput.classList.add('bg-[#F1F5F9]', 'cursor-not-allowed');
+        } else {
+          submitBtn.disabled = false;
+          submitSpinner.classList.add('hidden');
+          submitText.textContent = 'Masuk';
+          emailInput.disabled = false;
+          passwordInput.disabled = false;
+          togglePasswordBtn.disabled = false;
+          emailInput.classList.remove('bg-[#F1F5F9]', 'cursor-not-allowed');
+          passwordInput.classList.remove('bg-[#F1F5F9]', 'cursor-not-allowed');
+        }
+      }
+
+      function showAuthError() {
+        authErrorBanner.classList.remove('hidden');
+        authErrorBanner.focus();
+      }
+
+      // Quick Simulation Helper for interactive review
+      function simulateState(state) {
+        // Reset
+        authErrorBanner.classList.add('hidden');
+        emailError.classList.add('hidden');
+        passwordError.classList.add('hidden');
+        emailInput.classList.remove('border-[#B91C1C]');
+        passwordInput.classList.remove('border-[#B91C1C]');
+        emailInput.classList.add('border-[#94A3B8]');
+        passwordInput.classList.add('border-[#94A3B8]');
+        setLoadingState(false);
+
+        if (state === 'default') {
+          emailInput.value = '';
+          passwordInput.value = '';
+          emailInput.focus();
+        } else if (state === 'filled') {
+          emailInput.value = 'reviewer1@amiga.co.id';
+          passwordInput.value = 'RahasiaAudit2026!';
+        } else if (state === 'validation_error') {
+          emailInput.value = 'budi-bukan-email';
+          passwordInput.value = '';
+          handleInputValidate('email');
+          passwordErrorText.textContent = 'Kata sandi wajib diisi.';
+          passwordError.classList.remove('hidden');
+          passwordInput.classList.add('border-[#B91C1C]');
+        } else if (state === 'auth_failed') {
+          emailInput.value = 'staf@amiga.co.id';
+          passwordInput.value = 'kataSandiKeliru';
+          showAuthError();
+        }
+      }
+    </script>
+  </body>
+</html>

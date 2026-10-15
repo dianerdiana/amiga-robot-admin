@@ -2,6 +2,7 @@ import uuid
 
 from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, Numeric, String, UniqueConstraint, func
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 from database import Base
 
@@ -20,3 +21,5 @@ class InvoiceItem(Base):
     quantity = Column(Numeric(18, 4), nullable=True)
     unit_price = Column(Numeric(18, 2), nullable=True)
     amount = Column(Numeric(18, 2), nullable=True)
+
+    invoice = relationship("Invoice", back_populates="items")
