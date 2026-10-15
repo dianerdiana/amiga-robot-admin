@@ -47,7 +47,7 @@ export const ROLE_CONFIGS: Record<string, RoleConfig> = {
         id: "pengguna",
         title: "Pengguna",
         icon: "group",
-        path: "/dashboard",
+        path: "/users",
         description: "Manajemen akun staf, peran tunggal, dan status aktif",
       },
       {

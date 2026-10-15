@@ -11,7 +11,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!isLoading && user) {
-      router.push("/dashboard");
+      router.replace(user.role === "SYSTEM_ADMIN" ? "/users" : "/dashboard");
     }
   }, [user, isLoading, router]);
 

@@ -46,13 +46,13 @@ class UserApiTestCase(unittest.TestCase):
                 [
                     User(
                         name="System Admin",
-                        email="admin@example.com",
+                        email="admin@amiga.local",
                         password_hash=hash_password("Password123!"),
                         role=UserRole.SYSTEM_ADMIN,
                     ),
                     User(
                         name="Intake",
-                        email="intake@example.com",
+                        email="intake@amiga.local",
                         password_hash=hash_password("Password123!"),
                         role=UserRole.INTAKE,
                     ),
@@ -73,7 +73,7 @@ class UserApiTestCase(unittest.TestCase):
         return {"Authorization": f"Bearer {token}"}
 
     def test_all_user_routes_require_system_admin(self):
-        intake_headers = self.auth(self.token_for("intake@example.com"))
+        intake_headers = self.auth(self.token_for("intake@amiga.local"))
         response = self.client.get("/api/v1/users", headers=intake_headers)
         self.assertEqual(response.status_code, 403)
 
@@ -90,20 +90,20 @@ class UserApiTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_system_admin_can_crud_users_and_deactivation_is_immediate(self):
-        admin_headers = self.auth(self.token_for("admin@example.com"))
+        admin_headers = self.auth(self.token_for("admin@amiga.local"))
         created = self.client.post(
             "/api/v1/users",
             headers=admin_headers,
             json={
                 "name": "Finance Reviewer",
-                "email": "REVIEWER@example.com",
+                "email": "REVIEWER@amiga.local",
                 "password": "Password123!",
                 "role": "FINANCE_REVIEWER",
             },
         )
         self.assertEqual(created.status_code, 201, created.text)
         user_id = created.json()["id"]
-        self.assertEqual(created.json()["email"], "reviewer@example.com")
+        self.assertEqual(created.json()["email"], "reviewer@amiga.local")
         self.assertNotIn("password", created.json())
         self.assertNotIn("password_hash", created.json())
 
@@ -120,7 +120,7 @@ class UserApiTestCase(unittest.TestCase):
         self.assertEqual(updated.json()["name"], "Reviewer Updated")
         self.assertEqual(updated.json()["role"], "SERVICE_LEAD")
 
-        reviewer_token = self.token_for("reviewer@example.com")
+        reviewer_token = self.token_for("reviewer@amiga.local")
         deleted = self.client.delete(
             f"/api/v1/users/{user_id}", headers=admin_headers
         )
@@ -133,13 +133,13 @@ class UserApiTestCase(unittest.TestCase):
         self.assertEqual(denied.status_code, 403)
 
     def test_duplicate_email_and_robot_role_are_rejected(self):
-        admin_headers = self.auth(self.token_for("admin@example.com"))
+        admin_headers = self.auth(self.token_for("admin@amiga.local"))
         duplicate = self.client.post(
             "/api/v1/users",
             headers=admin_headers,
             json={
                 "name": "Duplicate",
-                "email": "ADMIN@example.com",
+                "email": "ADMIN@amiga.local",
                 "password": "Password123!",
                 "role": "INTAKE",
             },
@@ -157,6 +157,20 @@ class UserApiTestCase(unittest.TestCase):
             },
         )
         self.assertEqual(robot.status_code, 422, robot.text)
+
+    def test_invalid_email_format_is_rejected(self):
+        admin_headers = self.auth(self.token_for("admin@amiga.local"))
+        response = self.client.post(
+            "/api/v1/users",
+            headers=admin_headers,
+            json={
+                "name": "Invalid Email",
+                "email": "bukan-email",
+                "password": "Password123!",
+                "role": "INTAKE",
+            },
+        )
+        self.assertEqual(response.status_code, 422, response.text)
 
 
 if __name__ == "__main__":

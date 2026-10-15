@@ -1,9 +1,10 @@
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from models.user import UserRole
+from schemas.common import InternalEmail
 
 
 MANAGEABLE_USER_ROLES = {
@@ -16,7 +17,7 @@ MANAGEABLE_USER_ROLES = {
 
 class UserCreate(BaseModel):
     name: str = Field(min_length=1, max_length=255)
-    email: EmailStr
+    email: InternalEmail
     password: str = Field(min_length=8, max_length=128)
     role: UserRole
     is_active: bool = True
@@ -39,7 +40,7 @@ class UserCreate(BaseModel):
 
 class UserUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=255)
-    email: EmailStr | None = None
+    email: InternalEmail | None = None
     password: str | None = Field(default=None, min_length=8, max_length=128)
     role: UserRole | None = None
     is_active: bool | None = None
@@ -67,7 +68,7 @@ class UserAdminResponse(BaseModel):
 
     id: uuid.UUID
     name: str
-    email: EmailStr
+    email: InternalEmail
     role: UserRole
     is_active: bool
     created_at: datetime
