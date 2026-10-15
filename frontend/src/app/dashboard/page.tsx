@@ -1,13 +1,12 @@
 "use client";
 
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import IntakeView from "@/components/dashboard/IntakeView";
 import ServiceLeadView from "@/components/dashboard/ServiceLeadView";
 
-// Intake tabs that now have dedicated routes; voucher tabs are still served by the dashboard.
+// Every Intake menu has its own route; old ?tab= links redirect there.
 const INTAKE_ROUTES: Record<string, string> = {
   invoices: "/invoices",
   upload: "/invoices/upload",
@@ -18,27 +17,25 @@ function DashboardContent() {
   const searchParams = useSearchParams();
   const { user } = useAuth();
   const tabParam = searchParams.get("tab");
-  const [activeTab, setActiveTab] = useState<string>(tabParam ?? "pengguna");
+  // Derived from the URL on every render: with cacheComponents the page state survives navigation,
+  // so a useState copy would keep the previous tab and the sidebar would not highlight on first click.
+  const activeTab = tabParam ?? "pengguna";
 
   useEffect(() => {
     if (user?.role === "SYSTEM_ADMIN") router.replace("/users");
     // The reviewer queue and split-screen live under /reviews.
     if (user?.role === "FINANCE_REVIEWER") router.replace("/reviews");
-    if (user?.role === "INTAKE" && (!tabParam || tabParam in INTAKE_ROUTES)) {
-      router.replace(INTAKE_ROUTES[tabParam ?? "invoices"]);
-    }
+    if (user?.role === "INTAKE") router.replace(INTAKE_ROUTES[tabParam ?? ""] ?? "/invoices");
   }, [router, tabParam, user?.role]);
 
   return (
     <DashboardLayout
       activeTab={activeTab}
-      onTabChange={setActiveTab}
       renderContent={({ currentRole, activeTab: currentTab }) => {
         return (
           <div className="w-full max-w-[1366px] mx-auto">
             {/* Dynamic Content based on Active Role */}
             {currentRole === "SYSTEM_ADMIN" && null}
-            {currentRole === "INTAKE" && <IntakeView activeTab={currentTab} />}
             {currentRole === "SERVICE_LEAD" && (
               <ServiceLeadView activeTab={currentTab} />
             )}

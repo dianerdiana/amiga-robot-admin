@@ -56,6 +56,11 @@ class FakeS3:
             raise ClientError({"Error": {"Code": "InternalError", "Message": "boom"}}, "PutObject")
         self.objects[Key] = Body
 
+    def head_object(self, Bucket, Key):
+        if Key not in self.objects:
+            raise ClientError({"Error": {"Code": "404", "Message": "Not Found"}}, "HeadObject")
+        return {"ContentLength": len(self.objects[Key])}
+
     def get_object(self, Bucket, Key):
         return {"Body": io.BytesIO(self.objects[Key])}
 
@@ -124,7 +129,7 @@ class InvoiceTestBase(unittest.TestCase):
 
         with self.engine.begin() as conn:
             # TRUNCATE does not fire the per-row append-only trigger on audit_logs.
-            conn.execute(text("TRUNCATE audit_logs, invoice_items, invoices, vouchers, user_clients CASCADE"))
+            conn.execute(text("TRUNCATE audit_logs, invoice_items, invoices, vouchers, voucher_sequences, user_clients CASCADE"))
             conn.execute(text("DELETE FROM clients"))
             conn.execute(text("DELETE FROM users WHERE email <> :robot"), {"robot": settings.ROBOT_ADMIN_EMAIL})
 

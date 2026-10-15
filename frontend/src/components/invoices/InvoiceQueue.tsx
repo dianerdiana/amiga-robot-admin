@@ -454,7 +454,7 @@ export default function InvoiceQueue({ mode = "intake" }: { mode?: QueueMode }) 
   );
 }
 
-function FilterSelect({
+export function FilterSelect({
   id,
   label,
   value,
@@ -495,7 +495,7 @@ function MobileField({ label, value, mono = false }: { label: string; value: str
   );
 }
 
-function PageButton({
+export function PageButton({
   children,
   onClick,
   disabled = false,
@@ -522,7 +522,7 @@ function PageButton({
 }
 
 /** 1 … 4 5 6 … 12 */
-function pageNumbers(current: number, count: number): (number | null)[] {
+export function pageNumbers(current: number, count: number): (number | null)[] {
   const pages = new Set([1, count, current - 1, current, current + 1].filter((p) => p >= 1 && p <= count));
   const sorted = [...pages].sort((a, b) => a - b);
   return sorted.flatMap((value, index) => (index > 0 && value - sorted[index - 1] > 1 ? [null, value] : [value]));
