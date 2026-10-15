@@ -56,6 +56,27 @@ export interface UpdateUserPayload {
   is_active?: boolean;
 }
 
+export interface ManagedClient {
+  id: string;
+  code: string;
+  name: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateClientPayload {
+  code: string;
+  name: string;
+  is_active?: boolean;
+}
+
+export interface UpdateClientPayload {
+  code?: string;
+  name?: string;
+  is_active?: boolean;
+}
+
 // Konfigurasi Base URL Backend
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
@@ -389,6 +410,32 @@ export const userService = {
 
   deactivate(userId: string): Promise<ManagedUser> {
     return apiFetch<ManagedUser>(`/api/v1/users/${userId}`, {
+      method: "DELETE",
+    });
+  },
+};
+
+export const clientService = {
+  list(skip = 0, limit = 100): Promise<ManagedClient[]> {
+    return apiFetch<ManagedClient[]>(`/api/v1/clients?skip=${skip}&limit=${limit}`);
+  },
+
+  create(payload: CreateClientPayload): Promise<ManagedClient> {
+    return apiFetch<ManagedClient>("/api/v1/clients", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  update(clientId: string, payload: UpdateClientPayload): Promise<ManagedClient> {
+    return apiFetch<ManagedClient>(`/api/v1/clients/${clientId}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  deactivate(clientId: string): Promise<ManagedClient> {
+    return apiFetch<ManagedClient>(`/api/v1/clients/${clientId}`, {
       method: "DELETE",
     });
   },
