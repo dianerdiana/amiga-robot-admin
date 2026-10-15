@@ -6,12 +6,15 @@ from sqlalchemy.orm import Session
 from database import get_db
 from middlewares.auth_middleware import require_roles
 from models.user import User, UserRole
+from schemas.assignment import ClientAssignmentListResponse, UserClientAssignmentCreate, UserClientAssignmentResponse
 from schemas.client import ClientCreate, ClientResponse, ClientUpdate
+from services.assignment_service import AssignmentService
 from services.client_service import ClientService
 
 
 router = APIRouter(prefix="/clients", tags=["Client Management"])
 system_admin_only = require_roles(UserRole.SYSTEM_ADMIN)
+assignment_manager_only = require_roles(UserRole.SYSTEM_ADMIN, UserRole.SERVICE_LEAD)
 
 
 @router.get("", response_model=list[ClientResponse])
@@ -61,3 +64,36 @@ def deactivate_client(
 ):
     """Soft-delete klien untuk menjaga relasi dokumen dan histori."""
     return ClientService.deactivate_client(db, client_id)
+
+
+@router.get("/{client_id}/assignments", response_model=ClientAssignmentListResponse)
+def list_client_assignments(
+    client_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    _: User = Depends(assignment_manager_only),
+):
+    return {"client_id": client_id, "users": AssignmentService.list_assigned_users(db, client_id)}
+
+
+@router.post(
+    "/{client_id}/assignments",
+    response_model=UserClientAssignmentResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+def assign_user_to_client(
+    client_id: uuid.UUID,
+    request: UserClientAssignmentCreate,
+    db: Session = Depends(get_db),
+    actor: User = Depends(assignment_manager_only),
+):
+    return AssignmentService.assign_user(db, client_id, request.user_id, actor)
+
+
+@router.delete("/{client_id}/assignments/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+def unassign_user_from_client(
+    client_id: uuid.UUID,
+    user_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    actor: User = Depends(assignment_manager_only),
+):
+    AssignmentService.unassign_user(db, client_id, user_id, actor)

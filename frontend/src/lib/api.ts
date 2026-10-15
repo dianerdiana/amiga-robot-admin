@@ -77,6 +77,11 @@ export interface UpdateClientPayload {
   is_active?: boolean;
 }
 
+export interface ClientAssignmentList {
+  client_id: string;
+  users: ManagedUser[];
+}
+
 // Konfigurasi Base URL Backend
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
@@ -436,6 +441,23 @@ export const clientService = {
 
   deactivate(clientId: string): Promise<ManagedClient> {
     return apiFetch<ManagedClient>(`/api/v1/clients/${clientId}`, {
+      method: "DELETE",
+    });
+  },
+
+  listAssignments(clientId: string): Promise<ClientAssignmentList> {
+    return apiFetch<ClientAssignmentList>(`/api/v1/clients/${clientId}/assignments`);
+  },
+
+  assignUser(clientId: string, userId: string): Promise<{ user_id: string; client_id: string }> {
+    return apiFetch(`/api/v1/clients/${clientId}/assignments`, {
+      method: "POST",
+      body: JSON.stringify({ user_id: userId }),
+    });
+  },
+
+  revokeUser(clientId: string, userId: string): Promise<void> {
+    return apiFetch<void>(`/api/v1/clients/${clientId}/assignments/${userId}`, {
       method: "DELETE",
     });
   },
