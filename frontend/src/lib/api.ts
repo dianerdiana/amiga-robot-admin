@@ -460,6 +460,9 @@ export const clientService = {
     return apiFetch<void>(`/api/v1/clients/${clientId}/assignments/${userId}`, {
       method: "DELETE",
     });
+  },
+};
+
 // ==========================================
 // Invoice (UC-1, UC-5, UC-6)
 // ==========================================
