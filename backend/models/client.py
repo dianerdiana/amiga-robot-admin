@@ -14,6 +14,7 @@ class Client(Base):
         server_default=func.gen_random_uuid(),
         index=True
     )
+    code = Column(String(50), unique=True, index=True, nullable=False)
     name = Column(String(255), unique=True, index=True, nullable=False)
     is_active = Column(Boolean, default=True, server_default=text("true"), nullable=False)
     created_at = Column(
