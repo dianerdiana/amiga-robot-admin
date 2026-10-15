@@ -6,6 +6,14 @@ Versi 0.1 (draf untuk review) | 14/10/2026 | Disusun oleh: Senior Software Analy
 
 Dokumen Revisi UML adalah sumber kebenaran. BRD v1.0 tidak dijadikan acuan. Setiap requirement punya ID (ACC, UPL, EXT, VAL, QUE, REV, AUD, VCH, ADM) yang ditautkan ke use case (UC) dan skenario uji (S1 sampai S7). Diagram UML disisipkan pada placeholder Gambar 1 sampai 6 (bagian 11). Hal yang saya tambahkan di luar Revisi UML ditandai **\[Tambahan\]** dan dikumpulkan di bagian 10 untuk dikonfirmasi.
 
+### Catatan perubahan 2026-10
+
+Keputusan setelah PRD v0.1, ditandai **[Perubahan 2026-10]** pada butir terkait:
+
+1. Intake dapat **mengoreksi** data hasil ekstraksi (field dan baris barang) pada status READY_FOR_REVIEW, EXCEPTION, dan POSSIBLE_DUPLICATE. Intake tetap **tidak** dapat menyetujui atau menolak, sehingga aturan pemisahan tugas (ACC-04) tidak berubah. Setiap koreksi wajib disertai alasan (10 sampai 500 karakter) yang dicatat di audit trail, memicu validasi ulang, dan memakai optimistic locking.
+2. POSSIBLE_DUPLICATE adalah **peringatan, bukan kunci**. Data dapat dikoreksi, dan Finance Reviewer dapat menyetujui invoice tersebut secara manual. Usulan untuk fitur reviewer: persetujuan atas POSSIBLE_DUPLICATE wajib disertai catatan justifikasi.
+3. Validasi input pengguna berada di backend sebagai sumber kebenaran; frontend hanya melakukan pemeriksaan sederhana untuk umpan balik cepat.
+
 ## 1. Ringkasan produk
 
 **Masalah.** Invoice vendor klien diolah manual: data diketik ulang, voucher disusun satu per satu, salah ketik dan pembayaran ganda sulit dicegah, dan jejak perubahan lemah.
@@ -27,7 +35,7 @@ Akses klien ke sistem, notifikasi WhatsApp atau email, integrasi pembayaran atau
 
 | Persona          | Peran                                                                                        | Batasan utama                                                            |
 | ---------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Intake           | Personel internal AMIGA. Mengunggah invoice, memantau status, membuat dan mengunduh voucher. | Tidak boleh mengedit hasil ekstraksi. Hanya klien yang ditugaskan.       |
+| Intake           | Personel internal AMIGA. Mengunggah invoice, memantau status, membuat dan mengunduh voucher. | Tidak boleh mengedit hasil ekstraksi. Hanya klien yang ditugaskan. **[Perubahan 2026-10]** Boleh mengoreksi data ekstraksi, tidak menyetujui/menolak.       |
 | Finance Reviewer | Memeriksa, mengoreksi, menyetujui atau menolak hasil ekstraksi.                              | Tidak mengunggah dan tidak membuat voucher. Hanya klien yang ditugaskan. |
 | Service Lead     | Menetapkan reviewer per klien.                                                               | Tidak melihat antrean dan tidak menyetujui apa pun.                      |
 | System Admin     | Mengelola user, peran, klien, dan penugasan Intake. **\[Tambahan\]**                         | Tidak mengakses invoice, voucher, maupun persetujuan.                    |
@@ -39,7 +47,7 @@ Akses klien ke sistem, notifikasi WhatsApp atau email, integrasi pembayaran atau
 | Upload invoice dan metadata                                      | Ya     | Tidak            | Tidak        | Tidak        | Tidak       |
 | Lihat antrean dan status (klien ditugaskan)                      | Ya     | Ya               | Tidak        | Tidak        | Tidak       |
 | Lihat hasil ekstraksi, hasil review, dan riwayat (read-only)     | Ya     | Ya               | Tidak        | Tidak        | Tidak       |
-| Koreksi field, setujui, tolak                                    | Tidak  | Ya               | Tidak        | Tidak        | Tidak       |
+| Koreksi field, setujui, tolak                                    | Koreksi saja **[Perubahan 2026-10]** | Ya               | Tidak        | Tidak        | Tidak       |
 | Buka file asli (ikon mata)                                       | Ya     | Ya               | Tidak        | Tidak        | Tidak       |
 | Buat voucher, lihat daftar, unduh                                | Ya     | Tidak            | Tidak        | Tidak        | Tidak       |
 | Tetapkan reviewer per klien                                      | Tidak  | Tidak            | Ya           | Tidak        | Tidak       |
@@ -169,7 +177,7 @@ Gambar 3. Pengecekan ulang saat baris dikunci mencegah satu invoice masuk dua vo
 | NO_LINE_ITEMS       | Baris barang tidak ditemukan.                                                                      |
 | EXTRACTION_FAILED   | Ekstraksi otomatis gagal. Isi data secara manual atau tolak dokumen.                               |
 | UNREADABLE_DOCUMENT | Dokumen tidak terbaca jelas.                                                                       |
-| POSSIBLE_DUPLICATE  | Invoice dengan nomor dan vendor yang sama sudah ada (Request ID ...). Dokumen hanya dapat ditolak. |
+| POSSIBLE_DUPLICATE  | Invoice dengan nomor dan vendor yang sama sudah ada (Request ID ...). Periksa kembali; reviewer dapat menolak atau menyetujui secara manual. **[Perubahan 2026-10]** |
 
 ### 5.5 Antrean kerja (QUE)
 
@@ -184,12 +192,12 @@ Gambar 3. Pengecekan ulang saat baris dikunci mencegah satu invoice masuk dua vo
 | ID     | Requirement                                                                                                                                                                                                                                                                                                | Prioritas |
 | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
 | REV-01 | Layar split-screen: file asli di kiri (PDF, atau gambar dengan zoom dasar), data di kanan, indikator validasi terlihat jelas. Termuat dalam 2 detik.                                                                                                                                                       | Must      |
-| REV-02 | Hanya Finance Reviewer yang dapat mengedit, pada status READY_FOR_REVIEW atau EXCEPTION. Field dapat diedit: vendor, nomor invoice, tanggal, rekening, pajak, diskon, total, serta tambah, ubah, dan hapus baris barang. Pada POSSIBLE_DUPLICATE semua field read-only dan hanya aksi Tolak yang tersedia. | Must      |
+| REV-02 | Hanya Finance Reviewer yang dapat mengedit, pada status READY_FOR_REVIEW atau EXCEPTION. Field dapat diedit: vendor, nomor invoice, tanggal, rekening, pajak, diskon, total, serta tambah, ubah, dan hapus baris barang. Pada POSSIBLE_DUPLICATE semua field read-only dan hanya aksi Tolak yang tersedia. **[Perubahan 2026-10]** Intake juga dapat mengoreksi (bukan menyetujui/menolak), dengan alasan wajib. POSSIBLE_DUPLICATE tidak lagi read-only. | Must      |
 | REV-03 | Setiap simpan memicu validasi ulang. EXCEPTION yang bersih menjadi READY_FOR_REVIEW. Penyimpanan bersifat atomik bersama audit trail.                                                                                                                                                                      | Must      |
 | REV-04 | Setujui hanya dari READY_FOR_REVIEW, mengubah status menjadi AMIGA_REVIEWED dan mengisi reviewed_by.                                                                                                                                                                                                       | Must      |
-| REV-05 | Tolak dari READY_FOR_REVIEW, EXCEPTION, atau POSSIBLE_DUPLICATE. Catatan wajib diisi (reject_note). Status REJECTED bersifat final.                                                                                                                                                                        | Must      |
+| REV-05 | Tolak dari READY_FOR_REVIEW, EXCEPTION, atau POSSIBLE_DUPLICATE. Catatan wajib diisi (reject_note). Status REJECTED bersifat final. **[Perubahan 2026-10]** POSSIBLE_DUPLICATE juga dapat disetujui secara manual oleh Finance Reviewer.                                                                                                                                                                        | Must      |
 | REV-06 | Optimistic locking lewat kolom version. Jika version atau status sudah berubah, aksi ditolak dengan pesan Data sudah diubah user lain, muat ulang.                                                                                                                                                         | Must      |
-| REV-07 | Intake melihat hasil ekstraksi, status, dan catatan penolakan secara read-only. Intake tidak dapat mengedit.                                                                                                                                                                                               | Must      |
+| REV-07 | Intake melihat hasil ekstraksi, status, dan catatan penolakan secara read-only. Intake tidak dapat mengedit. **[Perubahan 2026-10]** Diganti: Intake dapat mengoreksi data ekstraksi dengan alasan wajib; menyetujui dan menolak tetap hak Finance Reviewer.                                                                                                                                                                                               | Must      |
 | REV-08 | Ikon mata membuka file asli (PDF atau gambar sesuai mime_type) lewat presigned URL berumur pendek (usulan 5 menit) setelah backend memeriksa isolasi klien.                                                                                                                                                | Must      |
 
 ### 5.7 Audit trail (AUD) - UC-4

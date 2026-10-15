@@ -329,6 +329,9 @@ async function parseErrorResponse(response: Response): Promise<Error> {
     }
     const err = new Error(message);
     (err as unknown as { status: number }).status = response.status;
+    if (errorJson && Array.isArray(errorJson.detail)) {
+      (err as unknown as { detail: ValidationIssue[] }).detail = errorJson.detail;
+    }
     return err;
   } catch {
     const text = await response.text().catch(() => "");
@@ -570,6 +573,29 @@ export interface InvoiceDetail extends InvoiceSummary {
     reject_note: string | null;
   } | null;
   version: number;
+  can_edit: boolean;
+  last_correction: { by: UserRef; at: string; reason: string } | null;
+}
+
+export interface InvoiceItemInput {
+  description: string | null;
+  quantity: string | null;
+  unit_price: string | null;
+  amount: string | null;
+}
+
+/** Body of PUT /api/v1/invoices/{id}; the backend validates every field. */
+export interface InvoiceCorrectionPayload {
+  version: number;
+  reason: string;
+  vendor_name: string | null;
+  invoice_number: string | null;
+  invoice_date: string | null;
+  bank_account: string | null;
+  tax_amount: string | null;
+  discount_amount: string | null;
+  total_amount: string | null;
+  items: InvoiceItemInput[];
 }
 
 export interface InvoiceUploadResult {
@@ -641,8 +667,15 @@ export interface InvoiceListQuery {
   limit?: number;
 }
 
-/** API error carrying the HTTP status, e.g. 403 for client isolation. */
-export type ApiError = Error & { status?: number };
+/** One FastAPI validation issue; `loc` points at the field, e.g. ["body", "items", 2, "amount"]. */
+export interface ValidationIssue {
+  loc: (string | number)[];
+  msg: string;
+  type?: string;
+}
+
+/** API error carrying the HTTP status (e.g. 403, 409) and, for 422, the field-level issues. */
+export type ApiError = Error & { status?: number; detail?: ValidationIssue[] };
 
 export function errorStatus(error: unknown): number | undefined {
   return (error as ApiError | null)?.status;
@@ -676,6 +709,14 @@ export const invoiceService = {
 
   fileUrl(invoiceId: string): Promise<InvoiceFileUrl> {
     return apiFetch<InvoiceFileUrl>(`/api/v1/invoices/${invoiceId}/file-url`);
+  },
+
+  /** Intake correction; throws ApiError with status 409 (conflict) or 422 (detail per field). */
+  correct(invoiceId: string, payload: InvoiceCorrectionPayload): Promise<InvoiceDetail> {
+    return apiFetch<InvoiceDetail>(`/api/v1/invoices/${invoiceId}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
   },
 
   history(invoiceId: string): Promise<AuditEntry[]> {

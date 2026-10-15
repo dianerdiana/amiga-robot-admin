@@ -1,9 +1,10 @@
 import uuid
 from datetime import date, datetime
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from enum import Enum
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic_core import PydanticCustomError
 
 from models.invoice import InvoiceStatus
 from services.extraction.schema import ExtractedInvoice
@@ -121,6 +122,8 @@ class InvoiceDetail(InvoiceSummary):
     decision: InvoiceDecision | None
     previous_request: PreviousRequestRef | None
     version: int
+    can_edit: bool
+    last_correction: "CorrectionNote | None"
 
 
 class ExtractionStatus(BaseModel):
@@ -151,3 +154,154 @@ class AuditEntry(BaseModel):
     field_name: str | None
     old_value: str | None
     new_value: str | None
+
+
+class CorrectionNote(BaseModel):
+    by: UserRef
+    at: datetime
+    reason: str
+
+
+# ----------------------------------------------------------------------
+# Intake data correction. These validators are the primary input rules;
+# the frontend only mirrors simple checks for faster feedback.
+# ----------------------------------------------------------------------
+MAX_CORRECTION_ITEMS = 200
+REASON_MIN_LENGTH = 10
+REASON_MAX_LENGTH = 500
+
+
+def _invalid(message: str) -> PydanticCustomError:
+    return PydanticCustomError("invalid_value", message)
+
+
+def _clean_text(value: object, max_length: int) -> str | None:
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise _invalid("Nilai harus berupa teks.")
+    text = " ".join(value.split())
+    if len(text) > max_length:
+        raise _invalid(f"Maksimal {max_length} karakter.")
+    return text or None
+
+
+def _clean_amount(value: object, *, max_digits: int = 18, decimal_places: int = 2) -> Decimal | None:
+    """Non-negative decimal that fits the Numeric(max_digits, decimal_places) column."""
+    if value is None or (isinstance(value, str) and not value.strip()):
+        return None
+    if isinstance(value, bool):
+        raise _invalid("Nilai harus berupa angka.")
+    try:
+        amount = Decimal(str(value).strip())
+    except InvalidOperation:
+        raise _invalid("Nilai harus berupa angka.")
+    if not amount.is_finite():
+        raise _invalid("Nilai harus berupa angka.")
+    if amount < 0:
+        raise _invalid("Nilai tidak boleh negatif.")
+    exponent = amount.as_tuple().exponent
+    if isinstance(exponent, int) and -exponent > decimal_places:
+        raise _invalid(f"Maksimal {decimal_places} angka di belakang koma.")
+    if amount >= Decimal(10) ** (max_digits - decimal_places):
+        raise _invalid("Nilai terlalu besar.")
+    return amount
+
+
+class InvoiceItemInput(BaseModel):
+    description: str | None = None
+    quantity: Decimal | None = None
+    unit_price: Decimal | None = None
+    amount: Decimal | None = None
+
+    @field_validator("description", mode="before")
+    @classmethod
+    def _description(cls, value: object) -> str | None:
+        return _clean_text(value, 1000)
+
+    @field_validator("quantity", mode="before")
+    @classmethod
+    def _quantity(cls, value: object) -> Decimal | None:
+        return _clean_amount(value, decimal_places=4)
+
+    @field_validator("unit_price", "amount", mode="before")
+    @classmethod
+    def _money(cls, value: object) -> Decimal | None:
+        return _clean_amount(value)
+
+    @model_validator(mode="after")
+    def _not_empty(self) -> "InvoiceItemInput":
+        if all(v is None for v in (self.description, self.quantity, self.unit_price, self.amount)):
+            raise _invalid("Baris kosong; hapus atau lengkapi baris ini.")
+        return self
+
+
+class InvoiceCorrection(BaseModel):
+    version: int = Field(ge=1)
+    # Validated even when omitted, so a missing reason yields the Indonesian 422 message.
+    reason: str = Field(default="", validate_default=True)
+    vendor_name: str | None = None
+    invoice_number: str | None = None
+    invoice_date: date | None = None
+    bank_account: str | None = None
+    tax_amount: Decimal | None = None
+    discount_amount: Decimal = Decimal("0")
+    total_amount: Decimal | None = None
+    items: list[InvoiceItemInput] = Field(default_factory=list)
+
+    @field_validator("reason", mode="before")
+    @classmethod
+    def _reason(cls, value: object) -> str:
+        text = " ".join(str(value or "").split())
+        if len(text) < REASON_MIN_LENGTH:
+            raise _invalid(f"Alasan koreksi wajib diisi (min. {REASON_MIN_LENGTH} karakter).")
+        if len(text) > REASON_MAX_LENGTH:
+            raise _invalid(f"Alasan koreksi maksimal {REASON_MAX_LENGTH} karakter.")
+        return text
+
+    @field_validator("vendor_name", "invoice_number", mode="before")
+    @classmethod
+    def _short_text(cls, value: object) -> str | None:
+        return _clean_text(value, 255)
+
+    @field_validator("bank_account", mode="before")
+    @classmethod
+    def _bank_account(cls, value: object) -> str | None:
+        return _clean_text(value, 100)
+
+    @field_validator("invoice_date", mode="before")
+    @classmethod
+    def _date(cls, value: object) -> date | None:
+        if value is None or value == "":
+            return None
+        if isinstance(value, date):
+            parsed = value
+        else:
+            try:
+                parsed = date.fromisoformat(str(value))
+            except ValueError:
+                raise _invalid("Format tanggal tidak valid (YYYY-MM-DD).")
+        if parsed > date.today():
+            raise _invalid("Tanggal invoice tidak boleh di masa depan.")
+        return parsed
+
+    @field_validator("tax_amount", "total_amount", mode="before")
+    @classmethod
+    def _optional_money(cls, value: object) -> Decimal | None:
+        return _clean_amount(value)
+
+    @field_validator("discount_amount", mode="before")
+    @classmethod
+    def _discount(cls, value: object) -> Decimal:
+        amount = _clean_amount(value)
+        return amount if amount is not None else Decimal("0")
+
+    @field_validator("items", mode="before")
+    @classmethod
+    def _items_limit(cls, value: object) -> object:
+        if isinstance(value, list) and len(value) > MAX_CORRECTION_ITEMS:
+            raise _invalid(f"Maksimal {MAX_CORRECTION_ITEMS} baris barang.")
+        return value
+
+
+InvoiceDetail.model_rebuild()

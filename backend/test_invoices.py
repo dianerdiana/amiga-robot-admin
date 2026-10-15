@@ -83,7 +83,9 @@ class ScriptedExtractor:
 
 
 @unittest.skipUnless(TEST_DATABASE_URL, "TEST_DATABASE_URL belum diset (butuh PostgreSQL).")
-class InvoiceApiTestCase(unittest.TestCase):
+class InvoiceTestBase(unittest.TestCase):
+    """Shared Postgres fixtures and helpers; contains no tests itself."""
+
     @classmethod
     def setUpClass(cls):
         subprocess.run(
@@ -201,6 +203,8 @@ class InvoiceApiTestCase(unittest.TestCase):
             )
         return [(row.action, row.email) for row in rows]
 
+
+class InvoiceApiTestCase(InvoiceTestBase):
     # ------------------------------------------------------------------
     # Upload (UPL)
     # ------------------------------------------------------------------
@@ -499,6 +503,228 @@ class InvoiceApiTestCase(unittest.TestCase):
         self.assertTrue(any(entry["user"]["is_system"] for entry in history))
         # Opening the original file is not audited (AUD-01).
         self.assertNotIn("FILE_VIEWED", {entry["action"] for entry in history})
+
+
+class InvoiceCorrectionTestCase(InvoiceTestBase):
+    """Intake corrects extracted data: PUT /api/v1/invoices/{id}."""
+
+    REASON = "Data dari dokumen pendukung"
+
+    def payload(self, detail: dict, **changes) -> dict:
+        """Build a correction payload from the current detail, applying the given changes."""
+        body = {
+            "version": detail["version"],
+            "reason": self.REASON,
+            **{field: detail[field] for field in (
+                "vendor_name", "invoice_number", "invoice_date", "bank_account",
+                "tax_amount", "discount_amount", "total_amount",
+            )},
+            "items": [
+                {k: item[k] for k in ("description", "quantity", "unit_price", "amount")}
+                for item in detail["items"]
+            ],
+        }
+        body.update(changes)
+        return body
+
+    def correct(self, invoice_id, body, user=None):
+        return self.client.put(f"/api/v1/invoices/{invoice_id}", headers=self.auth(user or self.intake_a), json=body)
+
+    def extracted(self, filename="demo-normal.pdf", **kwargs) -> dict:
+        body = self.upload_ok(filename, **kwargs)
+        self.run_worker()
+        return self.detail(body["id"], user=kwargs.get("user"))
+
+    def audit_rows(self, invoice_id):
+        with self.Session() as db:
+            return (
+                db.query(AuditLog.action, AuditLog.field_name, AuditLog.old_value, AuditLog.new_value, User.email, AuditLog.created_at)
+                .join(User, User.id == AuditLog.user_id)
+                .filter(AuditLog.entity_id == uuid.UUID(invoice_id))
+                .order_by(AuditLog.created_at, AuditLog.id)
+                .all()
+            )
+
+    def test_correcting_missing_bank_account_clears_exception(self):
+        detail = self.extracted("demo-missing-bank.pdf")
+        self.assertEqual(detail["status"], "EXCEPTION")
+        self.assertTrue(detail["can_edit"])
+        self.assertIsNone(detail["last_correction"])
+
+        response = self.correct(detail["id"], self.payload(detail, bank_account="BCA 523-019-8812"))
+        self.assertEqual(response.status_code, 200, response.text)
+        corrected = response.json()
+        self.assertEqual(corrected["status"], "READY_FOR_REVIEW")
+        self.assertEqual(corrected["exceptions"], [])
+        self.assertEqual(corrected["version"], detail["version"] + 1)
+        self.assertEqual(corrected["last_correction"]["reason"], self.REASON)
+        self.assertEqual(corrected["last_correction"]["by"]["name"], "Intake.A")
+
+        rows = self.audit_rows(detail["id"])
+        correction_rows = [r for r in rows if r.email == "intake.a@amiga.local" and r.action != "UPLOADED"]
+        self.assertIn(("FIELD_UPDATED", "bank_account", None, "BCA 523-019-8812"), [(r.action, r.field_name, r.old_value, r.new_value) for r in correction_rows])
+        self.assertIn("STATUS_CHANGED", {r.action for r in correction_rows})
+        notes = [r for r in correction_rows if r.action == "CORRECTION_NOTE"]
+        self.assertEqual(len(notes), 1)
+        # The note shares the transaction timestamp with the changes it explains.
+        self.assertEqual({r.created_at for r in correction_rows}, {notes[0].created_at})
+
+    def test_line_item_edits_are_audited_and_renumbered(self):
+        detail = self.extracted("demo-normal.pdf")
+        items = [dict(i) for i in detail["items"]]
+        items[1]["amount"] = "460000"
+        items = [items[1], items[2], {"description": "Ongkos kirim", "quantity": "1", "unit_price": "10000", "amount": "10000"}]
+        response = self.correct(detail["id"], self.payload(detail, items=items))
+        self.assertEqual(response.status_code, 200, response.text)
+        corrected = response.json()
+        self.assertEqual([i["line_no"] for i in corrected["items"]], [1, 2, 3])
+        self.assertEqual(corrected["items"][0]["description"], "Tinta Cartridge Hitam Seri C-902")
+        self.assertEqual(corrected["status"], "EXCEPTION")  # totals no longer balance
+        self.assertEqual(corrected["exception_codes"], ["TOTAL_MISMATCH"])
+
+        fields = {r.field_name for r in self.audit_rows(detail["id"]) if r.action == "FIELD_UPDATED"}
+        self.assertIn("items[1].description", fields)
+        self.assertIn("items[1].amount", fields)
+        self.assertIn("items[3].description", fields)
+
+    def test_adding_and_removing_lines(self):
+        detail = self.extracted("demo-normal.pdf")
+        added = self.correct(detail["id"], self.payload(detail, items=[*detail["items"], {"description": "Materai", "amount": "10000"}]))
+        self.assertEqual(added.status_code, 200, added.text)
+        removed = self.correct(detail["id"], self.payload(added.json(), items=added.json()["items"][:2]))
+        self.assertEqual(removed.status_code, 200, removed.text)
+        actions = [(r.action, r.field_name) for r in self.audit_rows(detail["id"])]
+        self.assertIn(("ITEM_ADDED", "items[4]"), actions)
+        self.assertIn(("ITEM_REMOVED", "items[3]"), actions)
+        self.assertIn(("ITEM_REMOVED", "items[4]"), actions)
+        self.assertEqual(len(removed.json()["items"]), 2)
+
+    def test_saving_identical_data_is_a_no_op(self):
+        detail = self.extracted("demo-normal.pdf")
+        before = len(self.audit_rows(detail["id"]))
+        response = self.correct(detail["id"], self.payload(detail, total_amount="1248750.00"))
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(response.json()["version"], detail["version"])
+        self.assertEqual(len(self.audit_rows(detail["id"])), before)
+        self.assertIsNone(response.json()["last_correction"])
+
+    def test_stale_version_is_rejected(self):
+        detail = self.extracted("demo-normal.pdf")
+        first = self.correct(detail["id"], self.payload(detail, vendor_name="PT Sinar Abadi"))
+        self.assertEqual(first.status_code, 200, first.text)
+        stale = self.correct(detail["id"], self.payload(detail, vendor_name="PT Lain"))
+        self.assertEqual(stale.status_code, 409)
+        self.assertEqual(stale.json()["detail"], "Data sudah diubah user lain, muat ulang.")
+        self.assertEqual(self.detail(detail["id"])["vendor_name"], "PT Sinar Abadi")
+
+    def test_status_role_and_client_guards(self):
+        queued = self.upload_ok("demo-normal.pdf")
+        queued_detail = self.detail(queued["id"])
+        self.assertFalse(queued_detail["can_edit"])
+        self.assertEqual(self.correct(queued["id"], self.payload(queued_detail, vendor_name="X")).status_code, 409)
+
+        self.run_worker()
+        detail = self.detail(queued["id"])
+        with self.Session() as db:
+            db.execute(
+                text("UPDATE invoices SET status='REJECTED', reviewed_by=:r, reject_note='Tidak valid' WHERE id=:i"),
+                {"r": self.reviewer.id, "i": detail["id"]},
+            )
+            db.commit()
+        decided = self.correct(detail["id"], self.payload(self.detail(detail["id"]), vendor_name="X"))
+        self.assertEqual(decided.status_code, 409)
+        self.assertIn("REJECTED", decided.json()["detail"])
+        self.assertFalse(self.detail(detail["id"])["can_edit"])
+
+        other = self.extracted("demo-normal.pdf", user=self.intake_b, client=self.client_b)
+        self.assertEqual(self.correct(other["id"], self.payload(other, vendor_name="X")).status_code, 403)
+        self.assertEqual(self.correct(other["id"], self.payload(other, vendor_name="X"), user=self.reviewer).status_code, 403)
+
+    def test_possible_duplicate_is_editable_and_can_be_cleared(self):
+        first = self.extracted("demo-duplicate-a.pdf")
+        dup = self.extracted("demo-duplicate-b.pdf")
+        self.assertEqual(dup["status"], "POSSIBLE_DUPLICATE")
+        self.assertTrue(dup["can_edit"])
+        self.assertNotIn("hanya dapat ditolak", dup["exceptions"][0]["message"])
+        self.assertIn("menyetujui secara manual", dup["exceptions"][0]["message"])
+
+        cleared = self.correct(dup["id"], self.payload(dup, invoice_number="MTP-892-26"))
+        self.assertEqual(cleared.status_code, 200, cleared.text)
+        self.assertEqual(cleared.json()["status"], "READY_FOR_REVIEW")
+
+        # And the reverse: correcting a ready invoice into a duplicate of another.
+        again = self.correct(first["id"], self.payload(first, invoice_number="MTP-892-26"))
+        self.assertEqual(again.json()["status"], "POSSIBLE_DUPLICATE")
+
+    def test_backend_validation_errors_point_at_fields(self):
+        detail = self.extracted("demo-normal.pdf")
+        items = [dict(i) for i in detail["items"]]
+        items[0]["quantity"] = "-5"
+        items[1]["unit_price"] = "1.234"
+        items.append({})
+        body = self.payload(detail, vendor_name="x" * 300, invoice_date="2999-01-01", items=items, reason="abc")
+        response = self.correct(detail["id"], body)
+        self.assertEqual(response.status_code, 422)
+        errors = {tuple(e["loc"]): e["msg"] for e in response.json()["detail"]}
+        self.assertEqual(errors[("body", "items", 0, "quantity")], "Nilai tidak boleh negatif.")
+        self.assertEqual(errors[("body", "items", 1, "unit_price")], "Maksimal 2 angka di belakang koma.")
+        self.assertEqual(errors[("body", "items", 3)], "Baris kosong; hapus atau lengkapi baris ini.")
+        self.assertEqual(errors[("body", "vendor_name")], "Maksimal 255 karakter.")
+        self.assertEqual(errors[("body", "invoice_date")], "Tanggal invoice tidak boleh di masa depan.")
+        self.assertEqual(errors[("body", "reason")], "Alasan koreksi wajib diisi (min. 10 karakter).")
+
+        missing_reason = {k: v for k, v in self.payload(detail, vendor_name="Y").items() if k != "reason"}
+        self.assertEqual(self.correct(detail["id"], missing_reason).status_code, 422)
+        long_reason = self.correct(detail["id"], self.payload(detail, vendor_name="Y", reason="x" * 501))
+        self.assertEqual(long_reason.json()["detail"][0]["loc"], ["body", "reason"])
+        # Nothing was saved by any rejected request.
+        self.assertEqual(self.detail(detail["id"])["version"], detail["version"])
+
+    def test_original_ai_draft_is_preserved(self):
+        detail = self.extracted("demo-normal.pdf")
+        self.correct(detail["id"], self.payload(detail, vendor_name="PT Dikoreksi"))
+        extraction = self.client.get(f"/api/v1/invoices/{detail['id']}/extraction", headers=self.auth(self.intake_a)).json()
+        self.assertEqual(extraction["result"]["vendor_name"], "PT Sinar Abadi Perkasa")
+        self.assertEqual(self.detail(detail["id"])["vendor_name"], "PT Dikoreksi")
+
+    def test_another_assigned_intake_can_correct(self):
+        with self.Session() as db:
+            colleague = self._user(db, "intake.c@amiga.local", UserRole.INTAKE)
+            db.flush()
+            db.add(UserClient(user_id=colleague.id, client_id=self.client_a.id))
+            db.commit()
+            db.refresh(colleague)
+            db.expunge(colleague)
+        detail = self.extracted("demo-missing-bank.pdf")
+        response = self.correct(detail["id"], self.payload(detail, bank_account="BNI 0091-882-771"), user=colleague)
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(response.json()["last_correction"]["by"]["name"], "Intake.C")
+        self.assertIn(("CORRECTION_NOTE", "intake.c@amiga.local"), [(r.action, r.email) for r in self.audit_rows(detail["id"])])
+
+    def test_manual_fill_of_failed_extraction(self):
+        body = self.upload_ok("demo-multiline.pdf")
+        self.extractor.failures["demo-multiline.pdf"] = 2
+        self.run_worker()
+        failed = self.detail(body["id"])
+        self.assertEqual(failed["exception_codes"], ["EXTRACTION_FAILED"])
+        self.assertTrue(failed["can_edit"])
+
+        filled = self.correct(failed["id"], self.payload(
+            failed,
+            reason="Dokumen tidak terbaca, diisi manual",
+            vendor_name="CV Bahtera Logistik",
+            invoice_number="BL-JKT-9921",
+            invoice_date="2026-02-20",
+            bank_account="BCA 523-019-8812",
+            tax_amount="0",
+            discount_amount="0",
+            total_amount="500000",
+            items=[{"description": "Jasa pengiriman", "quantity": "1", "unit_price": "500000", "amount": "500000"}],
+        ))
+        self.assertEqual(filled.status_code, 200, filled.text)
+        self.assertEqual(filled.json()["status"], "READY_FOR_REVIEW")
+        requeue = self.client.post(f"/api/v1/invoices/{failed['id']}/extraction", headers=self.auth(self.intake_a))
+        self.assertEqual(requeue.status_code, 409)
 
 
 class ValidationRulesTestCase(unittest.TestCase):

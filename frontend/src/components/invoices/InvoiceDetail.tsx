@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { AuditEntry, InvoiceDetail as InvoiceDetailData, errorStatus, invoiceService } from "@/lib/api";
 import { formatBytes, formatDate, formatDateTime, formatQuantity, formatRupiah } from "@/lib/format";
 import FileViewerModal from "./FileViewerModal";
+import InvoiceCorrectionForm from "./InvoiceCorrectionForm";
 import { ErrorBanner, ForbiddenState, PageSpinner } from "./States";
 import { IssueChip, StatusBadge } from "./StatusBadge";
 import { AUDIT_ACTION_LABELS, CHANNEL_LABELS, EXTRACTION_FAILURE_CODES, isProcessing } from "./meta";
@@ -21,6 +22,9 @@ export default function InvoiceDetail({ invoiceId }: { invoiceId: string }) {
   const [historyOpen, setHistoryOpen] = useState(false);
   const [requeueing, setRequeueing] = useState(false);
   const [requeueError, setRequeueError] = useState<string | null>(null);
+  const [editing, setEditing] = useState(false);
+  const [conflict, setConflict] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
 
   /** Load detail and history; state is only updated in promise callbacks. */
   const load = useCallback(
@@ -99,11 +103,34 @@ export default function InvoiceDetail({ invoiceId }: { invoiceId: string }) {
           Kembali ke Antrean
         </Link>
         <span className="flex items-center gap-1.5 text-text-secondary">
-          Peran: <span className="rounded bg-primary-subtle px-1.5 py-0.5 font-semibold text-primary">Staf Intake (Read-Only)</span>
+          Peran:{" "}
+          <span className="rounded bg-primary-subtle px-1.5 py-0.5 font-semibold text-primary">
+            {invoice.can_edit ? "Staf Intake" : "Staf Intake (Read-Only)"}
+          </span>
         </span>
       </div>
 
       {error && <ErrorBanner title="Data terbaru belum dapat dimuat" message={error} onRetry={() => void load()} />}
+
+      {conflict && (
+        <div role="alert" className="flex flex-col gap-3 rounded-lg border-l-4 border-danger bg-danger-subtle p-4 text-status-rejected-fg sm:flex-row sm:items-center sm:justify-between">
+          <span className="flex items-start gap-2 text-sm">
+            <span aria-hidden="true" className="material-symbols-outlined">sync_problem</span>
+            {conflict} Perubahan lokal tidak disimpan.
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              setConflict(null);
+              setEditing(false);
+              void load();
+            }}
+            className="h-9 shrink-0 rounded bg-danger px-4 text-xs font-semibold text-white hover:opacity-90"
+          >
+            Muat Ulang
+          </button>
+        </div>
+      )}
 
       {/* Header card */}
       <section className="rounded-lg border border-border bg-surface shadow-sm">
@@ -118,15 +145,30 @@ export default function InvoiceDetail({ invoiceId }: { invoiceId: string }) {
               </span>
             )}
           </div>
-          <button
-            type="button"
-            aria-label="Lihat file asli dokumen invoice"
-            onClick={() => setViewerOpen(true)}
-            className="flex h-9 items-center justify-center gap-1.5 rounded border border-primary px-4 text-xs font-semibold text-primary hover:bg-primary-subtle"
-          >
-            <span aria-hidden="true" className="material-symbols-outlined text-[18px]">visibility</span>
-            Lihat file asli
-          </button>
+          <div className="flex flex-wrap gap-2">
+            {invoice.can_edit && !editing && (
+              <button
+                type="button"
+                onClick={() => {
+                  setConflict(null);
+                  setEditing(true);
+                }}
+                className="flex h-9 items-center justify-center gap-1.5 rounded bg-primary px-4 text-xs font-semibold text-white hover:bg-primary-hover"
+              >
+                <span aria-hidden="true" className="material-symbols-outlined text-[18px]">edit</span>
+                Koreksi Data
+              </button>
+            )}
+            <button
+              type="button"
+              aria-label="Lihat file asli dokumen invoice"
+              onClick={() => setViewerOpen(true)}
+              className="flex h-9 items-center justify-center gap-1.5 rounded border border-primary px-4 text-xs font-semibold text-primary hover:bg-primary-subtle"
+            >
+              <span aria-hidden="true" className="material-symbols-outlined text-[18px]">visibility</span>
+              Lihat file asli
+            </button>
+          </div>
         </div>
         <dl className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-4">
           <Fact label="Klien Entitas" value={invoice.client.name} hint={invoice.has_reviewer ? undefined : "Belum ada reviewer"} />
@@ -142,6 +184,18 @@ export default function InvoiceDetail({ invoiceId }: { invoiceId: string }) {
             </Link>{" "}
             (ditolak).
           </p>
+        )}
+        {invoice.last_correction && (
+          <details className="group border-t border-border px-4 py-2.5 text-xs sm:px-5">
+            <summary className="flex cursor-pointer list-none items-center gap-1.5 text-warning">
+              <span aria-hidden="true" className="material-symbols-outlined text-[16px]">edit_note</span>
+              <span>
+                Dikoreksi oleh <strong>{invoice.last_correction.by.name}</strong> · {formatDateTime(invoice.last_correction.at)}
+              </span>
+              <span aria-hidden="true" className="material-symbols-outlined text-[16px] transition-transform group-open:rotate-180">expand_more</span>
+            </summary>
+            <p className="mt-1.5 rounded bg-warning-subtle px-3 py-2 italic text-text-primary">“{invoice.last_correction.reason}”</p>
+          </details>
         )}
       </section>
 
@@ -192,65 +246,82 @@ export default function InvoiceDetail({ invoiceId }: { invoiceId: string }) {
             </section>
           )}
 
-          {/* Read-only extracted data */}
-          <section className="rounded-lg border border-border bg-surface shadow-sm">
-            <SectionHeader icon="text_snippet" title="Data Ekstraksi Invoice" note="Read-only • Hasil AI berstatus draf" />
-            <dl className="grid grid-cols-1 gap-x-6 gap-y-4 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-3">
-              <DataField label="Vendor" value={invoice.vendor_name} />
-              <DataField label="Nomor Invoice" value={invoice.invoice_number} mono />
-              <DataField label="Rekening Tujuan (Bank & No. Rek)" value={invoice.bank_account} mono warn={missingBank} />
-              <DataField label="Tanggal Invoice" value={invoice.invoice_date ? formatDate(invoice.invoice_date) : null} />
-              <DataField label="Tanggal Penerimaan" value={formatDate(invoice.request_date)} />
-              <DataField label="Diskon" value={formatRupiah(invoice.discount_amount)} mono />
-              <DataField label="Pajak (PPN)" value={invoice.tax_amount !== null ? formatRupiah(invoice.tax_amount) : null} mono />
-              <DataField label="Subtotal Baris" value={invoice.subtotal_amount !== null ? formatRupiah(invoice.subtotal_amount) : null} mono />
-              <DataField label="Total Invoice Akhir" value={invoice.total_amount !== null ? formatRupiah(invoice.total_amount) : null} mono strong />
-            </dl>
-          </section>
-
-          {/* Line items */}
-          <section className="rounded-lg border border-border bg-surface shadow-sm">
-            <SectionHeader
-              icon="format_list_bulleted"
-              title="Daftar Baris Barang / Jasa"
-              badge={`${invoice.items.length} Item`}
-              note="Satuan Rupiah (IDR)"
+          {editing ? (
+            <InvoiceCorrectionForm
+              invoice={invoice}
+              onCancel={() => setEditing(false)}
+              onConflict={setConflict}
+              onSaved={(saved) => {
+                setInvoice(saved);
+                setEditing(false);
+                setToast("Perubahan berhasil disimpan.");
+                window.setTimeout(() => setToast(null), 3500);
+                void load();
+              }}
             />
-            {invoice.items.length === 0 ? (
-              <p className="px-5 py-8 text-center text-xs italic text-text-disabled">Baris barang tidak ditemukan.</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse text-left text-xs">
-                  <thead>
-                    <tr className="h-10 border-b border-border bg-surface-muted text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
-                      <th className="w-12 px-4">No</th>
-                      <th className="px-3">Deskripsi Barang / Jasa</th>
-                      <th className="px-3 text-right">Qty</th>
-                      <th className="px-3 text-right">Harga Satuan</th>
-                      <th className="px-4 text-right">Jumlah</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-surface-muted">
-                    {invoice.items.map((item) => (
-                      <tr key={item.line_no} className="h-11">
-                        <td className="px-4 font-mono text-text-secondary">{item.line_no}</td>
-                        <td className="px-3">{item.description ?? <Missing />}</td>
-                        <td className="px-3 text-right font-mono tabular-nums">{formatQuantity(item.quantity)}</td>
-                        <td className="whitespace-nowrap px-3 text-right font-mono tabular-nums">{formatRupiah(item.unit_price)}</td>
-                        <td className="whitespace-nowrap px-4 text-right font-mono font-semibold tabular-nums">{formatRupiah(item.amount)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                  <tfoot className="border-t border-border bg-surface-muted/60 font-mono tabular-nums">
-                    <SummaryRow label="Subtotal Baris Barang" value={formatRupiah(invoice.subtotal_amount)} />
-                    <SummaryRow label="Pajak (PPN)" value={formatRupiah(invoice.tax_amount)} />
-                    <SummaryRow label="Potongan Diskon" value={`-${formatRupiah(invoice.discount_amount)}`} />
-                    <SummaryRow label="Total Tagihan Final" value={formatRupiah(invoice.total_amount)} strong />
-                  </tfoot>
-                </table>
-              </div>
-            )}
-          </section>
+          ) : (
+            <>
+              {/* Read-only extracted data */}
+              <section className="rounded-lg border border-border bg-surface shadow-sm">
+                <SectionHeader icon="text_snippet" title="Data Ekstraksi Invoice" note="Read-only • Hasil AI berstatus draf" />
+                <dl className="grid grid-cols-1 gap-x-6 gap-y-4 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-3">
+                  <DataField label="Vendor" value={invoice.vendor_name} />
+                  <DataField label="Nomor Invoice" value={invoice.invoice_number} mono />
+                  <DataField label="Rekening Tujuan (Bank & No. Rek)" value={invoice.bank_account} mono warn={missingBank} />
+                  <DataField label="Tanggal Invoice" value={invoice.invoice_date ? formatDate(invoice.invoice_date) : null} />
+                  <DataField label="Tanggal Penerimaan" value={formatDate(invoice.request_date)} />
+                  <DataField label="Diskon" value={formatRupiah(invoice.discount_amount)} mono />
+                  <DataField label="Pajak (PPN)" value={invoice.tax_amount !== null ? formatRupiah(invoice.tax_amount) : null} mono />
+                  <DataField label="Subtotal Baris" value={invoice.subtotal_amount !== null ? formatRupiah(invoice.subtotal_amount) : null} mono />
+                  <DataField label="Total Invoice Akhir" value={invoice.total_amount !== null ? formatRupiah(invoice.total_amount) : null} mono strong />
+                </dl>
+              </section>
+
+              {/* Line items */}
+              <section className="rounded-lg border border-border bg-surface shadow-sm">
+                <SectionHeader
+                  icon="format_list_bulleted"
+                  title="Daftar Baris Barang / Jasa"
+                  badge={`${invoice.items.length} Item`}
+                  note="Satuan Rupiah (IDR)"
+                />
+                {invoice.items.length === 0 ? (
+                  <p className="px-5 py-8 text-center text-xs italic text-text-disabled">Baris barang tidak ditemukan.</p>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse text-left text-xs">
+                      <thead>
+                        <tr className="h-10 border-b border-border bg-surface-muted text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
+                          <th className="w-12 px-4">No</th>
+                          <th className="px-3">Deskripsi Barang / Jasa</th>
+                          <th className="px-3 text-right">Qty</th>
+                          <th className="px-3 text-right">Harga Satuan</th>
+                          <th className="px-4 text-right">Jumlah</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-surface-muted">
+                        {invoice.items.map((item) => (
+                          <tr key={item.line_no} className="h-11">
+                            <td className="px-4 font-mono text-text-secondary">{item.line_no}</td>
+                            <td className="px-3">{item.description ?? <Missing />}</td>
+                            <td className="px-3 text-right font-mono tabular-nums">{formatQuantity(item.quantity)}</td>
+                            <td className="whitespace-nowrap px-3 text-right font-mono tabular-nums">{formatRupiah(item.unit_price)}</td>
+                            <td className="whitespace-nowrap px-4 text-right font-mono font-semibold tabular-nums">{formatRupiah(item.amount)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                      <tfoot className="border-t border-border bg-surface-muted/60 font-mono tabular-nums">
+                        <SummaryRow label="Subtotal Baris Barang" value={formatRupiah(invoice.subtotal_amount)} />
+                        <SummaryRow label="Pajak (PPN)" value={formatRupiah(invoice.tax_amount)} />
+                        <SummaryRow label="Potongan Diskon" value={`-${formatRupiah(invoice.discount_amount)}`} />
+                        <SummaryRow label="Total Tagihan Final" value={formatRupiah(invoice.total_amount)} strong />
+                      </tfoot>
+                    </table>
+                  </div>
+                )}
+              </section>
+            </>
+          )}
         </>
       )}
 
@@ -292,7 +363,17 @@ export default function InvoiceDetail({ invoiceId }: { invoiceId: string }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-surface-muted">
-                  {(history ?? []).map((entry) => (
+                  {(history ?? []).map((entry) =>
+                    entry.action === "CORRECTION_NOTE" ? (
+                      <tr key={entry.id} className="h-11 bg-warning-subtle/60">
+                        <td className="whitespace-nowrap px-4 font-mono text-text-secondary">{formatDateTime(entry.created_at, true)}</td>
+                        <td className="whitespace-nowrap px-4 font-medium">{entry.user.name}</td>
+                        <td colSpan={4} className="px-4 py-2">
+                          <span className="font-semibold text-warning">Alasan Koreksi:</span>{" "}
+                          <span className="italic text-text-primary">“{entry.new_value}”</span>
+                        </td>
+                      </tr>
+                    ) : (
                     <tr key={entry.id} className="h-11">
                       <td className="whitespace-nowrap px-4 font-mono text-text-secondary">{formatDateTime(entry.created_at, true)}</td>
                       <td className="whitespace-nowrap px-4">
@@ -310,7 +391,8 @@ export default function InvoiceDetail({ invoiceId }: { invoiceId: string }) {
                         <AuditValue value={entry.new_value} tone="new" />
                       </td>
                     </tr>
-                  ))}
+                    ),
+                  )}
                   {history?.length === 0 && (
                     <tr>
                       <td colSpan={6} className="px-4 py-6 text-center text-text-disabled">Belum ada riwayat.</td>
@@ -324,6 +406,12 @@ export default function InvoiceDetail({ invoiceId }: { invoiceId: string }) {
       </section>
 
       {viewerOpen && <FileViewerModal invoiceId={invoice.id} onClose={() => setViewerOpen(false)} />}
+      {toast && (
+        <div role="status" className="fixed bottom-6 right-6 z-[60] flex max-w-sm items-center gap-3 rounded-lg bg-text-primary px-4 py-3 text-xs text-white shadow-lg">
+          <span aria-hidden="true" className="material-symbols-outlined text-[20px] text-status-reviewed-border">check_circle</span>
+          {toast}
+        </div>
+      )}
     </div>
   );
 }

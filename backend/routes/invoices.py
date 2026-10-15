@@ -15,6 +15,7 @@ from schemas.invoice import (
     AuditEntry,
     FileUrlResponse,
     InvoiceChannel,
+    InvoiceCorrection,
     InvoiceDetail,
     InvoicePage,
     InvoiceUploadResponse,
@@ -92,6 +93,17 @@ def list_invoices(
 @router.get("/{invoice_id}", response_model=InvoiceDetail)
 def get_invoice(invoice_id: uuid.UUID, db: Session = Depends(get_db), user: User = Depends(intake_only)):
     return InvoiceService.get_detail(db, user, invoice_id)
+
+
+@router.put("/{invoice_id}", response_model=InvoiceDetail)
+def correct_invoice(
+    invoice_id: uuid.UUID,
+    request: InvoiceCorrection,
+    db: Session = Depends(get_db),
+    user: User = Depends(intake_only),
+):
+    """Correct extracted data (Intake). Requires the loaded version and a reason; re-runs validation."""
+    return InvoiceService.correct_invoice(db, user, invoice_id, request)
 
 
 @router.get("/{invoice_id}/file-url", response_model=FileUrlResponse)
