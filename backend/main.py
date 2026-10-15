@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from fastapi.middleware.cors import CORSMiddleware
 from database import get_db
-from routes import auth_router
+from routes import auth_router, invoice_router
 
 app = FastAPI(
     title="AMIGA Robot Admin Backend",
@@ -18,11 +18,14 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["X-Total-Count"],
 )
 
 # Registrasi Router
 app.include_router(auth_router, prefix="/api/v1")
+app.include_router(invoice_router, prefix="/api/v1")
 app.include_router(auth_router)  # Memungkinkan akses langsung /auth/login dsb.
+app.include_router(invoice_router)  # Memungkinkan akses langsung /invoices/... dsb.
 
 
 @app.get("/")

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import UserManagementView from "@/components/dashboard/UserManagementView";
 import IntakeView from "@/components/dashboard/IntakeView";
@@ -10,7 +12,19 @@ import TokenTestCard from "@/components/dashboard/TokenTestCard";
 import { UserRoleType } from "@/components/layout/types";
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<string>("pengguna");
+
+  React.useEffect(() => {
+    if (user?.role === "FINANCE_REVIEWER") {
+      router.replace("/dashboard/reviewer");
+    }
+  }, [user?.role, router]);
+
+  if (user?.role === "FINANCE_REVIEWER") {
+    return null;
+  }
 
   return (
     <DashboardLayout

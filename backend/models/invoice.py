@@ -2,6 +2,7 @@ import uuid
 from enum import Enum
 
 from sqlalchemy import CheckConstraint, Column, Date, DateTime, Enum as SQLEnum, ForeignKey, Index, Integer, Numeric, String, Text, func, text
+from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import ARRAY, UUID
 
 from database import Base
@@ -69,3 +70,11 @@ class Invoice(Base):
     reject_note = Column(Text, nullable=True)
     version = Column(Integer, server_default=text("1"), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+    # Relasi ORM ke item invoice (tidak memerlukan migrasi SQL, hanya Python-side)
+    items = relationship(
+        "InvoiceItem",
+        backref="invoice",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )

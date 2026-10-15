@@ -137,6 +137,7 @@ export async function refreshAccessToken(): Promise<TokenResponse | null> {
 export interface ApiFetchOptions extends RequestInit {
   skipAuth?: boolean;
   _isRetry?: boolean;
+  _includeHeaders?: boolean;
 }
 
 /**
@@ -151,7 +152,7 @@ export async function apiFetch<T = unknown>(
   endpoint: string,
   options: ApiFetchOptions = {}
 ): Promise<T> {
-  const { skipAuth = false, _isRetry = false, headers: customHeaders, ...restOptions } = options;
+  const { skipAuth = false, _isRetry = false, _includeHeaders = false, headers: customHeaders, ...restOptions } = options;
 
   const url = endpoint.startsWith("http") ? endpoint : `${API_BASE_URL}${endpoint}`;
 
@@ -249,10 +250,14 @@ export async function apiFetch<T = unknown>(
 
   // Jika respons berupa 204 No Content
   if (response.status === 204) {
-    return {} as T;
+    return (_includeHeaders ? { data: {}, headers: response.headers } : {}) as T;
   }
 
-  return (await response.json()) as T;
+  const json = (await response.json()) as T;
+  if (_includeHeaders) {
+    return { data: json, headers: response.headers } as unknown as T;
+  }
+  return json;
 }
 
 async function parseErrorResponse(response: Response): Promise<Error> {
