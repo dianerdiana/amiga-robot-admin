@@ -1,0 +1,11 @@
+{
+  "readable": false,
+  "vendor_name": null,
+  "invoice_number": null,
+  "invoice_date": null,
+  "bank_account": null,
+  "tax_amount": null,
+  "discount_amount": null,
+  "total_amount": null,
+  "items": []
+}

@@ -1,0 +1,1787 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="web_dashboard" name="shell-type" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              error: '#ba1a1a',
+              'status-ready-border': '#5EEAD4',
+              outline: '#757682',
+              'status-processing-fg': '#1E40AF',
+              warning: '#92400E',
+              'status-vouchered-bg': '#E0E7FF',
+              'status-processing-bg': '#DBEAFE',
+              surface: '#FFFFFF',
+              'secondary-container': '#99efe5',
+              'accent-subtle': '#CCFBF1',
+              border: '#CBD5E1',
+              'warning-subtle': '#FEF3C7',
+              'status-queued-fg': '#334155',
+              'on-primary-container': '#90a8ff',
+              'surface-container-low': '#f4f3fa',
+              'on-error-container': '#93000a',
+              'status-duplicate-fg': '#FFFFFF',
+              'status-sent-border': '#C4B5FD',
+              'diff-new-bg': '#DCFCE7',
+              info: '#1E40AF',
+              'inverse-primary': '#b6c4ff',
+              'success-subtle': '#DCFCE7',
+              tertiary: '#4b1c00',
+              background: '#F8FAFC',
+              'surface-container-highest': '#e3e1e9',
+              'text-link': '#1E40AF',
+              'primary-subtle': '#E0E7FF',
+              success: '#166534',
+              'accent-hover': '#0D625B',
+              'surface-container': '#eeedf4',
+              'on-tertiary-container': '#f39461',
+              'on-primary-fixed': '#00164e',
+              'tertiary-fixed-dim': '#ffb691',
+              'status-vouchered-fg': '#3730A3',
+              danger: '#B91C1C',
+              'status-vouchered-border': '#A5B4FC',
+              'on-primary-fixed-variant': '#264191',
+              'on-tertiary-fixed-variant': '#773205',
+              'inverse-on-surface': '#f1f0f7',
+              'on-secondary-container': '#006f67',
+              'on-primary': '#ffffff',
+              'surface-muted': '#F1F5F9',
+              'status-rejected-fg': '#991B1B',
+              'primary-fixed-dim': '#b6c4ff',
+              'surface-container-high': '#e9e7ef',
+              'tertiary-container': '#6e2c00',
+              'info-subtle': '#DBEAFE',
+              'secondary-fixed': '#9cf2e8',
+              'on-secondary': '#ffffff',
+              'status-queued-bg': '#F1F5F9',
+              'surface-tint': '#4059aa',
+              'primary-hover': '#1B3380',
+              'tertiary-fixed': '#ffdbcb',
+              'status-ready-fg': '#115E59',
+              'status-ready-bg': '#CCFBF1',
+              'surface-container-lowest': '#ffffff',
+              'status-processing-border': '#93C5FD',
+              'text-secondary': '#475569',
+              overlay: 'rgba(15, 23, 42, 0.55)',
+              'primary-active': '#172B6B',
+              'surface-dim': '#dad9e1',
+              secondary: '#006a63',
+              'status-reviewed-bg': '#DCFCE7',
+              'on-background': '#1a1b21',
+              'on-surface': '#1a1b21',
+              'on-accent': '#FFFFFF',
+              'on-error': '#ffffff',
+              'status-exception-border': '#FCD34D',
+              'status-rejected-bg': '#FFFFFF',
+              'status-duplicate-bg': '#B91C1C',
+              'on-surface-variant': '#444651',
+              'status-sent-fg': '#5B21B6',
+              'diff-new-fg': '#166534',
+              'status-reviewed-border': '#86EFAC',
+              'secondary-fixed-dim': '#80d5cb',
+              'status-queued-border': '#CBD5E1',
+              'surface-sunken': '#E2E8F0',
+              'status-sent-bg': '#EDE9FE',
+              'focus-ring': '#2563EB',
+              'diff-old-bg': '#FEE2E2',
+              'inverse-surface': '#2f3036',
+              'on-tertiary-fixed': '#341100',
+              'on-secondary-fixed-variant': '#00504a',
+              primary: '#00236f',
+              'border-strong': '#94A3B8',
+              'outline-variant': '#c5c5d3',
+              'primary-container': '#1e3a8a',
+              'status-reviewed-fg': '#166534',
+              'text-primary': '#0F172A',
+              'diff-old-fg': '#991B1B',
+              'on-tertiary': '#ffffff',
+              'surface-bright': '#faf8ff',
+              'text-disabled': '#94A3B8',
+              'status-duplicate-border': '#7F1D1D',
+              'danger-subtle': '#FEE2E2',
+              'surface-variant': '#e3e1e9',
+              'status-rejected-border': '#991B1B',
+              'status-exception-fg': '#92400E',
+              'status-exception-bg': '#FEF3C7',
+              'on-secondary-fixed': '#00201d',
+              'primary-fixed': '#dce1ff',
+              'error-container': '#ffdad6',
+            },
+            borderRadius: {
+              DEFAULT: '0.25rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              full: '9999px',
+            },
+            spacing: {
+              10: '40px',
+              16: '64px',
+              gutter: '1.5rem',
+              2: '8px',
+              1: '4px',
+              8: '32px',
+              'gutter-mobile': '0.75rem',
+              'space-md': '1rem',
+              5: '20px',
+              6: '24px',
+              margin: '1.5rem',
+              12: '48px',
+              'margin-tablet': '1rem',
+              'margin-mobile': '0.75rem',
+              'space-xl': '2rem',
+              3: '12px',
+              'gutter-laptop': '1rem',
+              'space-sm': '0.5rem',
+              'gutter-tablet': '1rem',
+              'space-xs': '0.25rem',
+              'base-unit': '4px',
+              'space-lg': '1.5rem',
+              4: '16px',
+              0: '0px',
+            },
+            fontFamily: {
+              'headline-sm': ['Inter'],
+              'table-header': ['Inter'],
+              'body-strong': ['Inter'],
+              display: ['Inter'],
+              'code-mono': ['JetBrains Mono'],
+              'amount-lg': ['JetBrains Mono'],
+              'body-default': ['Inter'],
+              'amount-default': ['JetBrains Mono'],
+              caption: ['Inter'],
+              'headline-md': ['Inter'],
+              'label-firm': ['Inter'],
+              'headline-lg': ['Inter'],
+            },
+            fontSize: {
+              'headline-sm': [
+                '16px',
+                { lineHeight: '24px', fontWeight: '600' },
+              ],
+              'table-header': [
+                '12px',
+                {
+                  lineHeight: '16px',
+                  letterSpacing: '0.04em',
+                  fontWeight: '600',
+                },
+              ],
+              'body-strong': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '600' },
+              ],
+              display: [
+                '28px',
+                {
+                  lineHeight: '36px',
+                  letterSpacing: '-0.01em',
+                  fontWeight: '700',
+                },
+              ],
+              'code-mono': ['13px', { lineHeight: '20px', fontWeight: '500' }],
+              'amount-lg': ['24px', { lineHeight: '32px', fontWeight: '700' }],
+              'body-default': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '400' },
+              ],
+              'amount-default': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '600' },
+              ],
+              caption: ['12px', { lineHeight: '16px', fontWeight: '400' }],
+              'headline-md': [
+                '20px',
+                { lineHeight: '28px', fontWeight: '600' },
+              ],
+              'label-firm': [
+                '12px',
+                {
+                  lineHeight: '16px',
+                  letterSpacing: '0.02em',
+                  fontWeight: '600',
+                },
+              ],
+              'headline-lg': [
+                '24px',
+                { lineHeight: '32px', fontWeight: '700' },
+              ],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="bg-background font-body-default text-body-default text-text-primary antialiased"
+  >
+    <header
+      class="fixed top-0 left-0 right-0 h-14 bg-surface z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"
+    >
+      <div class="h-14 w-full px-4 lg:px-6 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary shadow-sm"
+          >
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+              <path
+                d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h4a2 2 0 0 1 2 2v2h1a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-1v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3H3a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h1V9a2 2 0 0 1 2-2h4V5.73A2 2 0 0 1 10 4a2 2 0 0 1 2-2zm-4 7H6v10h12V9h-2v1H8V9zm1 3h2v2H9v-2zm4 0h2v2h-2v-2zm-4 4h6v1H9v-1z"
+              ></path>
+            </svg>
+          </div>
+          <div class="flex items-center gap-2">
+            <span
+              class="font-headline-sm text-headline-sm text-text-primary tracking-tight"
+              >AMIGA Robot Admin</span
+            ><span
+              class="hidden sm:inline-block font-caption text-caption text-text-secondary"
+              >| Portal Invoice-to-Voucher</span
+            >
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
+            <span
+              class="inline-flex items-center px-2 py-0.5 rounded font-label-firm text-label-firm bg-accent-subtle text-status-ready-fg"
+              >Intake</span
+            ><span
+              class="hidden md:inline-flex items-center px-2 py-0.5 rounded font-label-firm text-label-firm bg-surface-muted text-text-secondary"
+              >Finance Reviewer</span
+            >
+          </div>
+          <div class="h-6 w-px bg-surface-sunken hidden sm:block"></div>
+          <div class="flex items-center gap-3 pl-1">
+            <div class="text-right hidden sm:block">
+              <div
+                class="font-body-strong text-body-strong text-text-primary leading-tight"
+              >
+                Siti Rahmawati
+              </div>
+              <div
+                class="font-caption text-caption text-text-secondary leading-tight"
+              >
+                Staf Intake • ID #8841
+              </div>
+            </div>
+            <div
+              class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary font-body-strong text-body-strong"
+            >
+              <span
+                class="material-symbols-outlined text-on-primary text-[18px]"
+                >person</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <aside
+      class="fixed left-0 top-14 bottom-0 w-16 md:w-16 lg:w-60 bg-surface z-30 shadow-[0_1px_8px_rgba(0,0,0,0.04)] flex flex-col justify-between transition-all duration-200"
+    >
+      <div class="py-4">
+        <div class="px-4 mb-3 hidden lg:block">
+          <span
+            class="font-label-firm text-label-firm uppercase text-text-secondary tracking-wider"
+            >Menu Intake</span
+          >
+        </div>
+        <nav
+          class="px-2 flex flex-col gap-1"
+          data-active-classes="bg-primary-subtle text-primary font-bold rounded-lg"
+        >
+          <a
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+            data-path="antrean-invoice"
+            href="#"
+            title="Antrean Invoice"
+            ><span class="material-symbols-outlined text-[20px]">inbox</span
+            ><span class="font-body-default text-body-default hidden lg:inline"
+              >Antrean</span
+            ><span
+              class="ml-auto hidden lg:inline-flex items-center px-1.5 py-0.5 rounded font-label-firm text-[10px] bg-status-ready-bg text-status-ready-fg"
+              >24</span
+            ></a
+          ><a
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+            data-path="upload-invoice"
+            href="#"
+            title="Upload Invoice"
+            ><span class="material-symbols-outlined text-[20px]"
+              >upload_file</span
+            ><span class="font-body-default text-body-default hidden lg:inline"
+              >Upload Invoice</span
+            ></a
+          ><a
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+            data-path="buat-voucher"
+            href="#"
+            title="Buat Voucher"
+            ><span class="material-symbols-outlined text-[20px]">post_add</span
+            ><span class="font-body-default text-body-default hidden lg:inline"
+              >Buat Voucher</span
+            ></a
+          ><a
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+            data-path="daftar-voucher"
+            href="#"
+            title="Daftar Voucher"
+            ><span class="material-symbols-outlined text-[20px]"
+              >receipt_long</span
+            ><span class="font-body-default text-body-default hidden lg:inline"
+              >Daftar Voucher</span
+            ></a
+          >
+        </nav>
+        <div class="my-4 mx-3 h-px bg-surface-sunken"></div>
+        <div class="px-4 mb-3 hidden lg:block">
+          <span
+            class="font-label-firm text-label-firm uppercase text-text-secondary tracking-wider"
+            >Finance Reviewer</span
+          >
+        </div>
+        <nav
+          class="px-2 flex flex-col gap-1"
+          data-active-classes="bg-primary-subtle text-primary font-bold rounded-lg"
+        >
+          <a
+            class="flex items-center gap-3 px-3 py-2.5 transition-colors text-on-surface-variant"
+            data-path="antrean-finance-reviewer"
+            href="#"
+            title="Antrean Finance Reviewer"
+            ><span class="material-symbols-outlined text-[20px]">verified</span
+            ><span class="font-body-default text-body-default hidden lg:inline"
+              >Antrean Review</span
+            ><span
+              class="ml-auto hidden lg:inline-flex items-center px-1.5 py-0.5 rounded font-label-firm text-[10px] bg-warning-subtle text-warning"
+              >12</span
+            ></a
+          >
+        </nav>
+      </div>
+      <div
+        class="p-3 bg-surface-container-low mx-2 mb-3 rounded-lg hidden lg:block"
+      >
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px] text-success"
+            >smart_toy</span
+          ><span class="font-label-firm text-label-firm text-text-primary"
+            >Robot OCR Status</span
+          >
+        </div>
+        <div class="mt-1 font-caption text-caption text-text-secondary">
+          Engine aktif • Presisi 99.4%
+        </div>
+      </div>
+    </aside>
+    <div class="pl-16 lg:pl-60">
+      <main class="relative pt-14 w-full min-h-screen bg-background">
+        <div class="flex flex-col w-full">
+          <!-- QA State Simulation Banner -->
+          <div
+            class="w-full bg-slate-900 text-slate-100 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 shadow-inner"
+          >
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-amber-400 text-[18px]"
+                >bug_report</span
+              >
+              <span
+                class="font-label-firm text-label-firm uppercase tracking-wider text-slate-300"
+                >AMIGA QA Lab: State Simulator</span
+              >
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5 text-xs">
+              <button
+                class="px-2.5 py-1 rounded font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition"
+                id="btn-state-populated"
+                onclick="setSimState('populated')"
+              >
+                1. Populated (0 Dipilih)
+              </button>
+              <button
+                class="px-2.5 py-1 rounded font-medium bg-primary-container text-white shadow-sm ring-1 ring-blue-400 transition"
+                id="btn-state-selected"
+                onclick="setSimState('selected')"
+              >
+                2. Selected (2 Terpilih) [Aktif]
+              </button>
+              <button
+                class="px-2.5 py-1 rounded font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition"
+                id="btn-state-loading"
+                onclick="setSimState('loading')"
+              >
+                3. Skeleton Pulse
+              </button>
+              <button
+                class="px-2.5 py-1 rounded font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition"
+                id="btn-state-empty"
+                onclick="setSimState('empty')"
+              >
+                4. Empty State
+              </button>
+              <button
+                class="px-2.5 py-1 rounded font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition"
+                id="btn-state-conflict"
+                onclick="setSimState('conflict')"
+              >
+                5. Konflik Voucher
+              </button>
+              <button
+                class="px-2.5 py-1 rounded font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition"
+                id="btn-state-revoked"
+                onclick="setSimState('revoked')"
+              >
+                6. Penugasan Dicabut
+              </button>
+            </div>
+          </div>
+          <!-- Main Work Surface -->
+          <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-36">
+            <!-- Breadcrumb & Top Metadata -->
+            <div class="flex flex-col gap-1 mb-5">
+              <nav
+                class="flex items-center gap-2 font-caption text-caption text-text-secondary"
+              >
+                <span>Menu Intake</span>
+                <span class="material-symbols-outlined text-[14px]"
+                  >chevron_right</span
+                >
+                <span class="text-text-primary font-medium">Buat Voucher</span>
+              </nav>
+              <div
+                class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-1"
+              >
+                <div class="flex items-center gap-3">
+                  <h1
+                    class="font-headline-lg text-headline-lg text-text-primary tracking-tight"
+                  >
+                    Buat Voucher
+                  </h1>
+                  <span
+                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-label-firm text-label-firm bg-primary-subtle text-status-processing-fg"
+                  >
+                    <span
+                      class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"
+                    ></span>
+                    Langkah 1 dari 2: Pemilihan Invoice
+                  </span>
+                </div>
+                <div
+                  class="flex items-center gap-2 text-xs text-text-secondary"
+                >
+                  <span
+                    class="material-symbols-outlined text-[16px] text-success"
+                    >lock</span
+                  >
+                  <span
+                    >Aturan Validasi: 1 Klien • 1 Vendor • 1 Rekening
+                    Identik</span
+                  >
+                </div>
+              </div>
+              <p
+                class="font-body-default text-body-default text-text-secondary max-w-3xl mt-0.5"
+              >
+                Pilih invoice yang telah disetujui (<code
+                  class="font-code-mono text-xs px-1.5 py-0.5 bg-success-subtle text-status-reviewed-fg rounded"
+                  >AMIGA_REVIEWED</code
+                >) untuk digabungkan ke dalam satu voucher pembayaran resmi.
+              </p>
+            </div>
+            <!-- Contextual Info Strip -->
+            <div
+              class="w-full bg-surface-container-low rounded-lg p-3 sm:px-4 mb-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs"
+            >
+              <div class="flex flex-wrap items-center gap-y-2 gap-x-4">
+                <div class="flex items-center gap-2">
+                  <span
+                    class="material-symbols-outlined text-primary text-[18px]"
+                    >corporate_fare</span
+                  >
+                  <span class="text-text-secondary">Penugasan Aktif:</span>
+                  <span class="font-body-strong text-text-primary"
+                    >Klien A - Retail Mandiri</span
+                  >
+                </div>
+                <div class="hidden sm:block h-3.5 w-px bg-slate-300"></div>
+                <div class="flex items-center gap-2">
+                  <span
+                    class="material-symbols-outlined text-text-secondary text-[18px]"
+                    >badge</span
+                  >
+                  <span class="text-text-secondary">Sesi Aktif Intake:</span>
+                  <span
+                    class="font-code-mono font-medium text-text-primary bg-surface px-1.5 py-0.5 rounded shadow-xs"
+                    >SES-2026-0812</span
+                  >
+                </div>
+              </div>
+              <div class="flex items-center gap-2 text-text-secondary">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span
+                  >Operator:
+                  <strong class="text-text-primary font-medium"
+                    >Siti Rahmawati</strong
+                  >
+                  (#8841)</span
+                >
+              </div>
+            </div>
+            <!-- Alert Containers for Dynamic QA States -->
+            <div
+              class="hidden mb-6 rounded-lg bg-amber-50 p-4 shadow-sm border-l-4 border-warning"
+              id="alert-conflict"
+            >
+              <div class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-warning text-[24px]"
+                  >warning</span
+                >
+                <div class="flex-1 text-sm">
+                  <h3 class="font-body-strong text-warning">
+                    Konflik Status Dokumen Terdeteksi
+                  </h3>
+                  <p class="text-warning text-xs mt-0.5">
+                    Invoice
+                    <code class="font-code-mono font-bold"
+                      >INV/2026/02/0991</code
+                    >
+                    baru saja dimasukkan ke dalam draft voucher
+                    <code class="font-code-mono">VCH-2026-0419</code> oleh
+                    reviewer lain. Silakan perbarui data untuk melanjutkan.
+                  </p>
+                </div>
+                <button
+                  class="px-3 py-1 text-xs bg-warning text-white rounded font-medium hover:opacity-90"
+                  onclick="setSimState('selected')"
+                >
+                  Muat Ulang Daftar
+                </button>
+              </div>
+            </div>
+            <div
+              class="hidden mb-6 rounded-lg bg-red-50 p-4 shadow-sm border-l-4 border-danger"
+              id="alert-revoked"
+            >
+              <div class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-danger text-[24px]"
+                  >gpp_bad</span
+                >
+                <div class="flex-1 text-sm">
+                  <h3 class="font-body-strong text-danger">
+                    Akses Penugasan Klien Dicabut
+                  </h3>
+                  <p class="text-danger text-xs mt-0.5">
+                    Penugasan Anda untuk klien ini telah dialihkan oleh
+                    Supervisor Finance. Perubahan tidak dapat disimpan dan
+                    pembuatan voucher dibatalkan.
+                  </p>
+                </div>
+                <button
+                  class="px-3 py-1 text-xs bg-danger text-white rounded font-medium hover:opacity-90"
+                  onclick="window.location.reload()"
+                >
+                  Kembali ke Antrean
+                </button>
+              </div>
+            </div>
+            <!-- Step 1 Form Panel: Payment & Vendor Criteria (Strictly max-w-[720px]) -->
+            <div
+              class="w-full max-w-[720px] bg-surface rounded-lg p-5 shadow-sm mb-8 transition-all"
+            >
+              <div
+                class="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100"
+              >
+                <span class="material-symbols-outlined text-primary text-[20px]"
+                  >tune</span
+                >
+                <h2
+                  class="font-label-firm text-label-firm uppercase text-text-primary tracking-wide"
+                >
+                  Kriteria Pembayaran &amp; Vendor
+                </h2>
+              </div>
+              <div class="flex flex-col gap-4">
+                <!-- Row 1: Client & Vendor (2 Columns) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <!-- Klien -->
+                  <div class="flex flex-col gap-1.5">
+                    <label
+                      class="font-body-strong text-xs text-text-primary flex items-center justify-between"
+                    >
+                      <span>Klien <span class="text-danger">*</span></span>
+                      <span class="text-[11px] font-normal text-text-secondary"
+                        >3 klien penugasan</span
+                      >
+                    </label>
+                    <div class="relative">
+                      <select
+                        class="w-full h-10 px-3 pr-8 rounded bg-surface font-body-default text-xs text-text-primary border border-slate-300 focus:outline-none focus:ring-2 focus:ring-focus-ring"
+                        id="klien-select"
+                      >
+                        <option selected="" value="klien-a">
+                          Klien A - Retail Mandiri
+                        </option>
+                        <option value="klien-b">
+                          Klien B - Prima Logistik
+                        </option>
+                        <option value="klien-c">Klien C - Megah Tekstil</option>
+                      </select>
+                      <span
+                        class="material-symbols-outlined absolute right-2.5 top-2.5 text-text-secondary text-[20px] pointer-events-none"
+                        >expand_more</span
+                      >
+                    </div>
+                    <p class="font-caption text-caption text-text-secondary">
+                      Hanya menampilkan klien yang ditugaskan kepada Anda.
+                    </p>
+                  </div>
+                  <!-- Vendor -->
+                  <div class="flex flex-col gap-1.5">
+                    <label
+                      class="font-body-strong text-xs text-text-primary flex items-center justify-between"
+                    >
+                      <span>Vendor <span class="text-danger">*</span></span>
+                      <span
+                        class="text-[11px] font-normal text-success flex items-center gap-1"
+                      >
+                        <span
+                          class="w-1.5 h-1.5 rounded-full bg-success"
+                        ></span>
+                        Terfilter
+                      </span>
+                    </label>
+                    <div class="relative">
+                      <select
+                        class="w-full h-10 px-3 pr-8 rounded bg-surface font-body-default text-xs text-text-primary border border-slate-300 focus:outline-none focus:ring-2 focus:ring-focus-ring"
+                        id="vendor-select"
+                      >
+                        <option selected="" value="sinar-abadi">
+                          PT Sinar Abadi Perkasa
+                        </option>
+                        <option value="bahtera-mandiri">
+                          CV Bahtera Mandiri (1 Dokumen)
+                        </option>
+                      </select>
+                      <span
+                        class="material-symbols-outlined absolute right-2.5 top-2.5 text-text-secondary text-[20px] pointer-events-none"
+                        >expand_more</span
+                      >
+                    </div>
+                    <p class="font-caption text-caption text-text-secondary">
+                      Vendor otomatis terfilter berdasarkan invoice
+                      AMIGA_REVIEWED.
+                    </p>
+                  </div>
+                </div>
+                <!-- Row 2: Peruntukan Pembayaran -->
+                <div class="flex flex-col gap-1.5 pt-1">
+                  <div class="flex items-center justify-between">
+                    <label
+                      class="font-body-strong text-xs text-text-primary"
+                      for="peruntukan-input"
+                    >
+                      Peruntukan Pembayaran <span class="text-danger">*</span>
+                    </label>
+                    <span
+                      class="font-code-mono text-[11px] text-text-secondary"
+                      id="char-counter"
+                      >71/255</span
+                    >
+                  </div>
+                  <input
+                    class="w-full h-10 px-3 rounded bg-surface font-body-default text-xs text-text-primary border border-slate-300 focus:outline-none focus:ring-2 focus:ring-focus-ring transition"
+                    id="peruntukan-input"
+                    maxlength="255"
+                    oninput="updateCharCount(this)"
+                    placeholder="Contoh: Pembayaran pengadaan ATK kantor cabang Sudirman &amp; logistik operasional"
+                    type="text"
+                    value="Pembayaran pengadaan ATK kantor cabang Sudirman &amp; logistik operasional"
+                  />
+                  <p class="font-caption text-caption text-text-secondary">
+                    Wajib diisi sebelum melanjutkan ke pratinjau voucher.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- Invoice Picker Section -->
+            <div class="w-full flex flex-col gap-3">
+              <!-- Section Header & Legends -->
+              <div
+                class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1"
+              >
+                <div class="flex items-center gap-2.5">
+                  <h2
+                    class="font-label-firm text-label-firm uppercase text-text-primary tracking-wider"
+                  >
+                    Daftar Invoice Terverifikasi
+                  </h2>
+                  <span
+                    class="px-2 py-0.5 rounded font-label-firm text-[11px] bg-status-ready-bg text-status-ready-fg border border-status-ready-border"
+                    id="ready-badge"
+                  >
+                    4 Siap Dibuatkan
+                  </span>
+                </div>
+                <div
+                  class="flex flex-wrap items-center gap-4 text-xs text-text-secondary"
+                >
+                  <div class="flex items-center gap-1.5">
+                    <span
+                      class="w-2.5 h-2.5 rounded-full bg-emerald-500"
+                    ></span>
+                    <span>Kompatibel Rekening &amp; Vendor</span>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <span
+                      class="material-symbols-outlined text-[15px] text-slate-500"
+                      >lock</span
+                    >
+                    <span>Terkunci (Aturan Bank/Vendor)</span>
+                  </div>
+                </div>
+              </div>
+              <!-- State: Empty View Container (hidden by default) -->
+              <div
+                class="hidden w-full bg-surface rounded-lg p-12 text-center shadow-sm"
+                id="state-empty-container"
+              >
+                <div
+                  class="w-12 h-12 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-text-secondary mb-3"
+                >
+                  <span class="material-symbols-outlined text-[28px]"
+                    >inbox</span
+                  >
+                </div>
+                <h3 class="font-headline-sm text-headline-sm text-text-primary">
+                  Tidak Ada Invoice Siap Dibuatkan Voucher
+                </h3>
+                <p
+                  class="font-body-default text-body-default text-text-secondary max-w-md mx-auto mt-1 mb-4"
+                >
+                  Semua invoice berstatus
+                  <code class="font-code-mono text-xs">AMIGA_REVIEWED</code>
+                  untuk vendor ini telah dibuatkan voucher atau belum disetujui
+                  reviewer.
+                </p>
+                <button
+                  class="px-4 py-2 bg-primary text-white rounded text-xs font-semibold hover:bg-primary-hover transition"
+                  onclick="setSimState('selected')"
+                >
+                  Muat Ulang Filter
+                </button>
+              </div>
+              <!-- State: Loading Skeleton Container (hidden by default) -->
+              <div
+                class="hidden w-full bg-surface rounded-lg shadow-sm overflow-hidden p-4 space-y-3"
+                id="state-loading-container"
+              >
+                <div class="h-10 bg-slate-100 rounded animate-pulse"></div>
+                <div class="h-12 bg-slate-50 rounded animate-pulse"></div>
+                <div class="h-12 bg-slate-50 rounded animate-pulse"></div>
+                <div class="h-12 bg-slate-50 rounded animate-pulse"></div>
+                <div class="h-12 bg-slate-50 rounded animate-pulse"></div>
+              </div>
+              <!-- Main Audit-Grade Table -->
+              <div
+                class="w-full bg-surface rounded-lg shadow-sm overflow-x-auto"
+                id="table-container"
+              >
+                <table class="w-full text-left border-collapse min-w-[980px]">
+                  <thead>
+                    <tr
+                      class="bg-surface-muted text-text-secondary font-table-header text-table-header uppercase tracking-wider h-10 border-b border-slate-200"
+                    >
+                      <th class="w-12 px-4 py-2 text-center">
+                        <input
+                          checked=""
+                          class="rounded text-primary focus:ring-focus-ring w-4 h-4 cursor-pointer align-middle"
+                          id="select-all-checkbox"
+                          onchange="toggleSelectAll(this)"
+                          title="Pilih semua yang kompatibel"
+                          type="checkbox"
+                        />
+                      </th>
+                      <th class="px-4 py-2">Nomor Invoice</th>
+                      <th class="px-4 py-2">Tanggal</th>
+                      <th class="px-4 py-2">Rekening Tujuan</th>
+                      <th class="px-4 py-2 text-right">Total Tagihan</th>
+                      <th class="px-4 py-2 text-center">Status Dokumen</th>
+                      <th class="px-4 py-2 text-center w-24">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    class="divide-y divide-slate-200 font-body-default text-xs"
+                    id="invoice-table-body"
+                  >
+                    <!-- Row 1: CHECKED (Compatible) -->
+                    <tr
+                      class="h-12 hover:bg-primary-subtle transition-colors group"
+                      id="row-inv-1"
+                    >
+                      <td class="px-4 py-2 text-center">
+                        <input
+                          checked=""
+                          class="invoice-checkbox rounded text-primary focus:ring-focus-ring w-4 h-4 cursor-pointer align-middle"
+                          data-inv="INV/2026/02/0991"
+                          data-nominal="1248750"
+                          onchange="recalculateSelection()"
+                          type="checkbox"
+                        />
+                      </td>
+                      <td class="px-4 py-2">
+                        <div
+                          class="font-code-mono font-semibold text-text-primary text-[13px]"
+                        >
+                          INV/2026/02/0991
+                        </div>
+                        <div
+                          class="font-code-mono text-[11px] text-text-secondary"
+                        >
+                          REQ-2026-000123
+                        </div>
+                      </td>
+                      <td
+                        class="px-4 py-2 text-text-secondary whitespace-nowrap"
+                      >
+                        18/02/2026
+                      </td>
+                      <td class="px-4 py-2">
+                        <div
+                          class="font-code-mono font-medium text-text-primary"
+                        >
+                          Bank Mandiri 1370019283712
+                        </div>
+                        <div class="text-[11px] text-text-secondary">
+                          a.n. PT Sinar Abadi Perkasa
+                        </div>
+                      </td>
+                      <td
+                        class="px-4 py-2 text-right font-code-mono font-semibold text-text-primary text-[13px] whitespace-nowrap"
+                      >
+                        Rp 1.248.750,00
+                      </td>
+                      <td class="px-4 py-2 text-center">
+                        <span
+                          class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded font-label-firm text-[11px] bg-status-reviewed-bg text-status-reviewed-fg border border-status-reviewed-border"
+                        >
+                          <span class="material-symbols-outlined text-[14px]"
+                            >verified_user</span
+                          >
+                          AMIGA_REVIEWED
+                        </span>
+                      </td>
+                      <td class="px-4 py-2 text-center">
+                        <button
+                          class="p-1.5 text-text-secondary hover:text-primary hover:bg-slate-100 rounded transition"
+                          onclick="
+                            openPreviewModal(
+                              'INV/2026/02/0991',
+                              'Rp 1.248.750,00',
+                              '18/02/2026',
+                              'Bank Mandiri 1370019283712',
+                            )
+                          "
+                          title="Lihat file asli"
+                        >
+                          <span class="material-symbols-outlined text-[18px]"
+                            >visibility</span
+                          >
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Row 2: CHECKED (Compatible) -->
+                    <tr
+                      class="h-12 hover:bg-primary-subtle transition-colors group"
+                      id="row-inv-2"
+                    >
+                      <td class="px-4 py-2 text-center">
+                        <input
+                          checked=""
+                          class="invoice-checkbox rounded text-primary focus:ring-focus-ring w-4 h-4 cursor-pointer align-middle"
+                          data-inv="INV/2026/02/0995"
+                          data-nominal="3450000"
+                          onchange="recalculateSelection()"
+                          type="checkbox"
+                        />
+                      </td>
+                      <td class="px-4 py-2">
+                        <div
+                          class="font-code-mono font-semibold text-text-primary text-[13px]"
+                        >
+                          INV/2026/02/0995
+                        </div>
+                        <div
+                          class="font-code-mono text-[11px] text-text-secondary"
+                        >
+                          REQ-2026-000128
+                        </div>
+                      </td>
+                      <td
+                        class="px-4 py-2 text-text-secondary whitespace-nowrap"
+                      >
+                        20/02/2026
+                      </td>
+                      <td class="px-4 py-2">
+                        <div
+                          class="font-code-mono font-medium text-text-primary"
+                        >
+                          Bank Mandiri 1370019283712
+                        </div>
+                        <div class="text-[11px] text-text-secondary">
+                          a.n. PT Sinar Abadi Perkasa
+                        </div>
+                      </td>
+                      <td
+                        class="px-4 py-2 text-right font-code-mono font-semibold text-text-primary text-[13px] whitespace-nowrap"
+                      >
+                        Rp 3.450.000,00
+                      </td>
+                      <td class="px-4 py-2 text-center">
+                        <span
+                          class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded font-label-firm text-[11px] bg-status-reviewed-bg text-status-reviewed-fg border border-status-reviewed-border"
+                        >
+                          <span class="material-symbols-outlined text-[14px]"
+                            >verified_user</span
+                          >
+                          AMIGA_REVIEWED
+                        </span>
+                      </td>
+                      <td class="px-4 py-2 text-center">
+                        <button
+                          class="p-1.5 text-text-secondary hover:text-primary hover:bg-slate-100 rounded transition"
+                          onclick="
+                            openPreviewModal(
+                              'INV/2026/02/0995',
+                              'Rp 3.450.000,00',
+                              '20/02/2026',
+                              'Bank Mandiri 1370019283712',
+                            )
+                          "
+                          title="Lihat file asli"
+                        >
+                          <span class="material-symbols-outlined text-[18px]"
+                            >visibility</span
+                          >
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Row 3: DISABLED (Different Bank Account) -->
+                    <tr
+                      class="h-12 bg-slate-50/70 opacity-60 cursor-not-allowed select-none"
+                    >
+                      <td class="px-4 py-2 text-center">
+                        <input
+                          class="rounded text-slate-300 w-4 h-4 cursor-not-allowed align-middle"
+                          disabled=""
+                          type="checkbox"
+                        />
+                      </td>
+                      <td class="px-4 py-2">
+                        <div class="flex items-center gap-1.5">
+                          <span
+                            class="font-code-mono font-semibold text-text-secondary text-[13px]"
+                            >INV/2026/02/1004</span
+                          >
+                          <span
+                            class="material-symbols-outlined text-[15px] text-slate-500"
+                            >lock</span
+                          >
+                        </div>
+                        <div
+                          class="font-code-mono text-[11px] text-text-secondary"
+                        >
+                          REQ-2026-000135
+                        </div>
+                      </td>
+                      <td
+                        class="px-4 py-2 text-text-secondary whitespace-nowrap"
+                      >
+                        22/02/2026
+                      </td>
+                      <td class="px-4 py-2">
+                        <div class="font-code-mono text-text-secondary">
+                          BCA 8830192841
+                        </div>
+                        <div class="text-[11px] text-text-secondary">
+                          a.n. PT Sinar Abadi Perkasa (Cab. Bandung)
+                        </div>
+                        <div class="mt-1">
+                          <span
+                            class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-amber-100 text-amber-800"
+                          >
+                            <span class="material-symbols-outlined text-[12px]"
+                              >info</span
+                            >
+                            Rekening berbeda dengan invoice terpilih
+                          </span>
+                        </div>
+                      </td>
+                      <td
+                        class="px-4 py-2 text-right font-code-mono text-text-secondary text-[13px] whitespace-nowrap"
+                      >
+                        Rp 1.850.000,00
+                      </td>
+                      <td class="px-4 py-2 text-center">
+                        <span
+                          class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded font-label-firm text-[11px] bg-status-reviewed-bg text-status-reviewed-fg border border-status-reviewed-border opacity-70"
+                        >
+                          <span class="material-symbols-outlined text-[14px]"
+                            >verified_user</span
+                          >
+                          AMIGA_REVIEWED
+                        </span>
+                      </td>
+                      <td class="px-4 py-2 text-center">
+                        <button
+                          class="p-1.5 text-text-secondary hover:text-primary rounded transition"
+                          onclick="
+                            openPreviewModal(
+                              'INV/2026/02/1004',
+                              'Rp 1.850.000,00',
+                              '22/02/2026',
+                              'BCA 8830192841',
+                            )
+                          "
+                          title="Lihat file asli"
+                        >
+                          <span class="material-symbols-outlined text-[18px]"
+                            >visibility</span
+                          >
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Row 4: DISABLED (Different Vendor) -->
+                    <tr
+                      class="h-12 bg-slate-50/70 opacity-60 cursor-not-allowed select-none"
+                    >
+                      <td class="px-4 py-2 text-center">
+                        <input
+                          class="rounded text-slate-300 w-4 h-4 cursor-not-allowed align-middle"
+                          disabled=""
+                          type="checkbox"
+                        />
+                      </td>
+                      <td class="px-4 py-2">
+                        <div class="flex items-center gap-1.5">
+                          <span
+                            class="font-code-mono font-semibold text-text-secondary text-[13px]"
+                            >INV/2026/01/0882</span
+                          >
+                          <span
+                            class="material-symbols-outlined text-[15px] text-slate-500"
+                            >lock</span
+                          >
+                        </div>
+                        <div
+                          class="font-code-mono text-[11px] text-text-secondary"
+                        >
+                          REQ-2026-000099
+                        </div>
+                      </td>
+                      <td
+                        class="px-4 py-2 text-text-secondary whitespace-nowrap"
+                      >
+                        15/02/2026
+                      </td>
+                      <td class="px-4 py-2">
+                        <div class="font-code-mono text-text-secondary">
+                          Bank Mandiri 102009847120
+                        </div>
+                        <div class="text-[11px] text-text-secondary">
+                          a.n. CV Bahtera Mandiri
+                        </div>
+                        <div class="mt-1">
+                          <span
+                            class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-red-100 text-red-800"
+                          >
+                            <span class="material-symbols-outlined text-[12px]"
+                              >block</span
+                            >
+                            Vendor berbeda (CV Bahtera Mandiri)
+                          </span>
+                        </div>
+                      </td>
+                      <td
+                        class="px-4 py-2 text-right font-code-mono text-text-secondary text-[13px] whitespace-nowrap"
+                      >
+                        Rp 5.120.000,00
+                      </td>
+                      <td class="px-4 py-2 text-center">
+                        <span
+                          class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded font-label-firm text-[11px] bg-status-reviewed-bg text-status-reviewed-fg border border-status-reviewed-border opacity-70"
+                        >
+                          <span class="material-symbols-outlined text-[14px]"
+                            >verified_user</span
+                          >
+                          AMIGA_REVIEWED
+                        </span>
+                      </td>
+                      <td class="px-4 py-2 text-center">
+                        <button
+                          class="p-1.5 text-text-secondary hover:text-primary rounded transition"
+                          onclick="
+                            openPreviewModal(
+                              'INV/2026/01/0882',
+                              'Rp 5.120.000,00',
+                              '15/02/2026',
+                              'Bank Mandiri 102009847120',
+                            )
+                          "
+                          title="Lihat file asli"
+                        >
+                          <span class="material-symbols-outlined text-[18px]"
+                            >visibility</span
+                          >
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Footer Note -->
+              <div
+                class="flex items-center gap-2 text-xs text-text-secondary px-1"
+              >
+                <span
+                  class="material-symbols-outlined text-[16px] text-slate-400"
+                  >info</span
+                >
+                <span
+                  >Aturan Sistem AMIGA: Invoice dengan bank tujuan atau vendor
+                  berbeda secara otomatis dinonaktifkan dari penggabungan batch
+                  voucher ini.</span
+                >
+              </div>
+            </div>
+          </div>
+          <!-- Sticky Selection Summary Footer Bar -->
+          <!-- Fixed to bottom, strictly scoped, padding safe, no text overlap -->
+          <aside
+            class="fixed bottom-0 left-0 right-0 lg:left-60 z-30 bg-surface border-t border-slate-300 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] px-4 sm:px-8 py-3.5 transition-all"
+          >
+            <div
+              class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4"
+            >
+              <!-- Left side: Summary -->
+              <div class="flex items-center gap-4 w-full sm:w-auto">
+                <div
+                  class="w-10 h-10 rounded-lg bg-primary-subtle text-primary flex items-center justify-center shrink-0"
+                >
+                  <span class="material-symbols-outlined text-[24px]"
+                    >receipt</span
+                  >
+                </div>
+                <div class="flex flex-col">
+                  <div class="flex flex-wrap items-baseline gap-2">
+                    <span
+                      class="font-body-strong text-xs text-text-secondary"
+                      id="selected-count-text"
+                      >2 invoice dipilih</span
+                    >
+                    <span class="text-slate-300">•</span>
+                    <span class="font-body-strong text-xs text-text-secondary"
+                      >Total Nominal:</span
+                    >
+                    <span
+                      class="font-code-mono font-bold text-text-primary text-base sm:text-lg tracking-tight"
+                      id="selected-total-text"
+                    >
+                      Rp 4.698.750,00
+                    </span>
+                  </div>
+                  <div
+                    class="flex items-center gap-1.5 text-xs text-text-secondary"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[14px] text-emerald-600"
+                      >account_balance</span
+                    >
+                    <span id="rekening-target-text"
+                      >Rekening tujuan:
+                      <strong class="text-text-primary font-mono font-semibold"
+                        >Bank Mandiri 1370019283712</strong
+                      >
+                      (PT Sinar Abadi Perkasa)</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <!-- Right side: Actions -->
+              <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+                <button
+                  class="h-10 px-4 rounded text-xs font-semibold text-text-secondary hover:text-text-primary hover:bg-slate-100 border border-slate-300 transition"
+                  onclick="resetSelection()"
+                  type="button"
+                >
+                  Reset Pilihan
+                </button>
+                <button
+                  class="h-10 px-6 rounded text-xs font-semibold bg-primary text-white hover:bg-primary-hover active:bg-primary-active shadow-sm flex items-center gap-2 transition"
+                  id="btn-submit-step1"
+                  onclick="proceedToPreview()"
+                  type="button"
+                >
+                  <span>Lanjut ke Preview Voucher</span>
+                  <span class="material-symbols-outlined text-[18px]"
+                    >arrow_forward</span
+                  >
+                </button>
+              </div>
+            </div>
+          </aside>
+          <!-- Modal Original File Viewer (Integrated, Interactive) -->
+          <div
+            class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 sm:p-6 bg-slate-900/60 backdrop-blur-xs"
+            id="file-modal"
+          >
+            <div
+              class="w-full max-w-4xl bg-surface rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+            >
+              <!-- Modal Header -->
+              <div
+                class="px-5 py-3.5 bg-surface-muted border-b border-slate-200 flex items-center justify-between"
+              >
+                <div class="flex items-center gap-2.5">
+                  <span
+                    class="material-symbols-outlined text-primary text-[20px]"
+                    >picture_as_pdf</span
+                  >
+                  <div>
+                    <h3
+                      class="font-code-mono font-bold text-sm text-text-primary"
+                      id="modal-inv-title"
+                    >
+                      INV/2026/02/0991
+                    </h3>
+                    <p class="font-caption text-caption text-text-secondary">
+                      Pratinjau Berkas Asli (OCR Source PDF)
+                    </p>
+                  </div>
+                </div>
+                <!-- Viewer Toolbar -->
+                <div class="flex items-center gap-2">
+                  <div
+                    class="flex items-center bg-surface border border-slate-300 rounded px-1 py-0.5 text-xs text-text-secondary"
+                  >
+                    <button
+                      class="p-1 hover:text-text-primary"
+                      onclick="adjustZoom(-10)"
+                    >
+                      <span class="material-symbols-outlined text-[16px]"
+                        >remove</span
+                      >
+                    </button>
+                    <span class="px-2 font-code-mono" id="zoom-level"
+                      >100%</span
+                    >
+                    <button
+                      class="p-1 hover:text-text-primary"
+                      onclick="adjustZoom(10)"
+                    >
+                      <span class="material-symbols-outlined text-[16px]"
+                        >add</span
+                      >
+                    </button>
+                  </div>
+                  <button
+                    class="p-1.5 border border-slate-300 rounded hover:bg-slate-100 text-text-secondary"
+                    onclick="rotateDoc()"
+                    title="Putar"
+                  >
+                    <span class="material-symbols-outlined text-[16px]"
+                      >rotate_right</span
+                    >
+                  </button>
+                  <button
+                    class="p-1.5 rounded-full hover:bg-slate-200 text-text-secondary hover:text-text-primary"
+                    onclick="closePreviewModal()"
+                    title="Tutup"
+                  >
+                    <span class="material-symbols-outlined text-[20px]"
+                      >close</span
+                    >
+                  </button>
+                </div>
+              </div>
+              <!-- Modal Document Body (Realistic Invoice Render) -->
+              <div
+                class="flex-1 overflow-auto bg-slate-200 p-6 flex justify-center items-start"
+              >
+                <div
+                  class="w-full max-w-2xl bg-white p-8 rounded shadow-md border border-slate-300 transition-transform origin-top text-slate-800 text-xs"
+                  id="invoice-doc-canvas"
+                >
+                  <!-- Mock Invoice Header -->
+                  <div
+                    class="flex justify-between items-start border-b border-slate-300 pb-5 mb-5"
+                  >
+                    <div>
+                      <h2
+                        class="font-bold text-lg text-slate-900 tracking-tight"
+                      >
+                        PT SINAR ABADI PERKASA
+                      </h2>
+                      <p class="text-slate-500 text-[11px] mt-0.5">
+                        Kawasan Industri Pulogadung Blok B No. 14, Jakarta Timur
+                      </p>
+                      <p class="text-slate-500 text-[11px]">
+                        NPWP: 01.345.678.9-041.000
+                      </p>
+                    </div>
+                    <div class="text-right">
+                      <span
+                        class="font-code-mono text-sm font-bold text-primary block"
+                        id="modal-render-inv"
+                        >INV/2026/02/0991</span
+                      >
+                      <span
+                        class="text-slate-400 text-[11px]"
+                        id="modal-render-date"
+                        >Tanggal: 18/02/2026</span
+                      >
+                      <div
+                        class="mt-2 inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded text-[10px] font-semibold border border-emerald-200"
+                      >
+                        <span class="material-symbols-outlined text-[12px]"
+                          >verified</span
+                        >
+                        TERVERIFIKASI OCR
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Invoice Details -->
+                  <div class="grid grid-cols-2 gap-4 mb-6 text-[11px]">
+                    <div>
+                      <p class="text-slate-400 uppercase font-semibold">
+                        Ditagihkan Kepada:
+                      </p>
+                      <p class="font-bold text-slate-800 mt-1">
+                        Klien A - Retail Mandiri
+                      </p>
+                      <p class="text-slate-600">
+                        Jl. Jend. Sudirman Kav 21, Jakarta Pusat
+                      </p>
+                    </div>
+                    <div>
+                      <p class="text-slate-400 uppercase font-semibold">
+                        Tujuan Rekening Pembayaran:
+                      </p>
+                      <p
+                        class="font-bold font-code-mono text-slate-900 mt-1"
+                        id="modal-render-bank"
+                      >
+                        Bank Mandiri 1370019283712
+                      </p>
+                      <p class="text-slate-600">
+                        Atas Nama: PT Sinar Abadi Perkasa
+                      </p>
+                    </div>
+                  </div>
+                  <!-- Items Table -->
+                  <table
+                    class="w-full text-left text-[11px] mb-6 border-collapse"
+                  >
+                    <thead>
+                      <tr
+                        class="border-y border-slate-300 bg-slate-50 text-slate-600"
+                      >
+                        <th class="py-2 px-2">Deskripsi Barang/Jasa</th>
+                        <th class="py-2 px-2 text-center">Qty</th>
+                        <th class="py-2 px-2 text-right">Harga Satuan</th>
+                        <th class="py-2 px-2 text-right">Subtotal</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                      <tr>
+                        <td class="py-2.5 px-2">
+                          Kertas HVS A4 80gr Sinar Dunia (Karton)
+                        </td>
+                        <td class="py-2.5 px-2 text-center">15</td>
+                        <td class="py-2.5 px-2 text-right font-code-mono">
+                          Rp 45.000
+                        </td>
+                        <td class="py-2.5 px-2 text-right font-code-mono">
+                          Rp 675.000
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="py-2.5 px-2">
+                          Cartridge Toner Laserjet Hitam Original
+                        </td>
+                        <td class="py-2.5 px-2 text-center">1</td>
+                        <td class="py-2.5 px-2 text-right font-code-mono">
+                          Rp 450.000
+                        </td>
+                        <td class="py-2.5 px-2 text-right font-code-mono">
+                          Rp 450.000
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="py-2.5 px-2">
+                          Biaya Pengiriman Logistik Cepat Cabang Sudirman
+                        </td>
+                        <td class="py-2.5 px-2 text-center">1</td>
+                        <td class="py-2.5 px-2 text-right font-code-mono">
+                          Rp 123.750
+                        </td>
+                        <td class="py-2.5 px-2 text-right font-code-mono">
+                          Rp 123.750
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <!-- Total -->
+                  <div class="flex justify-end pt-3 border-t border-slate-300">
+                    <div class="w-64 space-y-1.5 text-[11px]">
+                      <div class="flex justify-between text-slate-600">
+                        <span>Subtotal Bersih:</span>
+                        <span class="font-code-mono">Rp 1.248.750</span>
+                      </div>
+                      <div class="flex justify-between text-slate-600">
+                        <span>PPN 11% (Termasuk):</span>
+                        <span class="font-code-mono">Rp 0</span>
+                      </div>
+                      <div
+                        class="flex justify-between font-bold text-sm text-slate-900 border-t border-slate-300 pt-2"
+                      >
+                        <span>Total Ditagihkan:</span>
+                        <span
+                          class="font-code-mono text-primary"
+                          id="modal-render-total"
+                          >Rp 1.248.750,00</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Digital Stamp & Sign -->
+                  <div
+                    class="mt-8 flex justify-between items-end pt-4 border-t border-dashed border-slate-200"
+                  >
+                    <div class="text-[10px] text-slate-400">
+                      Dokumen ini disahkan secara elektronik melalui Robot OCR
+                      AMIGA Engine v4.2<br />
+                      Checksum:
+                      <code class="font-code-mono">e7b992f08a41cc12</code>
+                    </div>
+                    <div class="text-center">
+                      <div
+                        class="w-24 h-12 border border-slate-200 rounded flex items-center justify-center text-slate-300 text-[10px] italic mb-1"
+                      >
+                        [Tanda Tangan]
+                      </div>
+                      <p class="font-semibold text-[10px]">Finance Dept.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Modal Footer -->
+              <div
+                class="px-5 py-3 bg-surface border-t border-slate-200 flex justify-between items-center text-xs"
+              >
+                <span class="text-text-secondary"
+                  >Status: Dokumen Asli Terenkripsi SHA-256</span
+                >
+                <button
+                  class="px-4 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-text-primary font-medium transition"
+                  onclick="closePreviewModal()"
+                >
+                  Tutup Pratinjau
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>
+          let currentZoom = 100;
+          let currentRotate = 0;
+
+          function updateCharCount(el) {
+            const len = el.value.length;
+            const counter = document.getElementById('char-counter');
+            if (counter) {
+              counter.innerText = `${len}/255`;
+              if (len > 240) {
+                counter.classList.add('text-danger');
+              } else {
+                counter.classList.remove('text-danger');
+              }
+            }
+            validateSubmissionState();
+          }
+
+          function recalculateSelection() {
+            const checkedBoxes = document.querySelectorAll(
+              '.invoice-checkbox:checked',
+            );
+            let total = 0;
+
+            checkedBoxes.forEach((cb) => {
+              const val = parseInt(cb.getAttribute('data-nominal') || '0', 10);
+              total += val;
+            });
+
+            const count = checkedBoxes.length;
+            const countEl = document.getElementById('selected-count-text');
+            const totalEl = document.getElementById('selected-total-text');
+            const submitBtn = document.getElementById('btn-submit-step1');
+
+            if (countEl) countEl.innerText = `${count} invoice dipilih`;
+            if (totalEl) totalEl.innerText = formatRupiah(total);
+
+            // Sync select-all box state
+            const allCompatibles =
+              document.querySelectorAll('.invoice-checkbox');
+            const selectAllBox = document.getElementById('select-all-checkbox');
+            if (selectAllBox) {
+              selectAllBox.checked =
+                count === allCompatibles.length && count > 0;
+              selectAllBox.indeterminate =
+                count > 0 && count < allCompatibles.length;
+            }
+
+            validateSubmissionState();
+          }
+
+          function validateSubmissionState() {
+            const checkedCount = document.querySelectorAll(
+              '.invoice-checkbox:checked',
+            ).length;
+            const peruntukanVal =
+              document.getElementById('peruntukan-input')?.value.trim() || '';
+            const submitBtn = document.getElementById('btn-submit-step1');
+
+            if (!submitBtn) return;
+
+            if (checkedCount === 0 || peruntukanVal === '') {
+              submitBtn.disabled = true;
+              submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+              submitBtn.classList.remove('hover:bg-primary-hover');
+            } else {
+              submitBtn.disabled = false;
+              submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+              submitBtn.classList.add('hover:bg-primary-hover');
+            }
+          }
+
+          function toggleSelectAll(master) {
+            const checkboxes = document.querySelectorAll('.invoice-checkbox');
+            checkboxes.forEach((cb) => {
+              cb.checked = master.checked;
+            });
+            recalculateSelection();
+          }
+
+          function resetSelection() {
+            const checkboxes = document.querySelectorAll('.invoice-checkbox');
+            checkboxes.forEach((cb) => {
+              cb.checked = false;
+            });
+            const selectAll = document.getElementById('select-all-checkbox');
+            if (selectAll) selectAll.checked = false;
+            recalculateSelection();
+          }
+
+          function formatRupiah(angka) {
+            return (
+              'Rp ' +
+              angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') +
+              ',00'
+            );
+          }
+
+          function proceedToPreview() {
+            const checked = document.querySelectorAll(
+              '.invoice-checkbox:checked',
+            ).length;
+            const peruntukan =
+              document.getElementById('peruntukan-input')?.value || '';
+            if (checked === 0) {
+              alert('Pilih minimal 1 invoice sebelum melanjutkan.');
+              return;
+            }
+            if (!peruntukan.trim()) {
+              alert('Mohon isi Peruntukan Pembayaran.');
+              return;
+            }
+            alert(
+              `Lanjut ke Langkah 2 (Pratinjau Voucher):\n• ${checked} Invoice Tergabung\n• Peruntukan: "${peruntukan}"`,
+            );
+          }
+
+          // File Viewer Modal interactions
+          function openPreviewModal(invNo, total, date, bank) {
+            document.getElementById('modal-inv-title').innerText = invNo;
+            document.getElementById('modal-render-inv').innerText = invNo;
+            document.getElementById('modal-render-total').innerText = total;
+            document.getElementById('modal-render-date').innerText =
+              'Tanggal: ' + date;
+            document.getElementById('modal-render-bank').innerText = bank;
+
+            currentZoom = 100;
+            currentRotate = 0;
+            applyCanvasTransform();
+
+            document.getElementById('file-modal').classList.remove('hidden');
+          }
+
+          function closePreviewModal() {
+            document.getElementById('file-modal').classList.add('hidden');
+          }
+
+          function adjustZoom(delta) {
+            currentZoom = Math.min(Math.max(currentZoom + delta, 50), 200);
+            document.getElementById('zoom-level').innerText = currentZoom + '%';
+            applyCanvasTransform();
+          }
+
+          function rotateDoc() {
+            currentRotate = (currentRotate + 90) % 360;
+            applyCanvasTransform();
+          }
+
+          function applyCanvasTransform() {
+            const canvas = document.getElementById('invoice-doc-canvas');
+            if (canvas) {
+              canvas.style.transform = `scale(${currentZoom / 100}) rotate(${currentRotate}deg)`;
+            }
+          }
+
+          // QA Simulation Switcher
+          function setSimState(state) {
+            // Reset buttons styling
+            const states = [
+              'populated',
+              'selected',
+              'loading',
+              'empty',
+              'conflict',
+              'revoked',
+            ];
+            states.forEach((s) => {
+              const btn = document.getElementById(`btn-state-${s}`);
+              if (btn) {
+                btn.classList.remove(
+                  'bg-primary-container',
+                  'text-white',
+                  'ring-1',
+                  'ring-blue-400',
+                );
+                btn.classList.add('bg-slate-800', 'text-slate-300');
+              }
+            });
+
+            const activeBtn = document.getElementById(`btn-state-${state}`);
+            if (activeBtn) {
+              activeBtn.classList.remove('bg-slate-800', 'text-slate-300');
+              activeBtn.classList.add(
+                'bg-primary-container',
+                'text-white',
+                'ring-1',
+                'ring-blue-400',
+              );
+            }
+
+            const tableContainer = document.getElementById('table-container');
+            const loadingContainer = document.getElementById(
+              'state-loading-container',
+            );
+            const emptyContainer = document.getElementById(
+              'state-empty-container',
+            );
+            const alertConflict = document.getElementById('alert-conflict');
+            const alertRevoked = document.getElementById('alert-revoked');
+
+            // Hide all dynamic alert containers
+            alertConflict.classList.add('hidden');
+            alertRevoked.classList.add('hidden');
+
+            if (state === 'loading') {
+              tableContainer.classList.add('hidden');
+              emptyContainer.classList.add('hidden');
+              loadingContainer.classList.remove('hidden');
+            } else if (state === 'empty') {
+              tableContainer.classList.add('hidden');
+              loadingContainer.classList.add('hidden');
+              emptyContainer.classList.remove('hidden');
+            } else {
+              tableContainer.classList.remove('hidden');
+              loadingContainer.classList.add('hidden');
+              emptyContainer.classList.add('hidden');
+
+              if (state === 'populated') {
+                resetSelection();
+              } else if (state === 'selected') {
+                const cb1 = document.querySelector(
+                  '#row-inv-1 .invoice-checkbox',
+                );
+                const cb2 = document.querySelector(
+                  '#row-inv-2 .invoice-checkbox',
+                );
+                if (cb1) cb1.checked = true;
+                if (cb2) cb2.checked = true;
+                recalculateSelection();
+              } else if (state === 'conflict') {
+                alertConflict.classList.remove('hidden');
+              } else if (state === 'revoked') {
+                alertRevoked.classList.remove('hidden');
+              }
+            }
+          }
+
+          // Initialize
+          document.addEventListener('DOMContentLoaded', () => {
+            recalculateSelection();
+          });
+        </script>
+      </main>
+    </div>
+  </body>
+</html>

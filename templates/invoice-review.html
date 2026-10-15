@@ -1,0 +1,1791 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AMIGA Robot Admin - Finance Reviewer (UC-7, UC-8)</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Material Symbols Outlined -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'on-primary-fixed': '#00164e',
+              'on-error-container': '#93000a',
+              'status-processing-fg': '#1E40AF',
+              'status-sent-border': '#C4B5FD',
+              'status-duplicate-fg': '#FFFFFF',
+              'text-secondary': '#475569',
+              'outline-variant': '#c5c5d3',
+              'text-disabled': '#94A3B8',
+              'status-vouchered-bg': '#E0E7FF',
+              'status-exception-fg': '#92400E',
+              'status-duplicate-bg': '#B91C1C',
+              'status-queued-bg': '#F1F5F9',
+              warning: '#92400E',
+              'tertiary-fixed-dim': '#ffb691',
+              'primary-subtle': '#E0E7FF',
+              'status-ready-fg': '#115E59',
+              'on-surface': '#1a1b21',
+              'status-ready-bg': '#CCFBF1',
+              'on-tertiary-fixed-variant': '#773205',
+              'status-vouchered-border': '#A5B4FC',
+              'status-vouchered-fg': '#3730A3',
+              'text-primary': '#0F172A',
+              tertiary: '#4b1c00',
+              'status-exception-bg': '#FEF3C7',
+              'status-sent-bg': '#EDE9FE',
+              'on-primary': '#FFFFFF',
+              'status-ready-border': '#5EEAD4',
+              'inverse-surface': '#2f3036',
+              'status-rejected-bg': '#FFFFFF',
+              'secondary-fixed': '#9cf2e8',
+              'on-secondary': '#ffffff',
+              'success-subtle': '#DCFCE7',
+              info: '#1E40AF',
+              'info-subtle': '#DBEAFE',
+              'on-accent': '#FFFFFF',
+              'surface-bright': '#faf8ff',
+              'on-surface-variant': '#444651',
+              error: '#ba1a1a',
+              'surface-container-highest': '#e3e1e9',
+              'on-primary-container': '#90a8ff',
+              'inverse-primary': '#b6c4ff',
+              'status-processing-border': '#93C5FD',
+              'surface-tint': '#4059aa',
+              'surface-muted': '#F1F5F9',
+              'on-error': '#ffffff',
+              'surface-sunken': '#E2E8F0',
+              border: '#CBD5E1',
+              'accent-subtle': '#CCFBF1',
+              'warning-subtle': '#FEF3C7',
+              'surface-container-lowest': '#ffffff',
+              'primary-active': '#172B6B',
+              'status-exception-border': '#FCD34D',
+              overlay: 'rgba(15, 23, 42, 0.55)',
+              'secondary-container': '#99efe5',
+              'primary-fixed-dim': '#b6c4ff',
+              secondary: '#006a63',
+              'surface-container-low': '#f4f3fa',
+              'text-link': '#1E40AF',
+              'status-queued-border': '#CBD5E1',
+              'inverse-on-surface': '#f1f0f7',
+              'tertiary-container': '#6e2c00',
+              'diff-old-bg': '#FEE2E2',
+              'on-tertiary': '#ffffff',
+              'on-tertiary-container': '#f39461',
+              'surface-dim': '#dad9e1',
+              'border-strong': '#94A3B8',
+              'status-reviewed-fg': '#166534',
+              'status-queued-fg': '#334155',
+              outline: '#757682',
+              'tertiary-fixed': '#ffdbcb',
+              'status-duplicate-border': '#7F1D1D',
+              'primary-hover': '#1B3380',
+              'diff-new-fg': '#166534',
+              'status-processing-bg': '#DBEAFE',
+              'primary-fixed': '#dce1ff',
+              'surface-variant': '#e3e1e9',
+              'status-reviewed-bg': '#DCFCE7',
+              'on-primary-fixed-variant': '#264191',
+              background: '#F8FAFC',
+              'diff-old-fg': '#991B1B',
+              'status-rejected-fg': '#991B1B',
+              'surface-container': '#eeedf4',
+              'on-secondary-container': '#006f67',
+              'primary-container': '#1e3a8a',
+              surface: '#FFFFFF',
+              success: '#166534',
+              'on-background': '#1a1b21',
+              primary: '#00236f',
+              'error-container': '#ffdad6',
+              'diff-new-bg': '#DCFCE7',
+              'danger-subtle': '#FEE2E2',
+              'status-reviewed-border': '#86EFAC',
+              'on-tertiary-fixed': '#341100',
+              'on-secondary-fixed': '#00201d',
+              'accent-hover': '#0D625B',
+              'status-sent-fg': '#5B21B6',
+              'status-rejected-border': '#991B1B',
+              'surface-container-high': '#e9e7ef',
+              'focus-ring': '#2563EB',
+              danger: '#B91C1C',
+              'secondary-fixed-dim': '#80d5cb',
+              'on-secondary-fixed-variant': '#00504a',
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              mono: ['"JetBrains Mono"', 'monospace'],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 20;
+        font-size: 18px;
+        line-height: 1;
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .material-symbols-outlined.fill {
+        font-variation-settings:
+          'FILL' 1,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 20;
+      }
+      /* Custom Scrollbars for Dual Pane view */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f5f9;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+      .field-modified {
+        border-left: 3px solid #0f766e !important;
+        background-color: #f0fdfa !important;
+      }
+      .field-highlight {
+        outline: 2px solid #f59e0b !important;
+        background-color: #fef3c7 !important;
+        transition: all 0.3s ease;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background text-text-primary antialiased font-sans flex flex-col h-screen overflow-hidden"
+  >
+    <!-- TOP PROTOTYPE SIMULATOR BAR -->
+    <header class="bg-surface border-b border-border z-40 shrink-0">
+      <div
+        class="px-4 py-2 flex items-center justify-between border-b border-slate-100 bg-slate-50 text-xs text-text-secondary"
+      >
+        <div class="flex items-center gap-2 font-mono font-medium">
+          <span
+            class="inline-flex items-center justify-center w-4 h-4 rounded bg-primary-container text-white text-[10px]"
+            >A</span
+          >
+          AMIGA SIMULATOR · REVIEW FLOW UC-7 / UC-8
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-text-disabled">Trigger Simulasi Izin:</span>
+          <button
+            class="hover:text-danger underline hover:no-underline flex items-center gap-1"
+            onclick="triggerAccessRevocation()"
+          >
+            <span class="material-symbols-outlined text-sm">lock_reset</span>
+            Pencabutan Akses
+          </button>
+          <span class="text-slate-300">|</span>
+          <button
+            class="hover:text-warning underline hover:no-underline flex items-center gap-1"
+            onclick="triggerSoDModal()"
+          >
+            <span class="material-symbols-outlined text-sm">gavel</span>
+            Separation of Duties (403)
+          </button>
+        </div>
+      </div>
+      <!-- State Tabs -->
+      <div
+        class="flex overflow-x-auto px-4 gap-2 py-1.5 bg-white border-b border-border scrollbar-none"
+      >
+        <button
+          class="tab-btn px-3 py-1.5 rounded text-xs font-semibold flex items-center gap-2 whitespace-nowrap bg-status-ready-bg text-status-ready-fg border border-status-ready-border transition"
+          id="tab-ready"
+          onclick="switchVariant('READY_FOR_REVIEW')"
+        >
+          <span class="w-2 h-2 rounded-full bg-teal-600"></span>
+          1. READY_FOR_REVIEW (Siap Disetujui)
+        </button>
+        <button
+          class="tab-btn px-3 py-1.5 rounded text-xs font-semibold flex items-center gap-2 whitespace-nowrap text-text-secondary hover:bg-slate-100 border border-transparent transition"
+          id="tab-exception"
+          onclick="switchVariant('EXCEPTION')"
+        >
+          <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+          2. EXCEPTION (2 Temuan Validasi)
+        </button>
+        <button
+          class="tab-btn px-3 py-1.5 rounded text-xs font-semibold flex items-center gap-2 whitespace-nowrap text-text-secondary hover:bg-slate-100 border border-transparent transition"
+          id="tab-duplicate"
+          onclick="switchVariant('POSSIBLE_DUPLICATE')"
+        >
+          <span class="w-2 h-2 rounded-full bg-danger"></span>
+          3. POSSIBLE_DUPLICATE (Terkunci &amp; Wajib Tolak)
+        </button>
+        <button
+          class="tab-btn px-3 py-1.5 rounded text-xs font-semibold flex items-center gap-2 whitespace-nowrap text-text-secondary hover:bg-slate-100 border border-transparent transition"
+          id="tab-queued"
+          onclick="switchVariant('QUEUED_PROCESSING')"
+        >
+          <span class="w-2 h-2 rounded-full bg-info"></span>
+          4. QUEUED / PROCESSING (Sedang Diproses)
+        </button>
+        <button
+          class="tab-btn px-3 py-1.5 rounded text-xs font-semibold flex items-center gap-2 whitespace-nowrap text-text-secondary hover:bg-slate-100 border border-transparent transition"
+          id="tab-conflict"
+          onclick="switchVariant('CONFLICT')"
+        >
+          <span class="w-2 h-2 rounded-full bg-purple-600"></span>
+          5. Konflik / Error Konkurensi
+        </button>
+      </div>
+    </header>
+    <!-- HEADER STRIP & METADATA -->
+    <div
+      class="bg-surface border-b border-border px-6 py-2.5 flex items-center justify-between shrink-0 shadow-sm z-30"
+    >
+      <div class="flex items-center gap-4 flex-wrap">
+        <!-- Back Link -->
+        <a
+          class="text-text-secondary hover:text-text-primary text-sm font-medium flex items-center gap-1.5 transition"
+          href="#"
+        >
+          <span class="material-symbols-outlined text-base">arrow_back</span>
+          Kembali ke Antrean
+        </a>
+        <span class="text-border">|</span>
+        <!-- Request ID -->
+        <div class="flex items-center gap-2">
+          <span
+            class="text-xs text-text-secondary uppercase tracking-wider font-semibold"
+            >Request ID:</span
+          >
+          <span
+            class="font-mono text-sm font-bold bg-slate-100 px-2.5 py-0.5 rounded text-text-primary border border-border"
+            >REQ-2026-000123</span
+          >
+        </div>
+        <!-- Hidden Optimistic Lock Version Input -->
+        <input id="concurrency-version" type="hidden" value="v3" />
+        <!-- Metadata Chips -->
+        <div class="hidden lg:flex items-center gap-2">
+          <span
+            class="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-md bg-surface-muted text-text-secondary border border-slate-200"
+          >
+            <span class="material-symbols-outlined text-xs text-slate-400"
+              >corporate_fare</span
+            >
+            <strong class="font-medium text-text-primary">Klien:</strong> Klien
+            A - Retail Mandiri
+          </span>
+          <span
+            class="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-md bg-surface-muted text-text-secondary border border-slate-200"
+          >
+            <span class="material-symbols-outlined text-xs text-slate-400"
+              >storefront</span
+            >
+            <strong class="font-medium text-text-primary">Vendor:</strong> PT
+            Contoh Sejahtera
+          </span>
+          <span
+            class="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-md bg-surface-muted text-text-secondary border border-slate-200"
+          >
+            <span class="material-symbols-outlined text-xs text-slate-400"
+              >schedule</span
+            >
+            <strong class="font-medium text-text-primary">Waktu:</strong>
+            24/02/2026 09:15 WIB
+          </span>
+        </div>
+      </div>
+      <!-- Status Dynamic Badge -->
+      <div class="shrink-0" id="header-status-badge">
+        <span
+          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide bg-status-ready-bg text-status-ready-fg border border-status-ready-border"
+        >
+          <span class="material-symbols-outlined text-sm">check_circle</span>
+          READY_FOR_REVIEW
+        </span>
+      </div>
+    </div>
+    <!-- CONCURRENCY / CONFLICT PERSISTENT BANNER (Variant 5) -->
+    <div
+      class="hidden bg-danger text-white px-6 py-2.5 flex items-center justify-between text-sm shadow-inner shrink-0 transition-all"
+      id="concurrency-conflict-banner"
+    >
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-white">sync_problem</span>
+        <span class="font-medium"
+          >Data sudah diubah user lain (Reviewer: Budi Santoso), muat ulang.
+          Perubahan lokal tidak disimpan.</span
+        >
+      </div>
+      <button
+        class="bg-white text-danger px-3 py-1 rounded font-semibold text-xs hover:bg-slate-100 flex items-center gap-1 shadow-sm"
+        onclick="location.reload()"
+      >
+        <span class="material-symbols-outlined text-sm">refresh</span>
+        Muat Ulang Halaman
+      </button>
+    </div>
+    <!-- MAIN DUAL-PANE VIEWPORT (calc(100vh - 120px)) -->
+    <main class="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+      <!-- LEFT PANE: ORIGINAL FILE VIEWER -->
+      <section
+        aria-label="Berkas Dokumen Asli"
+        class="lg:w-1/2 w-full flex flex-col bg-surface-sunken border-r border-border h-full relative"
+      >
+        <!-- Toolbar -->
+        <div
+          class="bg-surface border-b border-border px-4 py-2 flex items-center justify-between shrink-0 z-20"
+        >
+          <!-- Page Indicator & Controls -->
+          <div class="flex items-center gap-1">
+            <button
+              class="p-1 rounded text-text-secondary hover:text-text-primary hover:bg-surface-muted transition"
+              title="Halaman Sebelumnya"
+            >
+              <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            <span class="text-xs font-medium text-text-primary px-1"
+              >Halaman 1 / 2</span
+            >
+            <button
+              class="p-1 rounded text-text-secondary hover:text-text-primary hover:bg-surface-muted transition"
+              title="Halaman Selanjutnya"
+            >
+              <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+          </div>
+          <!-- Zoom Controls -->
+          <div class="flex items-center gap-2">
+            <button
+              class="p-1 rounded text-text-secondary hover:text-text-primary hover:bg-surface-muted transition"
+              onclick="changeZoom(-0.15)"
+              title="Perkecil (-)"
+            >
+              <span class="material-symbols-outlined">zoom_out</span>
+            </button>
+            <span
+              class="text-xs font-mono font-medium text-text-secondary w-14 text-center"
+              id="zoom-label"
+              >100%</span
+            >
+            <button
+              class="p-1 rounded text-text-secondary hover:text-text-primary hover:bg-surface-muted transition"
+              onclick="changeZoom(0.15)"
+              title="Perbesar (+)"
+            >
+              <span class="material-symbols-outlined">zoom_in</span>
+            </button>
+            <span class="text-slate-300">|</span>
+            <button
+              class="p-1 rounded text-text-secondary hover:text-text-primary hover:bg-surface-muted transition"
+              onclick="resetZoom()"
+              title="Sesuaikan Lebar"
+            >
+              <span class="material-symbols-outlined">fit_screen</span>
+            </button>
+            <button
+              class="p-1 rounded text-text-secondary hover:text-text-primary hover:bg-surface-muted transition"
+              onclick="rotateDoc()"
+              title="Putar 90 Derajat"
+            >
+              <span class="material-symbols-outlined">rotate_right</span>
+            </button>
+          </div>
+          <!-- Document Tag -->
+          <div
+            class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-100 text-[11px] font-mono text-text-secondary border border-slate-200"
+          >
+            <span class="material-symbols-outlined text-xs text-rose-600"
+              >picture_as_pdf</span
+            >
+            INV-2026-0991.pdf
+          </div>
+        </div>
+        <!-- Document Canvas Container -->
+        <div
+          class="flex-1 overflow-auto p-6 flex justify-center items-start bg-slate-200/70 select-none"
+          id="document-canvas-container"
+        >
+          <!-- High-fidelity Synthetic Invoice Sheet -->
+          <div
+            class="bg-white w-full max-w-[560px] min-h-[740px] p-8 shadow-xl border border-slate-300 rounded-sm text-text-primary font-sans transition-transform origin-top duration-150"
+            id="invoice-sheet"
+          >
+            <!-- Document Header -->
+            <div
+              class="flex justify-between items-start pb-6 border-b-2 border-slate-900"
+            >
+              <div>
+                <h2
+                  class="text-xl font-bold tracking-tight text-slate-900 uppercase"
+                >
+                  PT CONTOH SEJAHTERA
+                </h2>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                  Jl. Sudirman Kav. 45-46, Jakarta Selatan<br />
+                  NPWP: 01.892.482.9-012.000<br />
+                  Telp: (021) 555-0199
+                </p>
+              </div>
+              <div class="text-right">
+                <span
+                  class="inline-block px-3 py-1 bg-slate-100 text-slate-900 text-xs font-mono font-bold tracking-widest border border-slate-300 uppercase"
+                  >INVOICE</span
+                >
+                <p class="font-mono text-xs font-semibold text-slate-700 mt-2">
+                  No: INV/2026/02/0991
+                </p>
+                <p class="text-[11px] text-slate-500">Tgl: 18/02/2026</p>
+              </div>
+            </div>
+            <!-- Bill To & Payment Target Info -->
+            <div
+              class="grid grid-cols-2 gap-4 py-5 border-b border-slate-200 text-xs"
+            >
+              <div>
+                <p
+                  class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1"
+                >
+                  Kepada Yth (Bill To):
+                </p>
+                <p class="font-bold text-slate-800">Klien A - Retail Mandiri</p>
+                <p class="text-slate-600 mt-0.5">
+                  Gd. Menara Retail Lt. 8, Jakarta Barat
+                </p>
+                <p class="text-slate-500">ID Klien: CL-RT-0082</p>
+              </div>
+              <div
+                class="p-2.5 rounded bg-amber-50/50 border border-amber-200/60 transition"
+                id="doc-bank-section"
+              >
+                <p
+                  class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1"
+                >
+                  Rekening Pembayaran:
+                </p>
+                <p class="font-bold text-slate-800 font-mono text-xs">
+                  Bank Mandiri 137-00-1928371-2
+                </p>
+                <p class="text-slate-600 text-[11px]">
+                  a.n. PT Contoh Sejahtera
+                </p>
+                <span
+                  class="hidden text-[10px] font-semibold text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded mt-1 inline-block"
+                  id="ocr-highlight-tag"
+                  >OCR Terdeteksi Samar</span
+                >
+              </div>
+            </div>
+            <!-- Invoice Line Items Table -->
+            <div class="py-5" id="doc-items-section">
+              <table class="w-full text-xs text-left">
+                <thead>
+                  <tr
+                    class="border-b border-slate-300 text-slate-500 uppercase text-[10px]"
+                  >
+                    <th class="py-2 font-semibold">Deskripsi Barang / Jasa</th>
+                    <th class="py-2 text-center font-semibold w-12">Qty</th>
+                    <th class="py-2 text-right font-semibold w-24">
+                      Harga (Rp)
+                    </th>
+                    <th class="py-2 text-right font-semibold w-28">
+                      Jumlah (Rp)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  <tr>
+                    <td class="py-2.5 font-medium text-slate-800">
+                      Kertas HVS A4 80gr Sinar Dunia
+                    </td>
+                    <td class="py-2.5 text-center font-mono">10</td>
+                    <td class="py-2.5 text-right font-mono">55.000</td>
+                    <td class="py-2.5 text-right font-mono font-semibold">
+                      550.000
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="py-2.5 font-medium text-slate-800">
+                      Tinta Printer C-902 Black Original
+                    </td>
+                    <td class="py-2.5 text-center font-mono">2</td>
+                    <td class="py-2.5 text-right font-mono">225.000</td>
+                    <td class="py-2.5 text-right font-mono font-semibold">
+                      450.000
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="py-2.5 font-medium text-slate-800">
+                      Binder Clip No. 107 (Box)
+                    </td>
+                    <td class="py-2.5 text-center font-mono">5</td>
+                    <td class="py-2.5 text-right font-mono">25.000</td>
+                    <td class="py-2.5 text-right font-mono font-semibold">
+                      125.000
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Document Calculation Summary -->
+            <div class="border-t border-slate-300 pt-3 flex justify-end">
+              <div class="w-64 space-y-1.5 text-xs">
+                <div class="flex justify-between text-slate-600">
+                  <span>Subtotal:</span>
+                  <span class="font-mono">Rp1.125.000,00</span>
+                </div>
+                <div class="flex justify-between text-slate-600">
+                  <span>PPN (11%):</span>
+                  <span class="font-mono">Rp123.750,00</span>
+                </div>
+                <div class="flex justify-between text-slate-600">
+                  <span>Diskon:</span>
+                  <span class="font-mono">Rp0,00</span>
+                </div>
+                <div
+                  class="flex justify-between border-t border-slate-400 pt-1.5 font-bold text-sm text-slate-900"
+                >
+                  <span>Total:</span>
+                  <span class="font-mono">Rp1.248.750,00</span>
+                </div>
+              </div>
+            </div>
+            <!-- Footer Stamp & Sign -->
+            <div
+              class="mt-12 pt-6 border-t border-slate-200 flex justify-between items-end text-xs text-slate-400"
+            >
+              <div>
+                <p>Jatuh Tempo: 18/03/2026 (30 Hari)</p>
+                <p class="font-mono text-[10px] mt-1">
+                  Dicetak Sistem Otomatis E-Faktur
+                </p>
+              </div>
+              <div class="text-center">
+                <div
+                  class="h-12 border-b border-dashed border-slate-300 w-32 mx-auto flex items-center justify-center text-[10px] text-slate-300 italic"
+                >
+                  Cap &amp; Tanda Tangan
+                </div>
+                <p class="font-semibold text-slate-700 mt-1">Finance Dept.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- RIGHT PANE: DATA & VERIFICATION PANEL -->
+      <section
+        aria-label="Verifikasi Data Form"
+        class="lg:w-1/2 w-full flex flex-col bg-surface h-full overflow-y-auto"
+      >
+        <!-- STATE 4: QUEUED / PROCESSING (Full Viewport Replacement) -->
+        <div
+          class="hidden flex-1 flex flex-col items-center justify-center p-8 text-center bg-slate-50 h-full"
+          id="processing-state-container"
+        >
+          <div
+            class="w-16 h-16 rounded-full border-4 border-info-subtle border-t-info animate-spin mb-4"
+          ></div>
+          <h3 class="text-lg font-bold text-text-primary">
+            Dokumen sedang diproses
+          </h3>
+          <p class="text-sm text-text-secondary max-w-sm mt-1 leading-relaxed">
+            Robot OCR AMIGA sedang mengekstraksi data invoice. Mohon tunggu
+            beberapa saat, data parsial belum siap diverifikasi.
+          </p>
+          <div
+            class="mt-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-200/80 text-xs font-mono text-slate-700"
+          >
+            <span class="w-2 h-2 rounded-full bg-info animate-pulse"></span>
+            Estimasi: ~4 detik lagi
+          </div>
+        </div>
+        <!-- MAIN VERIFICATION CONTENT -->
+        <div
+          class="p-6 space-y-6 flex-1 pb-24"
+          id="active-verification-content"
+        >
+          <!-- SECTION 1: FINDINGS & ALERT LIST -->
+          <!-- Exception Banner (Variant 2) -->
+          <div
+            class="hidden rounded-lg border border-status-exception-border bg-status-exception-bg p-4 space-y-3"
+            id="exception-findings-banner"
+          >
+            <div class="flex items-center gap-2 text-status-exception-fg">
+              <span class="material-symbols-outlined text-warning"
+                >warning</span
+              >
+              <h4 class="font-bold text-sm">
+                2 Temuan Kendala Validasi Robot OCR
+              </h4>
+            </div>
+            <div class="space-y-2">
+              <!-- Finding 1 -->
+              <div
+                class="bg-white/90 p-3 rounded border border-amber-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm"
+              >
+                <div class="flex items-start gap-2">
+                  <span
+                    class="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#FEF3C7] text-[#92400E] border border-amber-300 shrink-0"
+                    >MISSING_EVIDENCE</span
+                  >
+                  <span class="text-text-primary"
+                    >Nomor rekening tidak ditemukan pada invoice atau hasil
+                    bacaan OCR ragu-ragu.</span
+                  >
+                </div>
+                <button
+                  class="text-xs font-semibold text-status-processing-fg hover:underline shrink-0 flex items-center gap-1 self-end sm:self-auto"
+                  onclick="
+                    highlightField('target_rekening', 'doc-bank-section')
+                  "
+                >
+                  <span>Sorot Field Rekening</span>
+                  <span class="material-symbols-outlined text-xs"
+                    >arrow_forward</span
+                  >
+                </button>
+              </div>
+              <!-- Finding 2 -->
+              <div
+                class="bg-white/90 p-3 rounded border border-amber-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm"
+              >
+                <div class="flex items-start gap-2">
+                  <span
+                    class="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#FEF3C7] text-[#92400E] border border-amber-300 shrink-0"
+                    >TOTAL_MISMATCH</span
+                  >
+                  <span class="text-text-primary"
+                    >Total invoice tidak sama dengan kalkulasi rincian barang,
+                    diskon, dan pajak (selisih Rp500.000,00).</span
+                  >
+                </div>
+                <button
+                  class="text-xs font-semibold text-status-processing-fg hover:underline shrink-0 flex items-center gap-1 self-end sm:self-auto"
+                  onclick="
+                    highlightField('table-line-items', 'doc-items-section')
+                  "
+                >
+                  <span>Sorot Baris Barang</span>
+                  <span class="material-symbols-outlined text-xs"
+                    >arrow_forward</span
+                  >
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Possible Duplicate Banner (Variant 3) -->
+          <div
+            class="hidden rounded-lg bg-status-duplicate-bg text-white p-4 shadow-md space-y-2"
+            id="duplicate-warning-banner"
+          >
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-xl">block</span>
+              <h4 class="font-bold text-sm">
+                Dokumen Terkunci &amp; Wajib Tolak
+              </h4>
+            </div>
+            <p class="text-xs leading-relaxed opacity-95">
+              Dokumen hanya dapat ditolak. Invoice dengan nomor dan vendor yang
+              sama sudah ada pada Request ID
+              <span class="font-mono font-bold underline">REQ-2026-000084</span>
+              (Klien A). Form dikunci secara permanen untuk mencegah pengeluaran
+              ganda.
+            </p>
+          </div>
+          <!-- SECTION 2: DATA INVOICE FORM -->
+          <div class="bg-white border border-border rounded-lg p-5 shadow-xs">
+            <div
+              class="flex items-center justify-between mb-4 pb-2 border-b border-slate-100"
+            >
+              <h3
+                class="font-bold text-sm text-text-primary flex items-center gap-2"
+              >
+                <span class="material-symbols-outlined text-primary text-base"
+                  >receipt_long</span
+                >
+                Informasi Umum Dokumen
+              </h3>
+              <span class="text-[11px] text-text-secondary"
+                >Pemeriksaan OCR AMIGA Model v4</span
+              >
+            </div>
+            <form
+              class="grid grid-cols-1 md:grid-cols-2 gap-4"
+              id="invoice-form"
+              onsubmit="event.preventDefault()"
+            >
+              <!-- Vendor -->
+              <div class="space-y-1">
+                <label class="block text-xs font-semibold text-text-secondary"
+                  >Vendor</label
+                >
+                <div class="input-wrapper">
+                  <input
+                    class="form-input w-full text-xs rounded border-border py-1.5 px-3 focus:ring-1 focus:ring-focus-ring focus:border-focus-ring transition"
+                    id="field-vendor"
+                    oninput="markFieldEdited(this)"
+                    type="text"
+                    value="PT Contoh Sejahtera"
+                  />
+                </div>
+                <span
+                  class="field-caption hidden text-[10px] text-teal-700 font-semibold"
+                  >● Diubah oleh reviewer</span
+                >
+              </div>
+              <!-- Nomor Invoice -->
+              <div class="space-y-1">
+                <label class="block text-xs font-semibold text-text-secondary"
+                  >Nomor Invoice</label
+                >
+                <div class="input-wrapper">
+                  <input
+                    class="form-input w-full text-xs font-mono rounded border-border py-1.5 px-3 focus:ring-1 focus:ring-focus-ring focus:border-focus-ring transition"
+                    id="field-invoice-no"
+                    oninput="markFieldEdited(this)"
+                    type="text"
+                    value="INV/2026/02/0991"
+                  />
+                </div>
+                <span
+                  class="field-caption hidden text-[10px] text-teal-700 font-semibold"
+                  >● Diubah oleh reviewer</span
+                >
+              </div>
+              <!-- Tanggal Invoice -->
+              <div class="space-y-1">
+                <label class="block text-xs font-semibold text-text-secondary"
+                  >Tanggal Invoice (dd/mm/yyyy)</label
+                >
+                <div class="input-wrapper">
+                  <input
+                    class="form-input w-full text-xs font-mono rounded border-border py-1.5 px-3 focus:ring-1 focus:ring-focus-ring focus:border-focus-ring transition"
+                    id="field-date"
+                    oninput="markFieldEdited(this)"
+                    placeholder="DD/MM/YYYY"
+                    type="text"
+                    value="18/02/2026"
+                  />
+                </div>
+                <span
+                  class="field-caption hidden text-[10px] text-teal-700 font-semibold"
+                  >● Diubah oleh reviewer</span
+                >
+              </div>
+              <!-- Rekening Tujuan -->
+              <div class="space-y-1" id="rekening-container">
+                <label
+                  class="block text-xs font-semibold text-text-secondary flex justify-between"
+                >
+                  <span>Rekening Tujuan Pembayaran</span>
+                  <span
+                    class="text-[10px] text-amber-700 font-semibold hidden"
+                    id="rekening-status-tag"
+                    >Perlu Verifikasi</span
+                  >
+                </label>
+                <div class="input-wrapper">
+                  <input
+                    class="form-input w-full text-xs rounded border-border py-1.5 px-3 focus:ring-1 focus:ring-focus-ring focus:border-focus-ring transition"
+                    id="target_rekening"
+                    oninput="markFieldEdited(this)"
+                    placeholder="Tidak ditemukan"
+                    type="text"
+                    value="Bank Mandiri 137-00-1928371-2 a.n. PT Contoh Sejahtera"
+                  />
+                </div>
+                <span
+                  class="field-caption hidden text-[10px] text-teal-700 font-semibold"
+                  >● Diubah oleh reviewer</span
+                >
+              </div>
+              <!-- Diskon -->
+              <div class="space-y-1">
+                <label class="block text-xs font-semibold text-text-secondary"
+                  >Diskon (Rp)</label
+                >
+                <div class="input-wrapper">
+                  <input
+                    class="form-input w-full text-xs font-mono text-right rounded border-border py-1.5 px-3 focus:ring-1 focus:ring-focus-ring focus:border-focus-ring transition"
+                    id="field-discount"
+                    oninput="markFieldEdited(this)"
+                    type="text"
+                    value="Rp0,00"
+                  />
+                </div>
+                <span
+                  class="field-caption hidden text-[10px] text-teal-700 font-semibold"
+                  >● Diubah oleh reviewer</span
+                >
+              </div>
+              <!-- Pajak PPN 11% -->
+              <div class="space-y-1">
+                <label class="block text-xs font-semibold text-text-secondary"
+                  >Pajak (PPN 11%)</label
+                >
+                <div class="input-wrapper">
+                  <input
+                    class="form-input w-full text-xs font-mono text-right rounded border-border py-1.5 px-3 focus:ring-1 focus:ring-focus-ring focus:border-focus-ring transition"
+                    id="field-tax"
+                    oninput="markFieldEdited(this)"
+                    type="text"
+                    value="Rp123.750,00"
+                  />
+                </div>
+                <span
+                  class="field-caption hidden text-[10px] text-teal-700 font-semibold"
+                  >● Diubah oleh reviewer</span
+                >
+              </div>
+              <!-- Total Invoice Final -->
+              <div class="space-y-1 md:col-span-2">
+                <label class="block text-xs font-semibold text-text-secondary"
+                  >Total Invoice Tercetak</label
+                >
+                <div class="input-wrapper">
+                  <input
+                    class="form-input w-full text-sm font-bold font-mono text-right rounded border-border bg-slate-50 py-1.5 px-3 text-slate-900"
+                    id="field-total"
+                    readonly=""
+                    type="text"
+                    value="Rp1.248.750,00"
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
+          <!-- SECTION 3: LINE ITEMS EDITOR -->
+          <div
+            class="bg-white border border-border rounded-lg p-5 shadow-xs transition"
+            id="table-line-items"
+          >
+            <div
+              class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100"
+            >
+              <div>
+                <h3
+                  class="font-bold text-sm text-text-primary flex items-center gap-2"
+                >
+                  <span class="material-symbols-outlined text-primary text-base"
+                    >format_list_numbered</span
+                  >
+                  Baris Rincian Barang / Jasa
+                </h3>
+                <p class="text-[11px] text-text-secondary mt-0.5">
+                  Penyesuaian baris akan memicu rekalkulasi otomatis.
+                </p>
+              </div>
+              <button
+                class="px-2.5 py-1 text-xs font-semibold rounded bg-surface-muted hover:bg-slate-200 text-text-primary border border-border flex items-center gap-1 transition"
+                id="btn-add-row"
+                onclick="addLineItem()"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-xs">add</span>
+                Tambah Baris
+              </button>
+            </div>
+            <!-- Table Container -->
+            <div class="overflow-x-auto border border-border rounded">
+              <table class="w-full text-xs text-left" id="items-editable-table">
+                <thead
+                  class="bg-slate-50 border-b border-border text-text-secondary text-[11px] uppercase"
+                >
+                  <tr>
+                    <th class="py-2 px-3 w-10 text-center">No</th>
+                    <th class="py-2 px-3">Deskripsi</th>
+                    <th class="py-2 px-3 w-16 text-center">Qty</th>
+                    <th class="py-2 px-3 w-28 text-right">Harga Satuan</th>
+                    <th class="py-2 px-3 w-32 text-right">Jumlah (Rp)</th>
+                    <th class="py-2 px-2 w-10 text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody
+                  class="divide-y divide-border font-sans"
+                  id="line-items-body"
+                >
+                  <tr class="item-row">
+                    <td
+                      class="py-2 px-3 text-center text-text-secondary font-mono text-xs"
+                    >
+                      1
+                    </td>
+                    <td class="py-1 px-2">
+                      <input
+                        class="w-full text-xs py-1 px-1.5 border border-transparent hover:border-border rounded focus:border-focus-ring"
+                        oninput="markFieldEdited(this)"
+                        type="text"
+                        value="Kertas HVS A4 80gr Sinar Dunia"
+                      />
+                    </td>
+                    <td class="py-1 px-2">
+                      <input
+                        class="row-qty w-full text-xs py-1 px-1 font-mono text-center border border-transparent hover:border-border rounded focus:border-focus-ring"
+                        oninput="recalcRow(this)"
+                        type="number"
+                        value="10"
+                      />
+                    </td>
+                    <td class="py-1 px-2">
+                      <input
+                        class="row-price w-full text-xs py-1 px-1.5 font-mono text-right border border-transparent hover:border-border rounded focus:border-focus-ring"
+                        oninput="recalcRow(this)"
+                        type="text"
+                        value="55.000"
+                      />
+                    </td>
+                    <td
+                      class="py-2 px-3 text-right font-mono font-medium text-slate-800 row-total"
+                    >
+                      550.000
+                    </td>
+                    <td class="py-1 px-2 text-center">
+                      <button
+                        class="row-delete-btn text-text-disabled hover:text-danger p-1 rounded transition"
+                        onclick="removeRow(this)"
+                        title="Hapus Baris"
+                      >
+                        <span class="material-symbols-outlined text-sm"
+                          >delete</span
+                        >
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="item-row">
+                    <td
+                      class="py-2 px-3 text-center text-text-secondary font-mono text-xs"
+                    >
+                      2
+                    </td>
+                    <td class="py-1 px-2">
+                      <input
+                        class="w-full text-xs py-1 px-1.5 border border-transparent hover:border-border rounded focus:border-focus-ring"
+                        oninput="markFieldEdited(this)"
+                        type="text"
+                        value="Tinta Printer C-902 Black Original"
+                      />
+                    </td>
+                    <td class="py-1 px-2">
+                      <input
+                        class="row-qty w-full text-xs py-1 px-1 font-mono text-center border border-transparent hover:border-border rounded focus:border-focus-ring"
+                        oninput="recalcRow(this)"
+                        type="number"
+                        value="2"
+                      />
+                    </td>
+                    <td class="py-1 px-2">
+                      <input
+                        class="row-price w-full text-xs py-1 px-1.5 font-mono text-right border border-transparent hover:border-border rounded focus:border-focus-ring"
+                        oninput="recalcRow(this)"
+                        type="text"
+                        value="225.000"
+                      />
+                    </td>
+                    <td
+                      class="py-2 px-3 text-right font-mono font-medium text-slate-800 row-total"
+                    >
+                      450.000
+                    </td>
+                    <td class="py-1 px-2 text-center">
+                      <button
+                        class="row-delete-btn text-text-disabled hover:text-danger p-1 rounded transition"
+                        onclick="removeRow(this)"
+                        title="Hapus Baris"
+                      >
+                        <span class="material-symbols-outlined text-sm"
+                          >delete</span
+                        >
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="item-row">
+                    <td
+                      class="py-2 px-3 text-center text-text-secondary font-mono text-xs"
+                    >
+                      3
+                    </td>
+                    <td class="py-1 px-2">
+                      <input
+                        class="w-full text-xs py-1 px-1.5 border border-transparent hover:border-border rounded focus:border-focus-ring"
+                        oninput="markFieldEdited(this)"
+                        type="text"
+                        value="Binder Clip No. 107 (Box)"
+                      />
+                    </td>
+                    <td class="py-1 px-2">
+                      <input
+                        class="row-qty w-full text-xs py-1 px-1 font-mono text-center border border-transparent hover:border-border rounded focus:border-focus-ring"
+                        oninput="recalcRow(this)"
+                        type="number"
+                        value="5"
+                      />
+                    </td>
+                    <td class="py-1 px-2">
+                      <input
+                        class="row-price w-full text-xs py-1 px-1.5 font-mono text-right border border-transparent hover:border-border rounded focus:border-focus-ring"
+                        oninput="recalcRow(this)"
+                        type="text"
+                        value="25.000"
+                      />
+                    </td>
+                    <td
+                      class="py-2 px-3 text-right font-mono font-medium text-slate-800 row-total"
+                    >
+                      125.000
+                    </td>
+                    <td class="py-1 px-2 text-center">
+                      <button
+                        class="row-delete-btn text-text-disabled hover:text-danger p-1 rounded transition"
+                        onclick="removeRow(this)"
+                        title="Hapus Baris"
+                      >
+                        <span class="material-symbols-outlined text-sm"
+                          >delete</span
+                        >
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Computation Footer Bar -->
+            <div
+              class="mt-4 p-3 bg-slate-50 border border-slate-200 rounded-md flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs"
+            >
+              <div class="space-y-1">
+                <div class="flex items-center gap-3">
+                  <span class="text-text-secondary"
+                    >Hasil Kalkulasi (Sum + PPN - Diskon):</span
+                  >
+                  <span
+                    class="font-mono font-bold text-slate-800 text-sm"
+                    id="computed-sum-display"
+                    >Rp1.248.750,00</span
+                  >
+                </div>
+                <!-- Mismatch tag (Variant 2) -->
+                <div
+                  class="hidden text-xs font-semibold text-warning flex items-center gap-1.5 bg-amber-100/70 px-2 py-0.5 rounded border border-amber-300 w-fit"
+                  id="mismatch-tag"
+                >
+                  <span class="material-symbols-outlined text-xs">warning</span>
+                  ⚠️ Selisih kalkulasi: Rp500.000,00
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-[11px] text-text-secondary block"
+                  >Total Target Dokumen:</span
+                >
+                <span class="font-mono font-bold text-text-primary text-sm"
+                  >Rp1.248.750,00</span
+                >
+              </div>
+            </div>
+          </div>
+          <!-- SECTION 4: RIWAYAT PERUBAHAN (AUDIT TRAIL) - COLLAPSIBLE -->
+          <div
+            class="bg-white border border-border rounded-lg shadow-xs overflow-hidden"
+          >
+            <button
+              class="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 transition"
+              onclick="toggleAuditTrail()"
+            >
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-base"
+                  >history_edu</span
+                >
+                <span class="font-bold text-sm text-text-primary"
+                  >Riwayat Perubahan &amp; Mutasi Data (Audit Trail)</span
+                >
+                <span
+                  class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-slate-100 text-slate-600 border border-slate-200"
+                  >2 Aktivitas</span
+                >
+              </div>
+              <span
+                class="material-symbols-outlined text-text-secondary transition-transform duration-200"
+                id="audit-chevron"
+                >expand_more</span
+              >
+            </button>
+            <div
+              class="p-4 pt-0 border-t border-slate-100 text-xs"
+              id="audit-trail-body"
+            >
+              <div class="overflow-x-auto mt-2">
+                <table class="w-full text-left">
+                  <thead
+                    class="bg-slate-50 text-[10px] uppercase text-text-secondary border-b border-border"
+                  >
+                    <tr>
+                      <th class="py-2 px-3 font-semibold">Waktu</th>
+                      <th class="py-2 px-3 font-semibold">User / Entitas</th>
+                      <th class="py-2 px-3 font-semibold">Aksi</th>
+                      <th class="py-2 px-3 font-semibold">Field Target</th>
+                      <th class="py-2 px-3 font-semibold">Nilai Lama</th>
+                      <th class="py-2 px-3 font-semibold">Nilai Baru</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-border">
+                    <tr>
+                      <td
+                        class="py-2 px-3 font-mono text-[11px] text-text-secondary"
+                      >
+                        24/02/2026 09:16:04
+                      </td>
+                      <td
+                        class="py-2 px-3 font-medium flex items-center gap-1.5"
+                      >
+                        <span
+                          class="material-symbols-outlined text-xs text-primary"
+                          >smart_toy</span
+                        >
+                        Robot Admin
+                      </td>
+                      <td class="py-2 px-3">Deteksi Temuan</td>
+                      <td class="py-2 px-3 font-mono text-[11px]">
+                        exception_flags
+                      </td>
+                      <td class="py-2 px-3">
+                        <span
+                          class="px-1.5 py-0.5 rounded bg-diff-old-bg text-diff-old-fg font-mono text-[10px]"
+                          >NONE</span
+                        >
+                      </td>
+                      <td class="py-2 px-3">
+                        <span
+                          class="px-1.5 py-0.5 rounded bg-diff-new-bg text-diff-new-fg font-mono text-[10px]"
+                          >MISSING_EVIDENCE</span
+                        >
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="py-2 px-3 font-mono text-[11px] text-text-secondary"
+                      >
+                        24/02/2026 09:15:20
+                      </td>
+                      <td
+                        class="py-2 px-3 font-medium flex items-center gap-1.5"
+                      >
+                        <span
+                          class="material-symbols-outlined text-xs text-text-secondary"
+                          >account_circle</span
+                        >
+                        Intake (Siti Rahmawati)
+                      </td>
+                      <td class="py-2 px-3">Upload Dokumen</td>
+                      <td class="py-2 px-3 font-mono text-[11px]">
+                        status_dokumen
+                      </td>
+                      <td class="py-2 px-3">
+                        <span class="text-text-disabled">-</span>
+                      </td>
+                      <td class="py-2 px-3">
+                        <span
+                          class="px-1.5 py-0.5 rounded bg-slate-100 text-slate-800 font-mono text-[10px]"
+                          >[DRAFT_CREATED]</span
+                        >
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Explicit Audit Disclaimer Note -->
+              <div
+                class="mt-3 p-2.5 rounded bg-slate-50 border border-slate-200 text-text-secondary text-[11px] flex items-center gap-2"
+              >
+                <span class="material-symbols-outlined text-xs text-slate-400"
+                  >info</span
+                >
+                <span
+                  >Aktivitas membuka halaman dan melihat dokumen file asli
+                  <strong>tidak dicatat</strong> dalam riwayat mutasi
+                  data.</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- BOTTOM STICKY ACTION BAR -->
+    <footer
+      class="bg-surface border-t border-border px-6 py-3 flex items-center justify-between shrink-0 z-30 shadow-lg"
+    >
+      <!-- Left: Status Perubahan -->
+      <div class="flex items-center gap-2 text-xs">
+        <span
+          class="w-2 h-2 rounded-full bg-slate-300"
+          id="save-status-indicator"
+        ></span>
+        <span class="text-text-secondary font-medium" id="save-status-text"
+          >Tidak ada perubahan</span
+        >
+      </div>
+      <!-- Right: Action Buttons (Simpan, Tolak, Setujui) -->
+      <div class="flex items-center gap-3">
+        <!-- Simpan (Secondary) -->
+        <button
+          class="px-4 py-2 rounded text-xs font-semibold bg-surface-muted text-text-disabled border border-slate-200 cursor-not-allowed transition flex items-center gap-1.5"
+          disabled=""
+          id="btn-save"
+          onclick="saveChanges()"
+          title="Tidak ada perubahan"
+        >
+          <span class="material-symbols-outlined text-sm">save</span>
+          Simpan
+        </button>
+        <!-- Tolak (Destructive - Always Available) -->
+        <button
+          class="px-4 py-2 rounded text-xs font-semibold bg-white text-danger border border-danger hover:bg-danger-subtle transition flex items-center gap-1.5 shadow-xs"
+          id="btn-reject"
+          onclick="openRejectModal()"
+        >
+          <span class="material-symbols-outlined text-sm">close</span>
+          Tolak
+        </button>
+        <!-- Setujui (Approve - Hidden in Duplicate, Disabled in Exception) -->
+        <div class="relative group" id="btn-approve-container">
+          <button
+            class="px-5 py-2 rounded text-xs font-semibold bg-success hover:bg-green-800 text-white transition flex items-center gap-1.5 shadow-sm"
+            id="btn-approve"
+            onclick="approveDocument()"
+          >
+            <span class="material-symbols-outlined text-sm">check</span>
+            Setujui
+          </button>
+          <!-- Tooltip for disabled exception state -->
+          <span
+            class="hidden absolute bottom-full mb-1 right-0 bg-slate-900 text-white text-[11px] py-1 px-2 rounded shadow-md whitespace-nowrap z-50"
+            id="approve-tooltip"
+          >
+            Dokumen belum siap disetujui (Ada temuan validasi)
+          </span>
+        </div>
+      </div>
+    </footer>
+    <!-- REJECT CONFIRMATION MODAL -->
+    <div
+      class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-overlay backdrop-blur-xs"
+      id="reject-modal"
+    >
+      <div
+        class="bg-surface rounded-xl border border-border shadow-2xl max-w-md w-full p-6 space-y-4"
+      >
+        <div class="flex items-start gap-3">
+          <div class="p-2 rounded-full bg-danger-subtle text-danger shrink-0">
+            <span class="material-symbols-outlined text-xl">gavel</span>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-text-primary">
+              Tolak Dokumen Request
+            </h3>
+            <p class="text-xs text-text-secondary mt-1">
+              Penolakan bersifat final. Dokumen tidak dapat dikembalikan ke
+              antrean pemeriksaan.
+            </p>
+          </div>
+        </div>
+        <!-- Mandatory Rejection Reason Textarea -->
+        <div class="space-y-1.5">
+          <label
+            class="block text-xs font-semibold text-text-primary"
+            for="reject-reason"
+          >
+            Catatan penolakan <span class="text-danger">*</span>
+          </label>
+          <textarea
+            class="w-full text-xs rounded border border-border p-2.5 focus:ring-1 focus:ring-danger focus:border-danger"
+            id="reject-reason"
+            oninput="validateRejectForm(this)"
+            placeholder="Tuliskan alasan penolakan secara spesifik untuk staf Intake..."
+            rows="4"
+          ></textarea>
+          <p class="text-[11px] text-text-secondary">
+            Alasan ini akan dikirimkan kepada pengunggah dan dicatat di audit
+            log.
+          </p>
+        </div>
+        <!-- Modal Actions -->
+        <div
+          class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100"
+        >
+          <button
+            class="px-3.5 py-2 rounded text-xs font-semibold text-text-secondary hover:bg-slate-100 transition"
+            onclick="closeRejectModal()"
+          >
+            Batal
+          </button>
+          <button
+            class="px-4 py-2 rounded text-xs font-semibold bg-danger/50 text-white cursor-not-allowed transition flex items-center gap-1.5"
+            disabled=""
+            id="btn-confirm-reject"
+            onclick="submitRejection()"
+          >
+            <span class="material-symbols-outlined text-sm"
+              >delete_forever</span
+            >
+            Tolak dokumen
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- SEPARATION OF DUTIES (SOD 403) SIMULATION MODAL -->
+    <div
+      class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-overlay backdrop-blur-xs"
+      id="sod-modal"
+    >
+      <div
+        class="bg-surface rounded-xl border border-border shadow-2xl max-w-sm w-full p-6 text-center space-y-4"
+      >
+        <div
+          class="w-12 h-12 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center mx-auto"
+        >
+          <span class="material-symbols-outlined text-2xl">shield_person</span>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-text-primary">
+            Separation of Duties (403)
+          </h3>
+          <p class="text-xs text-text-secondary mt-1.5 leading-relaxed">
+            Anda tidak berhak menyetujui dokumen ini karena tercatat sebagai
+            staf yang mengunggah dokumen di tahap Intake. Prinsip empat-mata
+            (four-eyes principle) aktif.
+          </p>
+        </div>
+        <button
+          class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-text-primary font-semibold text-xs rounded transition"
+          onclick="closeSoDModal()"
+        >
+          Mengerti
+        </button>
+      </div>
+    </div>
+    <!-- JAVASCRIPT MICRO-INTERACTIONS & LOGIC -->
+    <script>
+      // State management
+      let currentVariant = 'READY_FOR_REVIEW';
+      let unsavedChangesCount = 0;
+      let currentZoom = 1.0;
+      let currentRotation = 0;
+
+      // Zoom and Pan Handlers
+      function changeZoom(delta) {
+        currentZoom = Math.min(Math.max(currentZoom + delta, 0.4), 2.2);
+        applyTransform();
+      }
+
+      function resetZoom() {
+        currentZoom = 1.0;
+        currentRotation = 0;
+        applyTransform();
+      }
+
+      function rotateDoc() {
+        currentRotation = (currentRotation + 90) % 360;
+        applyTransform();
+      }
+
+      function applyTransform() {
+        const sheet = document.getElementById('invoice-sheet');
+        sheet.style.transform = `scale(${currentZoom}) rotate(${currentRotation}deg)`;
+        document.getElementById('zoom-label').innerText =
+          `${Math.round(currentZoom * 100)}%`;
+      }
+
+      // Variant Switching
+      function switchVariant(variant) {
+        currentVariant = variant;
+
+        // Update Tab Styles
+        const tabIds = [
+          'ready',
+          'exception',
+          'duplicate',
+          'queued',
+          'conflict',
+        ];
+        const currentTabKey = {
+          READY_FOR_REVIEW: 'ready',
+          EXCEPTION: 'exception',
+          POSSIBLE_DUPLICATE: 'duplicate',
+          QUEUED_PROCESSING: 'queued',
+          CONFLICT: 'conflict',
+        }[variant];
+
+        tabIds.forEach((id) => {
+          const btn = document.getElementById(`tab-${id}`);
+          if (id === currentTabKey) {
+            btn.className =
+              'tab-btn px-3 py-1.5 rounded text-xs font-semibold flex items-center gap-2 whitespace-nowrap bg-status-ready-bg text-status-ready-fg border border-status-ready-border transition';
+          } else {
+            btn.className =
+              'tab-btn px-3 py-1.5 rounded text-xs font-semibold flex items-center gap-2 whitespace-nowrap text-text-secondary hover:bg-slate-100 border border-transparent transition';
+          }
+        });
+
+        // Target DOM elements
+        const badgeContainer = document.getElementById('header-status-badge');
+        const conflictBanner = document.getElementById(
+          'concurrency-conflict-banner',
+        );
+        const processingContainer = document.getElementById(
+          'processing-state-container',
+        );
+        const verificationContent = document.getElementById(
+          'active-verification-content',
+        );
+        const exceptionBanner = document.getElementById(
+          'exception-findings-banner',
+        );
+        const duplicateBanner = document.getElementById(
+          'duplicate-warning-banner',
+        );
+        const mismatchTag = document.getElementById('mismatch-tag');
+        const approveBtn = document.getElementById('btn-approve');
+        const approveTooltip = document.getElementById('approve-tooltip');
+        const approveContainer = document.getElementById(
+          'btn-approve-container',
+        );
+        const rekeningInput = document.getElementById('target_rekening');
+        const rekeningTag = document.getElementById('rekening-status-tag');
+        const ocrHighlightTag = document.getElementById('ocr-highlight-tag');
+        const formInputs = document.querySelectorAll('#invoice-form input');
+        const addRowBtn = document.getElementById('btn-add-row');
+        const rowDeleteBtns = document.querySelectorAll('.row-delete-btn');
+
+        // Reset Defaults
+        conflictBanner.classList.add('hidden');
+        processingContainer.classList.add('hidden');
+        verificationContent.classList.remove('hidden');
+        exceptionBanner.classList.add('hidden');
+        duplicateBanner.classList.add('hidden');
+        mismatchTag.classList.add('hidden');
+        approveContainer.classList.remove('hidden');
+        approveBtn.disabled = false;
+        approveBtn.classList.remove(
+          'opacity-50',
+          'cursor-not-allowed',
+          'bg-slate-400',
+        );
+        approveBtn.classList.add('bg-success', 'hover:bg-green-800');
+        approveTooltip.classList.add('hidden');
+        rekeningTag.classList.add('hidden');
+        ocrHighlightTag.classList.add('hidden');
+
+        // Make form editable by default
+        formInputs.forEach((i) => {
+          if (i.id !== 'field-total') i.readOnly = false;
+        });
+        addRowBtn.disabled = false;
+        addRowBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        rowDeleteBtns.forEach((b) => (b.disabled = false));
+
+        // Branch Variant Logic
+        if (variant === 'READY_FOR_REVIEW') {
+          badgeContainer.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide bg-status-ready-bg text-status-ready-fg border border-status-ready-border">
+            <span class="material-symbols-outlined text-sm">check_circle</span>
+            READY_FOR_REVIEW
+          </span>
+        `;
+          rekeningInput.value =
+            'Bank Mandiri 137-00-1928371-2 a.n. PT Contoh Sejahtera';
+        } else if (variant === 'EXCEPTION') {
+          badgeContainer.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide bg-status-exception-bg text-status-exception-fg border border-status-exception-border">
+            <span class="material-symbols-outlined text-sm">warning</span>
+            EXCEPTION (2 Temuan)
+          </span>
+        `;
+          exceptionBanner.classList.remove('hidden');
+          mismatchTag.classList.remove('hidden');
+          rekeningTag.classList.remove('hidden');
+          ocrHighlightTag.classList.remove('hidden');
+
+          // Disabled approve with tooltip
+          approveBtn.disabled = true;
+          approveBtn.classList.add(
+            'opacity-50',
+            'cursor-not-allowed',
+            'bg-slate-400',
+          );
+          approveBtn.classList.remove('bg-success', 'hover:bg-green-800');
+          approveTooltip.classList.remove('hidden');
+
+          rekeningInput.value = 'Tidak ditemukan';
+        } else if (variant === 'POSSIBLE_DUPLICATE') {
+          badgeContainer.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide bg-status-duplicate-bg text-status-duplicate-fg border border-status-duplicate-border">
+            <span class="material-symbols-outlined text-sm">block</span>
+            POSSIBLE_DUPLICATE
+          </span>
+        `;
+          duplicateBanner.classList.remove('hidden');
+          approveContainer.classList.add('hidden'); // Not rendered in duplicate
+
+          // Lock form completely
+          formInputs.forEach((i) => (i.readOnly = true));
+          addRowBtn.disabled = true;
+          addRowBtn.classList.add('opacity-50', 'cursor-not-allowed');
+          rowDeleteBtns.forEach((b) => (b.disabled = true));
+        } else if (variant === 'QUEUED_PROCESSING') {
+          badgeContainer.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide bg-status-processing-bg text-status-processing-fg border border-status-processing-border">
+            <span class="w-3 h-3 rounded-full border-2 border-status-processing-fg border-t-transparent animate-spin"></span>
+            PROCESSING
+          </span>
+        `;
+          verificationContent.classList.add('hidden');
+          processingContainer.classList.remove('hidden');
+        } else if (variant === 'CONFLICT') {
+          badgeContainer.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide bg-purple-100 text-purple-800 border border-purple-300">
+            <span class="material-symbols-outlined text-sm">sync_problem</span>
+            KONFLIK KONKURENSI
+          </span>
+        `;
+          conflictBanner.classList.remove('hidden');
+          approveBtn.disabled = true;
+          approveBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+      }
+
+      // Input & Field Modifications
+      function markFieldEdited(inputEl) {
+        if (currentVariant === 'POSSIBLE_DUPLICATE') return;
+
+        inputEl.classList.add('field-modified');
+        const wrapper = inputEl.closest('.space-y-1') || inputEl.parentElement;
+        const caption = wrapper.querySelector('.field-caption');
+        if (caption) caption.classList.remove('hidden');
+
+        unsavedChangesCount++;
+        updateSaveState();
+      }
+
+      function updateSaveState() {
+        const saveBtn = document.getElementById('btn-save');
+        const indicator = document.getElementById('save-status-indicator');
+        const statusText = document.getElementById('save-status-text');
+
+        if (unsavedChangesCount > 0) {
+          saveBtn.disabled = false;
+          saveBtn.classList.remove(
+            'bg-surface-muted',
+            'text-text-disabled',
+            'cursor-not-allowed',
+          );
+          saveBtn.classList.add(
+            'bg-white',
+            'text-text-primary',
+            'border-primary',
+            'hover:bg-slate-50',
+            'shadow-xs',
+          );
+          saveBtn.title = 'Simpan pembaruan ke server';
+
+          indicator.classList.remove('bg-slate-300');
+          indicator.classList.add('bg-amber-500', 'animate-pulse');
+          statusText.innerText = `${unsavedChangesCount} perubahan belum disimpan`;
+          statusText.classList.add('text-amber-800', 'font-semibold');
+        } else {
+          saveBtn.disabled = true;
+          saveBtn.classList.add(
+            'bg-surface-muted',
+            'text-text-disabled',
+            'cursor-not-allowed',
+          );
+          saveBtn.classList.remove(
+            'bg-white',
+            'text-text-primary',
+            'border-primary',
+            'hover:bg-slate-50',
+            'shadow-xs',
+          );
+          saveBtn.title = 'Tidak ada perubahan';
+
+          indicator.classList.add('bg-slate-300');
+          indicator.classList.remove('bg-amber-500', 'animate-pulse');
+          statusText.innerText = 'Tidak ada perubahan';
+          statusText.classList.remove('text-amber-800', 'font-semibold');
+        }
+      }
+
+      function saveChanges() {
+        alert(
+          'Perubahan verifikasi tersimpan secara lokal ke Request ID REQ-2026-000123.',
+        );
+        unsavedChangesCount = 0;
+        updateSaveState();
+      }
+
+      function highlightField(fieldId, docSectionId) {
+        const target = document.getElementById(fieldId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          target.classList.add('field-highlight');
+          setTimeout(() => target.classList.remove('field-highlight'), 2200);
+        }
+        const docTarget = document.getElementById(docSectionId);
+        if (docTarget) {
+          docTarget.classList.add('ring-2', 'ring-amber-400');
+          setTimeout(
+            () => docTarget.classList.remove('ring-2', 'ring-amber-400'),
+            2200,
+          );
+        }
+      }
+
+      // Line Items Row calculations
+      function recalcRow(el) {
+        markFieldEdited(el);
+        const row = el.closest('.item-row');
+        const qty = parseFloat(row.querySelector('.row-qty').value) || 0;
+        const rawPrice = row
+          .querySelector('.row-price')
+          .value.replace(/[^0-9]/g, '');
+        const price = parseFloat(rawPrice) || 0;
+        const total = qty * price;
+
+        row.querySelector('.row-total').innerText =
+          total.toLocaleString('id-ID');
+
+        // Update global sum
+        let sum = 0;
+        document.querySelectorAll('.row-total').forEach((cell) => {
+          sum += parseFloat(cell.innerText.replace(/[^0-9]/g, '')) || 0;
+        });
+        const tax = sum * 0.11;
+        const grand = sum + tax;
+        document.getElementById('computed-sum-display').innerText =
+          `Rp${grand.toLocaleString('id-ID')},00`;
+      }
+
+      function addLineItem() {
+        if (currentVariant === 'POSSIBLE_DUPLICATE') return;
+        const tbody = document.getElementById('line-items-body');
+        const rowCount = tbody.querySelectorAll('tr').length + 1;
+        const tr = document.createElement('tr');
+        tr.className = 'item-row bg-teal-50/40';
+        tr.innerHTML = `
+        <td class="py-2 px-3 text-center text-text-secondary font-mono text-xs">${rowCount}</td>
+        <td class="py-1 px-2">
+          <input type="text" value="Barang Tambahan Baru" class="w-full text-xs py-1 px-1.5 border border-border rounded focus:border-focus-ring" oninput="markFieldEdited(this)">
+        </td>
+        <td class="py-1 px-2">
+          <input type="number" value="1" class="row-qty w-full text-xs py-1 px-1 font-mono text-center border border-border rounded focus:border-focus-ring" oninput="recalcRow(this)">
+        </td>
+        <td class="py-1 px-2">
+          <input type="text" value="100.000" class="row-price w-full text-xs py-1 px-1.5 font-mono text-right border border-border rounded focus:border-focus-ring" oninput="recalcRow(this)">
+        </td>
+        <td class="py-2 px-3 text-right font-mono font-medium text-slate-800 row-total">100.000</td>
+        <td class="py-1 px-2 text-center">
+          <button onclick="removeRow(this)" class="row-delete-btn text-text-disabled hover:text-danger p-1 rounded transition" title="Hapus Baris">
+            <span class="material-symbols-outlined text-sm">delete</span>
+          </button>
+        </td>
+      `;
+        tbody.appendChild(tr);
+        markFieldEdited(tr.querySelector('input'));
+      }
+
+      function removeRow(btn) {
+        if (currentVariant === 'POSSIBLE_DUPLICATE') return;
+        const row = btn.closest('.item-row');
+        row.remove();
+        unsavedChangesCount++;
+        updateSaveState();
+      }
+
+      // Collapsible Audit Trail
+      function toggleAuditTrail() {
+        const body = document.getElementById('audit-trail-body');
+        const chevron = document.getElementById('audit-chevron');
+        body.classList.toggle('hidden');
+        chevron.classList.toggle('rotate-180');
+      }
+
+      // Modal Handlers
+      function openRejectModal() {
+        document.getElementById('reject-modal').classList.remove('hidden');
+        document.getElementById('reject-reason').focus();
+      }
+
+      function closeRejectModal() {
+        document.getElementById('reject-modal').classList.add('hidden');
+      }
+
+      function validateRejectForm(textarea) {
+        const confirmBtn = document.getElementById('btn-confirm-reject');
+        if (textarea.value.trim().length > 3) {
+          confirmBtn.disabled = false;
+          confirmBtn.classList.remove('bg-danger/50', 'cursor-not-allowed');
+          confirmBtn.classList.add('bg-danger', 'hover:bg-red-800');
+        } else {
+          confirmBtn.disabled = true;
+          confirmBtn.classList.add('bg-danger/50', 'cursor-not-allowed');
+          confirmBtn.classList.remove('bg-danger', 'hover:bg-red-800');
+        }
+      }
+
+      function submitRejection() {
+        const reason = document.getElementById('reject-reason').value;
+        alert(
+          `Dokumen REQ-2026-000123 berhasil DITOLAK secara permanen.\nAlasan: ${reason}`,
+        );
+        closeRejectModal();
+        location.reload();
+      }
+
+      function approveDocument() {
+        alert(
+          'Dokumen REQ-2026-000123 DISETUJUI. Lanjut ke proses pembuatan Voucher Pengeluaran Kas (UC-9).',
+        );
+      }
+
+      // Simulator Triggers
+      function triggerAccessRevocation() {
+        alert(
+          'Simulasi 401/403: Akses sesi Anda telah dicabut oleh Administrator Pusat. Anda dialihkan ke halaman Login.',
+        );
+      }
+
+      function triggerSoDModal() {
+        document.getElementById('sod-modal').classList.remove('hidden');
+      }
+
+      function closeSoDModal() {
+        document.getElementById('sod-modal').classList.add('hidden');
+      }
+    </script>
+  </body>
+</html>

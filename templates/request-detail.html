@@ -1,0 +1,1951 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="web_dashboard" name="shell-type" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              error: '#ba1a1a',
+              'status-ready-border': '#5EEAD4',
+              outline: '#757682',
+              'status-processing-fg': '#1E40AF',
+              warning: '#92400E',
+              'status-vouchered-bg': '#E0E7FF',
+              'status-processing-bg': '#DBEAFE',
+              surface: '#FFFFFF',
+              'secondary-container': '#99efe5',
+              'accent-subtle': '#CCFBF1',
+              border: '#CBD5E1',
+              'warning-subtle': '#FEF3C7',
+              'status-queued-fg': '#334155',
+              'on-primary-container': '#90a8ff',
+              'surface-container-low': '#f4f3fa',
+              'on-error-container': '#93000a',
+              'status-duplicate-fg': '#FFFFFF',
+              'status-sent-border': '#C4B5FD',
+              'diff-new-bg': '#DCFCE7',
+              info: '#1E40AF',
+              'inverse-primary': '#b6c4ff',
+              'success-subtle': '#DCFCE7',
+              tertiary: '#4b1c00',
+              background: '#F8FAFC',
+              'surface-container-highest': '#e3e1e9',
+              'text-link': '#1E40AF',
+              'primary-subtle': '#E0E7FF',
+              success: '#166534',
+              'accent-hover': '#0D625B',
+              'surface-container': '#eeedf4',
+              'on-tertiary-container': '#f39461',
+              'on-primary-fixed': '#00164e',
+              'tertiary-fixed-dim': '#ffb691',
+              'status-vouchered-fg': '#3730A3',
+              danger: '#B91C1C',
+              'status-vouchered-border': '#A5B4FC',
+              'on-primary-fixed-variant': '#264191',
+              'on-tertiary-fixed-variant': '#773205',
+              'inverse-on-surface': '#f1f0f7',
+              'on-secondary-container': '#006f67',
+              'on-primary': '#ffffff',
+              'surface-muted': '#F1F5F9',
+              'status-rejected-fg': '#991B1B',
+              'primary-fixed-dim': '#b6c4ff',
+              'surface-container-high': '#e9e7ef',
+              'tertiary-container': '#6e2c00',
+              'info-subtle': '#DBEAFE',
+              'secondary-fixed': '#9cf2e8',
+              'on-secondary': '#ffffff',
+              'status-queued-bg': '#F1F5F9',
+              'surface-tint': '#4059aa',
+              'primary-hover': '#1B3380',
+              'tertiary-fixed': '#ffdbcb',
+              'status-ready-fg': '#115E59',
+              'status-ready-bg': '#CCFBF1',
+              'surface-container-lowest': '#ffffff',
+              'status-processing-border': '#93C5FD',
+              'text-secondary': '#475569',
+              overlay: 'rgba(15, 23, 42, 0.55)',
+              'primary-active': '#172B6B',
+              'surface-dim': '#dad9e1',
+              secondary: '#006a63',
+              'status-reviewed-bg': '#DCFCE7',
+              'on-background': '#1a1b21',
+              'on-surface': '#1a1b21',
+              'on-accent': '#FFFFFF',
+              'on-error': '#ffffff',
+              'status-exception-border': '#FCD34D',
+              'status-rejected-bg': '#FFFFFF',
+              'status-duplicate-bg': '#B91C1C',
+              'on-surface-variant': '#444651',
+              'status-sent-fg': '#5B21B6',
+              'diff-new-fg': '#166534',
+              'status-reviewed-border': '#86EFAC',
+              'secondary-fixed-dim': '#80d5cb',
+              'status-queued-border': '#CBD5E1',
+              'surface-sunken': '#E2E8F0',
+              'status-sent-bg': '#EDE9FE',
+              'focus-ring': '#2563EB',
+              'diff-old-bg': '#FEE2E2',
+              'inverse-surface': '#2f3036',
+              'on-tertiary-fixed': '#341100',
+              'on-secondary-fixed-variant': '#00504a',
+              primary: '#00236f',
+              'border-strong': '#94A3B8',
+              'outline-variant': '#c5c5d3',
+              'primary-container': '#1e3a8a',
+              'status-reviewed-fg': '#166534',
+              'text-primary': '#0F172A',
+              'diff-old-fg': '#991B1B',
+              'on-tertiary': '#ffffff',
+              'surface-bright': '#faf8ff',
+              'text-disabled': '#94A3B8',
+              'status-duplicate-border': '#7F1D1D',
+              'danger-subtle': '#FEE2E2',
+              'surface-variant': '#e3e1e9',
+              'status-rejected-border': '#991B1B',
+              'status-exception-fg': '#92400E',
+              'status-exception-bg': '#FEF3C7',
+              'on-secondary-fixed': '#00201d',
+              'primary-fixed': '#dce1ff',
+              'error-container': '#ffdad6',
+            },
+            borderRadius: {
+              DEFAULT: '0.25rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              full: '9999px',
+            },
+            spacing: {
+              10: '40px',
+              16: '64px',
+              gutter: '1.5rem',
+              2: '8px',
+              1: '4px',
+              8: '32px',
+              'gutter-mobile': '0.75rem',
+              'space-md': '1rem',
+              5: '20px',
+              6: '24px',
+              margin: '1.5rem',
+              12: '48px',
+              'margin-tablet': '1rem',
+              'margin-mobile': '0.75rem',
+              'space-xl': '2rem',
+              3: '12px',
+              'gutter-laptop': '1rem',
+              'space-sm': '0.5rem',
+              'gutter-tablet': '1rem',
+              'space-xs': '0.25rem',
+              'base-unit': '4px',
+              'space-lg': '1.5rem',
+              4: '16px',
+              0: '0px',
+            },
+            fontFamily: {
+              'headline-sm': ['Inter'],
+              'table-header': ['Inter'],
+              'body-strong': ['Inter'],
+              display: ['Inter'],
+              'code-mono': ['JetBrains Mono'],
+              'amount-lg': ['JetBrains Mono'],
+              'body-default': ['Inter'],
+              'amount-default': ['JetBrains Mono'],
+              caption: ['Inter'],
+              'headline-md': ['Inter'],
+              'label-firm': ['Inter'],
+              'headline-lg': ['Inter'],
+            },
+            fontSize: {
+              'headline-sm': [
+                '16px',
+                { lineHeight: '24px', fontWeight: '600' },
+              ],
+              'table-header': [
+                '12px',
+                {
+                  lineHeight: '16px',
+                  letterSpacing: '0.04em',
+                  fontWeight: '600',
+                },
+              ],
+              'body-strong': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '600' },
+              ],
+              display: [
+                '28px',
+                {
+                  lineHeight: '36px',
+                  letterSpacing: '-0.01em',
+                  fontWeight: '700',
+                },
+              ],
+              'code-mono': ['13px', { lineHeight: '20px', fontWeight: '500' }],
+              'amount-lg': ['24px', { lineHeight: '32px', fontWeight: '700' }],
+              'body-default': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '400' },
+              ],
+              'amount-default': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '600' },
+              ],
+              caption: ['12px', { lineHeight: '16px', fontWeight: '400' }],
+              'headline-md': [
+                '20px',
+                { lineHeight: '28px', fontWeight: '600' },
+              ],
+              'label-firm': [
+                '12px',
+                {
+                  lineHeight: '16px',
+                  letterSpacing: '0.02em',
+                  fontWeight: '600',
+                },
+              ],
+              'headline-lg': [
+                '24px',
+                { lineHeight: '32px', fontWeight: '700' },
+              ],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="bg-background font-body-default text-body-default text-text-primary antialiased"
+  >
+    <header
+      class="fixed top-0 left-0 right-0 h-14 bg-surface z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"
+    >
+      <div class="h-14 w-full px-4 lg:px-6 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary shadow-sm"
+          >
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+              <path
+                d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h4a2 2 0 0 1 2 2v2h1a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-1v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3H3a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h1V9a2 2 0 0 1 2-2h4V5.73A2 2 0 0 1 10 4a2 2 0 0 1 2-2zm-4 7H6v10h12V9h-2v1H8V9zm1 3h2v2H9v-2zm4 0h2v2h-2v-2zm-4 4h6v1H9v-1z"
+              ></path>
+            </svg>
+          </div>
+          <div class="flex items-center gap-2">
+            <span
+              class="font-headline-sm text-headline-sm text-text-primary tracking-tight"
+              >AMIGA Robot Admin</span
+            ><span
+              class="hidden sm:inline-block font-caption text-caption text-text-secondary"
+              >| Portal Invoice-to-Voucher</span
+            >
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
+            <span
+              class="inline-flex items-center px-2 py-0.5 rounded font-label-firm text-label-firm bg-accent-subtle text-status-ready-fg"
+              >Intake</span
+            ><span
+              class="hidden md:inline-flex items-center px-2 py-0.5 rounded font-label-firm text-label-firm bg-surface-muted text-text-secondary"
+              >Finance Reviewer</span
+            >
+          </div>
+          <div class="h-6 w-px bg-surface-sunken hidden sm:block"></div>
+          <div class="flex items-center gap-3 pl-1">
+            <div class="text-right hidden sm:block">
+              <div
+                class="font-body-strong text-body-strong text-text-primary leading-tight"
+              >
+                Siti Rahmawati
+              </div>
+              <div
+                class="font-caption text-caption text-text-secondary leading-tight"
+              >
+                Staf Intake • ID #8841
+              </div>
+            </div>
+            <div
+              class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary font-body-strong text-body-strong"
+            >
+              <span
+                class="material-symbols-outlined text-on-primary text-[18px]"
+                >person</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <aside
+      class="fixed left-0 top-14 bottom-0 w-16 md:w-16 lg:w-60 bg-surface z-30 shadow-[0_1px_8px_rgba(0,0,0,0.04)] flex flex-col justify-between transition-all duration-200"
+    >
+      <div class="py-4">
+        <div class="px-4 mb-3 hidden lg:block">
+          <span
+            class="font-label-firm text-label-firm uppercase text-text-secondary tracking-wider"
+            >Menu Intake</span
+          >
+        </div>
+        <nav
+          class="px-2 flex flex-col gap-1"
+          data-active-classes="bg-primary-subtle text-primary font-bold rounded-lg"
+        >
+          <a
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+            data-path="antrean-invoice"
+            href="#"
+            title="Antrean Invoice"
+            ><span class="material-symbols-outlined text-[20px]">inbox</span
+            ><span class="font-body-default text-body-default hidden lg:inline"
+              >Antrean</span
+            ><span
+              class="ml-auto hidden lg:inline-flex items-center px-1.5 py-0.5 rounded font-label-firm text-[10px] bg-status-ready-bg text-status-ready-fg"
+              >24</span
+            ></a
+          ><a
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+            data-path="upload-invoice"
+            href="#"
+            title="Upload Invoice"
+            ><span class="material-symbols-outlined text-[20px]"
+              >upload_file</span
+            ><span class="font-body-default text-body-default hidden lg:inline"
+              >Upload Invoice</span
+            ></a
+          ><a
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+            data-path="buat-voucher"
+            href="#"
+            title="Buat Voucher"
+            ><span class="material-symbols-outlined text-[20px]">post_add</span
+            ><span class="font-body-default text-body-default hidden lg:inline"
+              >Buat Voucher</span
+            ></a
+          ><a
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+            data-path="daftar-voucher"
+            href="#"
+            title="Daftar Voucher"
+            ><span class="material-symbols-outlined text-[20px]"
+              >receipt_long</span
+            ><span class="font-body-default text-body-default hidden lg:inline"
+              >Daftar Voucher</span
+            ></a
+          >
+        </nav>
+        <div class="my-4 mx-3 h-px bg-surface-sunken"></div>
+        <div class="px-4 mb-3 hidden lg:block">
+          <span
+            class="font-label-firm text-label-firm uppercase text-text-secondary tracking-wider"
+            >Finance Reviewer</span
+          >
+        </div>
+        <nav
+          class="px-2 flex flex-col gap-1"
+          data-active-classes="bg-primary-subtle text-primary font-bold rounded-lg"
+        >
+          <a
+            class="flex items-center gap-3 px-3 py-2.5 transition-colors text-on-surface-variant"
+            data-path="antrean-finance-reviewer"
+            href="#"
+            title="Antrean Finance Reviewer"
+            ><span class="material-symbols-outlined text-[20px]">verified</span
+            ><span class="font-body-default text-body-default hidden lg:inline"
+              >Antrean Review</span
+            ><span
+              class="ml-auto hidden lg:inline-flex items-center px-1.5 py-0.5 rounded font-label-firm text-[10px] bg-warning-subtle text-warning"
+              >12</span
+            ></a
+          >
+        </nav>
+      </div>
+      <div
+        class="p-3 bg-surface-container-low mx-2 mb-3 rounded-lg hidden lg:block"
+      >
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px] text-success"
+            >smart_toy</span
+          ><span class="font-label-firm text-label-firm text-text-primary"
+            >Robot OCR Status</span
+          >
+        </div>
+        <div class="mt-1 font-caption text-caption text-text-secondary">
+          Engine aktif • Presisi 99.4%
+        </div>
+      </div>
+    </aside>
+    <div class="pl-16 lg:pl-60">
+      <main class="relative pt-14 w-full min-h-screen bg-background">
+        <div class="flex flex-col w-full">
+          <!-- Simulator Bar for Prototype State Switching -->
+          <div class="w-full bg-surface-container-high px-4 py-2.5 shadow-sm">
+            <div
+              class="max-w-[1400px] mx-auto flex flex-wrap items-center justify-between gap-3"
+            >
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px] text-primary"
+                  >science</span
+                >
+                <span
+                  class="font-label-firm text-label-firm text-text-primary uppercase tracking-wider"
+                  >Simulasi Status Intake (UC-5 / UC-6):</span
+                >
+              </div>
+              <div
+                class="flex flex-wrap items-center gap-1.5"
+                id="state-selector-container"
+              >
+                <button
+                  class="px-2.5 py-1 rounded font-caption text-caption font-semibold bg-surface text-danger shadow-sm hover:bg-danger-subtle transition-all"
+                  data-state-btn="rejected"
+                  onclick="switchState('rejected')"
+                  type="button"
+                >
+                  1. REJECTED
+                </button>
+                <button
+                  class="px-2.5 py-1 rounded font-caption text-caption font-semibold bg-surface text-success shadow-sm hover:bg-success-subtle transition-all"
+                  data-state-btn="reviewed"
+                  onclick="switchState('reviewed')"
+                  type="button"
+                >
+                  2. AMIGA_REVIEWED
+                </button>
+                <button
+                  class="px-2.5 py-1 rounded font-caption text-caption font-semibold bg-surface text-warning shadow-sm hover:bg-warning-subtle transition-all"
+                  data-state-btn="exception"
+                  onclick="switchState('exception')"
+                  type="button"
+                >
+                  3. EXCEPTION
+                </button>
+                <button
+                  class="px-2.5 py-1 rounded font-caption text-caption font-semibold bg-surface text-status-duplicate-bg shadow-sm hover:bg-danger-subtle transition-all"
+                  data-state-btn="duplicate"
+                  onclick="switchState('duplicate')"
+                  type="button"
+                >
+                  4. POSSIBLE_DUPLICATE
+                </button>
+                <button
+                  class="px-2.5 py-1 rounded font-caption text-caption font-semibold bg-surface text-status-processing-fg shadow-sm hover:bg-status-processing-bg transition-all"
+                  data-state-btn="processing"
+                  onclick="switchState('processing')"
+                  type="button"
+                >
+                  5. PROCESSING
+                </button>
+                <button
+                  class="px-2.5 py-1 rounded font-caption text-caption font-semibold bg-surface text-text-secondary shadow-sm hover:bg-surface-sunken transition-all"
+                  data-state-btn="forbidden"
+                  onclick="switchState('forbidden')"
+                  type="button"
+                >
+                  6. 403 Forbidden
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Main Work Area Container (1366px Optimized Desktop Grid) -->
+          <div
+            class="w-full px-4 lg:px-8 py-6 max-w-[1440px] mx-auto flex flex-col gap-6"
+          >
+            <!-- View: 403 Forbidden Error State (Hidden by default) -->
+            <div
+              class="hidden flex-col items-center justify-center py-20 px-4 text-center bg-surface rounded-xl shadow-sm"
+              id="view-forbidden"
+            >
+              <div
+                class="w-16 h-16 rounded-full bg-danger-subtle text-danger flex items-center justify-center mb-4"
+              >
+                <span class="material-symbols-outlined text-[36px]"
+                  >lock_person</span
+                >
+              </div>
+              <h2
+                class="font-headline-lg text-headline-lg text-text-primary tracking-tight mb-2"
+              >
+                Akses Tidak Diberikan (403)
+              </h2>
+              <p
+                class="font-body-default text-body-default text-text-secondary max-w-md mb-6"
+              >
+                Anda tidak memiliki akses ke dokumen ini. Request ditugaskan
+                pada unit klien di luar wewenang operasional akun Anda.
+              </p>
+              <a
+                class="inline-flex items-center gap-2 px-4 py-2 bg-primary text-on-primary font-body-strong text-body-strong rounded hover:bg-primary-hover transition-colors"
+                href="#"
+              >
+                <span class="material-symbols-outlined text-[18px]"
+                  >arrow_back</span
+                >
+                Kembali ke Antrean
+              </a>
+            </div>
+            <!-- View: Normal Detail Document (Active) -->
+            <div class="flex flex-col gap-6 w-full" id="view-document">
+              <!-- Breadcrumb Bar -->
+              <div class="flex items-center justify-between flex-wrap gap-3">
+                <a
+                  class="inline-flex items-center gap-2 font-body-strong text-body-strong text-text-link hover:text-primary-hover group transition-colors"
+                  href="#"
+                >
+                  <span
+                    class="material-symbols-outlined text-[18px] transition-transform group-hover:-translate-x-1"
+                    >arrow_back</span
+                  >
+                  <span>Kembali ke Antrean</span>
+                </a>
+                <div
+                  class="flex items-center gap-2 text-text-secondary font-caption text-caption"
+                >
+                  <span
+                    >Peran:
+                    <strong class="text-text-primary font-medium"
+                      >Staf Intake (Read-Only)</strong
+                    ></span
+                  >
+                  <span>•</span>
+                  <span class="flex items-center gap-1">
+                    <span
+                      class="material-symbols-outlined text-[14px] text-success"
+                      >visibility</span
+                    >
+                    Akses Audit-Safe
+                  </span>
+                </div>
+              </div>
+              <!-- Main Context Card Header -->
+              <div
+                class="bg-surface rounded-xl p-5 lg:p-6 shadow-sm flex flex-col gap-5"
+              >
+                <div
+                  class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-surface-sunken"
+                >
+                  <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="material-symbols-outlined text-primary text-[24px]"
+                        >receipt</span
+                      >
+                      <span
+                        class="font-code-mono text-[20px] font-bold text-text-primary tracking-tight"
+                        id="doc-req-id"
+                        >REQ-2026-000123</span
+                      >
+                    </div>
+                    <!-- Dynamic Status Badge -->
+                    <div id="dynamic-status-badge">
+                      <span
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded font-label-firm text-label-firm bg-danger-subtle text-danger border border-status-rejected-border"
+                      >
+                        <span class="material-symbols-outlined text-[16px]"
+                          >cancel</span
+                        >
+                        <span>REJECTED</span>
+                      </span>
+                    </div>
+                    <!-- Draft Status Chip (Conditional) -->
+                    <span
+                      class="inline-flex items-center gap-1 px-2 py-0.5 rounded font-label-firm text-[11px] bg-warning-subtle text-warning"
+                      id="draft-pill"
+                    >
+                      <span class="material-symbols-outlined text-[14px]"
+                        >edit_note</span
+                      >
+                      Draf Ekstraksi
+                    </span>
+                  </div>
+                  <!-- Document Inspection CTA -->
+                  <div class="flex items-center gap-3">
+                    <button
+                      aria-label="Lihat file asli dokumen invoice"
+                      class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-surface hover:bg-surface-muted text-text-primary font-body-strong text-body-strong transition-all shadow-sm"
+                      onclick="openDocumentModal()"
+                      type="button"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[18px] text-primary"
+                        >visibility</span
+                      >
+                      <span>Lihat file asli</span>
+                    </button>
+                  </div>
+                </div>
+                <!-- Metadata Strip: 4 Key Factoids -->
+                <div
+                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-1"
+                >
+                  <div class="flex flex-col">
+                    <span
+                      class="font-caption text-caption text-text-secondary uppercase tracking-wider mb-1"
+                      >Klien Entitas</span
+                    >
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="material-symbols-outlined text-[16px] text-text-secondary"
+                        >domain</span
+                      >
+                      <span
+                        class="font-body-strong text-body-strong text-text-primary"
+                        >Klien A - Retail Mandiri</span
+                      >
+                    </div>
+                  </div>
+                  <div class="flex flex-col">
+                    <span
+                      class="font-caption text-caption text-text-secondary uppercase tracking-wider mb-1"
+                      >Vendor Penerbit</span
+                    >
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="material-symbols-outlined text-[16px] text-text-secondary"
+                        >storefront</span
+                      >
+                      <span
+                        class="font-body-strong text-body-strong text-text-primary"
+                        >PT Sinar Abadi Perkasa</span
+                      >
+                    </div>
+                  </div>
+                  <div class="flex flex-col">
+                    <span
+                      class="font-caption text-caption text-text-secondary uppercase tracking-wider mb-1"
+                      >Waktu Upload</span
+                    >
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="material-symbols-outlined text-[16px] text-text-secondary"
+                        >schedule</span
+                      >
+                      <span
+                        class="font-code-mono text-code-mono text-text-primary"
+                        >24/02/2026 09:15 WIB</span
+                      >
+                    </div>
+                  </div>
+                  <div class="flex flex-col">
+                    <span
+                      class="font-caption text-caption text-text-secondary uppercase tracking-wider mb-1"
+                      >Nama File Masuk</span
+                    >
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="material-symbols-outlined text-[16px] text-text-secondary"
+                        >description</span
+                      >
+                      <span
+                        class="font-code-mono text-code-mono text-text-primary truncate"
+                        title="INV-SAP-2026-889.pdf"
+                        >INV-SAP-2026-889.pdf</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- State: QUEUED / PROCESSING Placeholder View (Replaces content when active) -->
+              <div
+                class="hidden flex-col items-center justify-center p-12 bg-surface rounded-xl shadow-sm text-center"
+                id="view-processing-state"
+              >
+                <div
+                  class="w-14 h-14 rounded-full bg-status-processing-bg text-status-processing-fg flex items-center justify-center mb-4 animate-spin"
+                >
+                  <span class="material-symbols-outlined text-[32px]"
+                    >sync</span
+                  >
+                </div>
+                <h3
+                  class="font-headline-md text-headline-md text-text-primary mb-1"
+                >
+                  Dokumen Sedang Diproses
+                </h3>
+                <p
+                  class="font-body-default text-body-default text-text-secondary max-w-md mb-2"
+                >
+                  Robot OCR dan parser AMIGA sedang mengekstrak entitas faktur,
+                  baris barang, dan verifikasi pajak.
+                </p>
+                <span class="font-caption text-caption text-text-disabled"
+                  >Tidak ada data parsial yang dapat ditampilkan sebelum
+                  ekstraksi rampung.</span
+                >
+              </div>
+              <!-- Main Data Body Container -->
+              <div class="flex flex-col gap-6" id="data-body-container">
+                <!-- 1. Decision / Review Result Block -->
+                <div id="decision-block">
+                  <!-- REJECTED Decision Variant (Default shown) -->
+                  <div
+                    class="bg-danger-subtle rounded-xl p-5 shadow-sm flex flex-col md:flex-row md:items-start justify-between gap-5"
+                    id="decision-rejected"
+                  >
+                    <div class="flex items-start gap-4">
+                      <div
+                        class="w-10 h-10 rounded-lg bg-surface text-danger flex items-center justify-center shadow-sm shrink-0 mt-0.5"
+                      >
+                        <span class="material-symbols-outlined text-[24px]"
+                          >block</span
+                        >
+                      </div>
+                      <div class="flex flex-col gap-1.5">
+                        <div class="flex items-center gap-2.5 flex-wrap">
+                          <span
+                            class="px-2 py-0.5 rounded font-label-firm text-label-firm bg-danger text-on-error"
+                            >Ditolak</span
+                          >
+                          <span
+                            class="font-body-strong text-body-strong text-text-primary"
+                            >Budi Santoso</span
+                          >
+                          <span
+                            class="font-caption text-caption text-text-secondary"
+                            >(Finance Reviewer)</span
+                          >
+                          <span class="text-text-secondary">•</span>
+                          <span
+                            class="font-code-mono text-caption text-text-secondary"
+                            >24/02/2026 14:20 WIB</span
+                          >
+                        </div>
+                        <div
+                          class="text-body-default font-body-default text-text-primary mt-1"
+                        >
+                          <span
+                            class="font-body-strong text-body-strong text-danger"
+                            >Alasan Penolakan:</span
+                          >
+                          "Nomor rekening vendor pada invoice tidak valid dan
+                          nominal tidak sesuai PO #PO-9912. Harap minta faktur
+                          revisi dari supplier."
+                        </div>
+                        <p
+                          class="font-caption text-caption text-text-secondary italic mt-1"
+                        >
+                          Request lama berstatus final. Perbaikan diunggah
+                          sebagai request baru dengan referensi request ini.
+                        </p>
+                      </div>
+                    </div>
+                    <!-- Exclusive Intake Action on REJECTED: Unggah Ulang -->
+                    <div
+                      class="shrink-0 flex flex-col items-start md:items-end gap-1.5"
+                    >
+                      <button
+                        class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-on-primary font-body-strong text-body-strong rounded-lg shadow-sm transition-colors"
+                        onclick="
+                          alert(
+                            'Membuka antarmuka Unggah Invoice Baru dengan referensi REQ-2026-000123',
+                          )
+                        "
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-[18px]"
+                          >replay</span
+                        >
+                        <span>Unggah ulang</span>
+                      </button>
+                      <span class="font-caption text-[11px] text-text-secondary"
+                        >Buat Request Pengganti</span
+                      >
+                    </div>
+                  </div>
+                  <!-- AMIGA_REVIEWED Decision Variant (Hidden in default state) -->
+                  <div
+                    class="hidden bg-success-subtle rounded-xl p-5 shadow-sm flex items-start gap-4"
+                    id="decision-reviewed"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-lg bg-surface text-success flex items-center justify-center shadow-sm shrink-0 mt-0.5"
+                    >
+                      <span class="material-symbols-outlined text-[24px]"
+                        >verified</span
+                      >
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <div class="flex items-center gap-2.5 flex-wrap">
+                        <span
+                          class="px-2 py-0.5 rounded font-label-firm text-label-firm bg-success text-on-primary"
+                          >Disetujui</span
+                        >
+                        <span
+                          class="font-body-strong text-body-strong text-text-primary"
+                          >Budi Santoso</span
+                        >
+                        <span
+                          class="font-caption text-caption text-text-secondary"
+                          >(Finance Reviewer)</span
+                        >
+                        <span class="text-text-secondary">•</span>
+                        <span
+                          class="font-code-mono text-caption text-text-secondary"
+                          >24/02/2026 14:20 WIB</span
+                        >
+                      </div>
+                      <div
+                        class="text-body-default font-body-default text-text-primary mt-1"
+                      >
+                        <span
+                          class="font-body-strong text-body-strong text-success"
+                          >Catatan Persetujuan:</span
+                        >
+                        "Faktur sah, nomor rekening terverifikasi terhadap
+                        master vendor SAP, dan nominal sesuai pesanan."
+                      </div>
+                    </div>
+                  </div>
+                  <!-- PROCESSING / WAITING Banner Variant (Hidden in default state) -->
+                  <div
+                    class="hidden bg-status-processing-bg rounded-xl p-4 shadow-sm flex items-center gap-3"
+                    id="decision-waiting"
+                  >
+                    <span
+                      class="material-symbols-outlined text-status-processing-fg text-[22px]"
+                      >hourglass_top</span
+                    >
+                    <span
+                      class="font-body-strong text-body-strong text-status-processing-fg"
+                    >
+                      Menunggu pemeriksaan oleh Finance Reviewer
+                    </span>
+                  </div>
+                </div>
+                <!-- 2. Exception Findings Alert Block -->
+                <div
+                  class="bg-warning-subtle rounded-xl p-5 shadow-sm flex flex-col gap-3"
+                  id="exception-findings-box"
+                >
+                  <div class="flex items-center gap-2 text-warning">
+                    <span class="material-symbols-outlined text-[20px]"
+                      >warning</span
+                    >
+                    <span class="font-headline-sm text-headline-sm"
+                      >Daftar Temuan Kendala (Exception Findings)</span
+                    >
+                  </div>
+                  <p class="font-caption text-caption text-text-secondary">
+                    Robot AMIGA mendeteksi ketidaksesuaian data berikut saat
+                    validasi otomatis OCR.
+                  </p>
+                  <div class="flex flex-col gap-2 pt-1" id="findings-list">
+                    <!-- Finding 1 -->
+                    <div
+                      class="flex items-start gap-3 p-3 bg-surface rounded-lg"
+                    >
+                      <span
+                        class="px-2 py-0.5 rounded font-code-mono text-[11px] font-bold bg-danger-subtle text-danger shrink-0 mt-0.5"
+                      >
+                        MISSING_EVIDENCE
+                      </span>
+                      <span
+                        class="font-body-default text-body-default text-text-primary"
+                      >
+                        Nomor rekening tidak ditemukan pada invoice.
+                      </span>
+                    </div>
+                    <!-- Finding 2 -->
+                    <div
+                      class="flex items-start gap-3 p-3 bg-surface rounded-lg"
+                    >
+                      <span
+                        class="px-2 py-0.5 rounded font-code-mono text-[11px] font-bold bg-warning-subtle text-warning shrink-0 mt-0.5"
+                      >
+                        TOTAL_MISMATCH
+                      </span>
+                      <span
+                        class="font-body-default text-body-default text-text-primary"
+                      >
+                        Total invoice tidak sama dengan jumlah baris, diskon,
+                        dan pajak (selisih Rp500.000,00).
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <!-- 3. Invoice Extracted Data (Audit-Grade Read-Only Cards) -->
+                <div
+                  class="bg-surface rounded-xl p-5 lg:p-6 shadow-sm flex flex-col gap-5"
+                >
+                  <div
+                    class="flex items-center justify-between pb-3 border-b border-surface-sunken"
+                  >
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="material-symbols-outlined text-[20px] text-primary"
+                        >text_snippet</span
+                      >
+                      <h3
+                        class="font-headline-sm text-headline-sm text-text-primary"
+                      >
+                        Data Ekstraksi Invoice
+                      </h3>
+                    </div>
+                    <span
+                      class="font-caption text-caption text-text-secondary italic"
+                      >Read-only view • Tanpa affordance input</span
+                    >
+                  </div>
+                  <!-- Structured 3-Column Display Panel -->
+                  <div
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                  >
+                    <!-- Vendor Name -->
+                    <div
+                      class="bg-surface-muted p-3.5 rounded-lg flex flex-col gap-1"
+                    >
+                      <span
+                        class="font-caption text-caption text-text-secondary"
+                        >Vendor</span
+                      >
+                      <span
+                        class="font-body-strong text-body-strong text-text-primary"
+                        >PT Sinar Abadi Perkasa</span
+                      >
+                    </div>
+                    <!-- Invoice Number -->
+                    <div
+                      class="bg-surface-muted p-3.5 rounded-lg flex flex-col gap-1"
+                    >
+                      <span
+                        class="font-caption text-caption text-text-secondary"
+                        >Nomor Invoice</span
+                      >
+                      <span
+                        class="font-code-mono text-body-strong text-text-primary"
+                        >INV/2026/02/0991</span
+                      >
+                    </div>
+                    <!-- Rekening Tujuan (Missing Evidence Case demonstration) -->
+                    <div
+                      class="bg-surface-muted p-3.5 rounded-lg flex flex-col gap-1"
+                      id="field-rekening"
+                    >
+                      <span
+                        class="font-caption text-caption text-text-secondary"
+                        >Rekening Tujuan (Bank &amp; No. Rek)</span
+                      >
+                      <!-- Rendered as italic placeholder when MISSING_EVIDENCE is triggered -->
+                      <span
+                        class="font-body-default text-body-default text-text-disabled italic flex items-center gap-1.5"
+                      >
+                        <span
+                          class="material-symbols-outlined text-[16px] text-warning"
+                          >help</span
+                        >
+                        Tidak ditemukan
+                      </span>
+                    </div>
+                    <!-- Tanggal Invoice -->
+                    <div
+                      class="bg-surface-muted p-3.5 rounded-lg flex flex-col gap-1"
+                    >
+                      <span
+                        class="font-caption text-caption text-text-secondary"
+                        >Tanggal Invoice</span
+                      >
+                      <span
+                        class="font-code-mono text-body-default text-text-primary"
+                        >18/02/2026</span
+                      >
+                    </div>
+                    <!-- Tanggal Penerimaan Dokumen -->
+                    <div
+                      class="bg-surface-muted p-3.5 rounded-lg flex flex-col gap-1"
+                    >
+                      <span
+                        class="font-caption text-caption text-text-secondary"
+                        >Tanggal Penerimaan</span
+                      >
+                      <span
+                        class="font-code-mono text-body-default text-text-primary"
+                        >24/02/2026</span
+                      >
+                    </div>
+                    <!-- Diskon Total -->
+                    <div
+                      class="bg-surface-muted p-3.5 rounded-lg flex flex-col gap-1"
+                    >
+                      <span
+                        class="font-caption text-caption text-text-secondary"
+                        >Diskon</span
+                      >
+                      <span
+                        class="font-amount-default text-amount-default text-text-primary text-right tabular-nums"
+                        >Rp0,00</span
+                      >
+                    </div>
+                    <!-- Pajak PPN -->
+                    <div
+                      class="bg-surface-muted p-3.5 rounded-lg flex flex-col gap-1"
+                    >
+                      <span
+                        class="font-caption text-caption text-text-secondary"
+                        >Pajak (PPN 11%)</span
+                      >
+                      <span
+                        class="font-amount-default text-amount-default text-text-primary text-right tabular-nums"
+                        >Rp123.750,00</span
+                      >
+                    </div>
+                    <!-- Subtotal Sebelum Pajak -->
+                    <div
+                      class="bg-surface-muted p-3.5 rounded-lg flex flex-col gap-1"
+                    >
+                      <span
+                        class="font-caption text-caption text-text-secondary"
+                        >Subtotal Bersih</span
+                      >
+                      <span
+                        class="font-amount-default text-amount-default text-text-primary text-right tabular-nums"
+                        >Rp1.125.000,00</span
+                      >
+                    </div>
+                    <!-- Total Invoice Final -->
+                    <div
+                      class="bg-primary-subtle p-3.5 rounded-lg flex flex-col gap-1"
+                    >
+                      <span
+                        class="font-label-firm text-label-firm text-primary uppercase"
+                        >Total Invoice Akhir</span
+                      >
+                      <span
+                        class="font-amount-lg text-amount-lg text-primary text-right tabular-nums"
+                        >Rp1.248.750,00</span
+                      >
+                    </div>
+                  </div>
+                </div>
+                <!-- 4. Line Items Table (Dense 44px Row Height) -->
+                <div
+                  class="bg-surface rounded-xl p-5 lg:p-6 shadow-sm flex flex-col gap-4"
+                >
+                  <div class="flex items-center justify-between pb-2">
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="material-symbols-outlined text-[20px] text-primary"
+                        >format_list_bulleted</span
+                      >
+                      <h3
+                        class="font-headline-sm text-headline-sm text-text-primary"
+                      >
+                        Daftar Baris Barang / Jasa
+                      </h3>
+                      <span
+                        class="px-2 py-0.5 rounded font-label-firm text-[11px] bg-surface-sunken text-text-secondary"
+                        >3 Item</span
+                      >
+                    </div>
+                    <span
+                      class="font-caption text-caption text-text-secondary hidden sm:inline"
+                      >Satuan Rupiah (IDR)</span
+                    >
+                  </div>
+                  <div class="w-full overflow-x-auto rounded-lg">
+                    <table class="w-full text-left border-collapse">
+                      <thead>
+                        <tr
+                          class="h-10 bg-surface-muted font-table-header text-table-header text-text-secondary uppercase border-b border-surface-sunken"
+                        >
+                          <th class="px-4 py-2 w-12 text-center">No</th>
+                          <th class="px-4 py-2">Deskripsi Barang / Jasa</th>
+                          <th class="px-4 py-2 text-right w-24">Qty</th>
+                          <th class="px-4 py-2 text-right w-44">
+                            Harga Satuan
+                          </th>
+                          <th class="px-4 py-2 text-right w-44">Jumlah</th>
+                        </tr>
+                      </thead>
+                      <tbody
+                        class="divide-y divide-surface-sunken font-body-default text-body-default"
+                      >
+                        <tr
+                          class="h-11 hover:bg-primary-subtle transition-colors"
+                        >
+                          <td
+                            class="px-4 py-2 text-center text-text-secondary font-code-mono"
+                          >
+                            1
+                          </td>
+                          <td class="px-4 py-2 font-medium text-text-primary">
+                            Kertas HVS A4 80gr Rim Natural
+                          </td>
+                          <td
+                            class="px-4 py-2 text-right tabular-nums font-code-mono"
+                          >
+                            10
+                          </td>
+                          <td
+                            class="px-4 py-2 text-right tabular-nums font-amount-default"
+                          >
+                            Rp55.000,00
+                          </td>
+                          <td
+                            class="px-4 py-2 text-right tabular-nums font-amount-default text-text-primary"
+                          >
+                            Rp550.000,00
+                          </td>
+                        </tr>
+                        <tr
+                          class="h-11 hover:bg-primary-subtle transition-colors"
+                        >
+                          <td
+                            class="px-4 py-2 text-center text-text-secondary font-code-mono"
+                          >
+                            2
+                          </td>
+                          <td class="px-4 py-2 font-medium text-text-primary">
+                            Tinta Cartridge Hitam Seri C-902
+                          </td>
+                          <td
+                            class="px-4 py-2 text-right tabular-nums font-code-mono"
+                          >
+                            2
+                          </td>
+                          <td
+                            class="px-4 py-2 text-right tabular-nums font-amount-default"
+                          >
+                            Rp225.000,00
+                          </td>
+                          <td
+                            class="px-4 py-2 text-right tabular-nums font-amount-default text-text-primary"
+                          >
+                            Rp450.000,00
+                          </td>
+                        </tr>
+                        <tr
+                          class="h-11 hover:bg-primary-subtle transition-colors"
+                        >
+                          <td
+                            class="px-4 py-2 text-center text-text-secondary font-code-mono"
+                          >
+                            3
+                          </td>
+                          <td class="px-4 py-2 font-medium text-text-primary">
+                            Klip Dokumen Binder Jumbo Box (isi 12)
+                          </td>
+                          <td
+                            class="px-4 py-2 text-right tabular-nums font-code-mono"
+                          >
+                            5
+                          </td>
+                          <td
+                            class="px-4 py-2 text-right tabular-nums font-amount-default"
+                          >
+                            Rp25.000,00
+                          </td>
+                          <td
+                            class="px-4 py-2 text-right tabular-nums font-amount-default text-text-primary"
+                          >
+                            Rp125.000,00
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tfoot>
+                        <tr
+                          class="bg-surface-container-low font-body-strong text-body-strong border-t border-surface-sunken"
+                        >
+                          <td
+                            class="px-4 py-2.5 text-right text-text-secondary"
+                            colspan="4"
+                          >
+                            Subtotal Baris Barang
+                          </td>
+                          <td
+                            class="px-4 py-2.5 text-right font-amount-default text-text-primary tabular-nums"
+                          >
+                            Rp1.125.000,00
+                          </td>
+                        </tr>
+                        <tr
+                          class="bg-surface-container-low font-caption text-caption"
+                        >
+                          <td
+                            class="px-4 py-2 text-right text-text-secondary"
+                            colspan="4"
+                          >
+                            Pajak Pertambahan Nilai (PPN 11%)
+                          </td>
+                          <td
+                            class="px-4 py-2 text-right font-amount-default text-text-primary tabular-nums"
+                          >
+                            Rp123.750,00
+                          </td>
+                        </tr>
+                        <tr
+                          class="bg-surface-container-low font-caption text-caption"
+                        >
+                          <td
+                            class="px-4 py-2 text-right text-text-secondary"
+                            colspan="4"
+                          >
+                            Potongan Diskon
+                          </td>
+                          <td
+                            class="px-4 py-2 text-right font-amount-default text-text-primary tabular-nums"
+                          >
+                            -Rp0,00
+                          </td>
+                        </tr>
+                        <tr
+                          class="bg-primary-subtle font-headline-sm text-headline-sm"
+                        >
+                          <td
+                            class="px-4 py-3 text-right text-primary font-bold"
+                            colspan="4"
+                          >
+                            Total Tagihan Final
+                          </td>
+                          <td
+                            class="px-4 py-3 text-right font-amount-lg text-primary tabular-nums"
+                          >
+                            Rp1.248.750,00
+                          </td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+                <!-- 5. Collapsible Audit Trail / Riwayat Perubahan -->
+                <div class="bg-surface rounded-xl shadow-sm overflow-hidden">
+                  <button
+                    class="w-full p-5 lg:p-6 flex items-center justify-between text-left hover:bg-surface-muted transition-colors"
+                    onclick="toggleAuditTrail()"
+                    type="button"
+                  >
+                    <div class="flex items-center gap-3">
+                      <span
+                        class="material-symbols-outlined text-[20px] text-primary"
+                        >history_edu</span
+                      >
+                      <div>
+                        <h3
+                          class="font-headline-sm text-headline-sm text-text-primary"
+                        >
+                          Riwayat Perubahan &amp; Audit Trail
+                        </h3>
+                        <p
+                          class="font-caption text-caption text-text-secondary"
+                        >
+                          Daftar rekaman mutasi data otomatis &amp; manual
+                          secara kronologis
+                        </p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="font-caption text-caption text-text-secondary"
+                        >Hanya aksi mutasi dicatat</span
+                      >
+                      <span
+                        class="material-symbols-outlined text-text-secondary transition-transform duration-200"
+                        id="audit-toggle-icon"
+                        >expand_more</span
+                      >
+                    </div>
+                  </button>
+                  <!-- Audit Body Collapsible Section -->
+                  <div
+                    class="px-5 pb-6 lg:px-6 flex flex-col gap-4"
+                    id="audit-trail-content"
+                  >
+                    <div
+                      class="p-3 bg-surface-muted rounded-lg flex items-center gap-2 text-text-secondary font-caption text-caption"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[16px] text-info"
+                        >info</span
+                      >
+                      <span
+                        >Audit-grade: Aktivitas membuka halaman dan melihat
+                        dokumen file asli tidak dicatat dalam riwayat mutasi
+                        data.</span
+                      >
+                    </div>
+                    <div class="overflow-x-auto rounded-lg">
+                      <table class="w-full text-left border-collapse">
+                        <thead>
+                          <tr
+                            class="h-10 bg-surface-muted font-table-header text-table-header text-text-secondary uppercase border-b border-surface-sunken"
+                          >
+                            <th class="px-4 py-2 w-44">Waktu</th>
+                            <th class="px-4 py-2 w-48">Pengguna</th>
+                            <th class="px-4 py-2 w-32">Aksi</th>
+                            <th class="px-4 py-2 w-40">Field Target</th>
+                            <th class="px-4 py-2">Nilai Lama</th>
+                            <th class="px-4 py-2">Nilai Baru</th>
+                          </tr>
+                        </thead>
+                        <tbody
+                          class="divide-y divide-surface-sunken font-body-default text-body-default"
+                        >
+                          <!-- Row 1: Reviewer Decision -->
+                          <tr class="h-11 hover:bg-surface-muted">
+                            <td
+                              class="px-4 py-2 font-code-mono text-caption text-text-secondary whitespace-nowrap"
+                            >
+                              24/02/2026 14:20:18
+                            </td>
+                            <td class="px-4 py-2">
+                              <div
+                                class="flex items-center gap-1.5 font-medium text-text-primary"
+                              >
+                                <span
+                                  class="material-symbols-outlined text-[16px] text-text-secondary"
+                                  >person</span
+                                >
+                                <span>Budi Santoso</span>
+                              </div>
+                            </td>
+                            <td class="px-4 py-2 font-semibold text-danger">
+                              Tolak Request
+                            </td>
+                            <td
+                              class="px-4 py-2 font-code-mono text-caption text-text-secondary"
+                            >
+                              status_dokumen
+                            </td>
+                            <td class="px-4 py-2">
+                              <span
+                                class="px-2 py-0.5 rounded font-code-mono text-[11px] bg-diff-old-bg text-diff-old-fg"
+                                >READY_FOR_REVIEW</span
+                              >
+                            </td>
+                            <td class="px-4 py-2">
+                              <span
+                                class="px-2 py-0.5 rounded font-code-mono text-[11px] bg-danger-subtle text-danger font-bold"
+                                >REJECTED</span
+                              >
+                            </td>
+                          </tr>
+                          <!-- Row 2: Robot OCR Tagging -->
+                          <tr class="h-11 hover:bg-surface-muted">
+                            <td
+                              class="px-4 py-2 font-code-mono text-caption text-text-secondary whitespace-nowrap"
+                            >
+                              24/02/2026 09:16:04
+                            </td>
+                            <td class="px-4 py-2">
+                              <div
+                                class="flex items-center gap-1.5 font-medium text-primary"
+                              >
+                                <span
+                                  class="material-symbols-outlined text-[16px]"
+                                  >smart_toy</span
+                                >
+                                <span>AMIGA Robot OCR</span>
+                              </div>
+                            </td>
+                            <td class="px-4 py-2 font-medium text-text-primary">
+                              Deteksi Temuan
+                            </td>
+                            <td
+                              class="px-4 py-2 font-code-mono text-caption text-text-secondary"
+                            >
+                              exception_flags
+                            </td>
+                            <td class="px-4 py-2">
+                              <span
+                                class="px-2 py-0.5 rounded font-code-mono text-[11px] bg-surface-sunken text-text-disabled"
+                                >NONE</span
+                              >
+                            </td>
+                            <td class="px-4 py-2">
+                              <span
+                                class="px-2 py-0.5 rounded font-code-mono text-[11px] bg-warning-subtle text-warning"
+                                >MISSING_EVIDENCE</span
+                              >
+                            </td>
+                          </tr>
+                          <!-- Row 3: Ingestion Intake -->
+                          <tr class="h-11 hover:bg-surface-muted">
+                            <td
+                              class="px-4 py-2 font-code-mono text-caption text-text-secondary whitespace-nowrap"
+                            >
+                              24/02/2026 09:15:22
+                            </td>
+                            <td class="px-4 py-2">
+                              <div
+                                class="flex items-center gap-1.5 font-medium text-text-primary"
+                              >
+                                <span
+                                  class="material-symbols-outlined text-[16px] text-text-secondary"
+                                  >person</span
+                                >
+                                <span>Siti Rahmawati</span>
+                              </div>
+                            </td>
+                            <td class="px-4 py-2 font-medium text-text-primary">
+                              Upload Dokumen
+                            </td>
+                            <td
+                              class="px-4 py-2 font-code-mono text-caption text-text-secondary"
+                            >
+                              request_intake
+                            </td>
+                            <td class="px-4 py-2">
+                              <span
+                                class="text-text-disabled italic font-caption"
+                                >-</span
+                              >
+                            </td>
+                            <td class="px-4 py-2">
+                              <span
+                                class="px-2 py-0.5 rounded font-code-mono text-[11px] bg-diff-new-bg text-diff-new-fg"
+                                >DRAFT_CREATED</span
+                              >
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- End data-body-container -->
+            </div>
+            <!-- End view-document -->
+          </div>
+          <!-- End max-w container -->
+          <!-- Modal: Original Document Viewer (Audit Grade Lightbox) -->
+          <div
+            aria-labelledby="modal-title"
+            aria-modal="true"
+            class="hidden fixed inset-0 z-50 overflow-y-auto bg-overlay flex items-center justify-center p-4 lg:p-8"
+            id="original-file-modal"
+            role="dialog"
+          >
+            <div
+              class="relative w-full max-w-5xl bg-surface rounded-xl shadow-2xl flex flex-col max-h-[942px] overflow-hidden animate-fadeIn"
+            >
+              <!-- Modal Top Header Toolbar -->
+              <div
+                class="px-5 py-3.5 bg-surface-muted border-b border-surface-sunken flex items-center justify-between gap-3"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-8 h-8 rounded bg-primary-subtle text-primary flex items-center justify-center"
+                  >
+                    <span class="material-symbols-outlined text-[20px]"
+                      >picture_as_pdf</span
+                    >
+                  </div>
+                  <div class="flex flex-col">
+                    <h4
+                      class="font-body-strong text-body-strong text-text-primary truncate"
+                      id="modal-title"
+                    >
+                      invoice-sinar-abadi.pdf
+                    </h4>
+                    <div
+                      class="flex items-center gap-2 font-caption text-caption text-text-secondary"
+                    >
+                      <span>Ukuran: 1.4 MB</span>
+                      <span>•</span>
+                      <span
+                        class="font-label-firm text-[10px] uppercase text-success"
+                        >File Asli Terverifikasi</span
+                      >
+                    </div>
+                  </div>
+                </div>
+                <!-- Zoom & Inspection Controls -->
+                <div class="flex items-center gap-2">
+                  <div
+                    class="bg-surface rounded-lg p-1 flex items-center shadow-sm"
+                  >
+                    <button
+                      class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-muted hover:text-text-primary"
+                      onclick="adjustZoom(-10)"
+                      title="Perkecil"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[18px]"
+                        >zoom_out</span
+                      >
+                    </button>
+                    <span
+                      class="font-code-mono text-[12px] px-2 text-text-primary min-w-[50px] text-center"
+                      id="zoom-level-text"
+                      >100%</span
+                    >
+                    <button
+                      class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-muted hover:text-text-primary"
+                      onclick="adjustZoom(10)"
+                      title="Perbesar"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[18px]"
+                        >zoom_in</span
+                      >
+                    </button>
+                    <button
+                      class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-muted hover:text-text-primary ml-1"
+                      onclick="resetZoom()"
+                      title="Reset Zoom"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[18px]"
+                        >fit_screen</span
+                      >
+                    </button>
+                  </div>
+                  <!-- Close Modal Button -->
+                  <button
+                    aria-label="Tutup jendela pratinjau"
+                    class="w-9 h-9 rounded-lg bg-surface hover:bg-danger-subtle hover:text-danger text-text-secondary flex items-center justify-center shadow-sm transition-colors"
+                    onclick="closeDocumentModal()"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-[20px]"
+                      >close</span
+                    >
+                  </button>
+                </div>
+              </div>
+              <!-- Document Viewport Frame with Realistic Render Simulation -->
+              <div
+                class="w-full flex-1 bg-surface-sunken overflow-auto p-6 flex justify-center items-center min-h-[500px]"
+              >
+                <div
+                  class="bg-surface shadow-md rounded p-8 w-full max-w-3xl transition-transform duration-150 origin-top flex flex-col gap-6"
+                  id="pdf-canvas-container"
+                  style="transform: scale(1)"
+                >
+                  <!-- Mock Authentic Invoice Document Content -->
+                  <div
+                    class="flex justify-between items-start border-b border-surface-sunken pb-6"
+                  >
+                    <div>
+                      <h2
+                        class="font-headline-lg text-headline-lg text-text-primary font-bold"
+                      >
+                        PT SINAR ABADI PERKASA
+                      </h2>
+                      <p class="font-caption text-caption text-text-secondary">
+                        Jl. Industri Raya No. 45 Blok C, Kawasan Pulogadung,
+                        Jakarta Timur
+                      </p>
+                      <p class="font-caption text-caption text-text-secondary">
+                        Telp: (021) 460-9988 | Email: billing@sinarabadi.co.id
+                      </p>
+                      <p
+                        class="font-code-mono text-caption text-text-secondary mt-1"
+                      >
+                        NPWP: 01.455.890.3-054.000
+                      </p>
+                    </div>
+                    <div class="text-right">
+                      <div
+                        class="font-headline-md text-headline-md font-bold text-primary"
+                      >
+                        FAKTUR PENJUALAN
+                      </div>
+                      <div
+                        class="font-code-mono text-body-strong text-text-primary mt-1"
+                      >
+                        INV/2026/02/0991
+                      </div>
+                      <div
+                        class="font-caption text-caption text-text-secondary mt-1"
+                      >
+                        Tanggal: 18 Februari 2026
+                      </div>
+                      <div
+                        class="font-caption text-caption text-text-secondary"
+                      >
+                        Jatuh Tempo: 18 Maret 2026
+                      </div>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-4 text-body-default">
+                    <div>
+                      <span
+                        class="font-label-firm text-caption text-text-secondary uppercase"
+                        >Ditujukan Kepada:</span
+                      >
+                      <div
+                        class="font-body-strong text-body-strong text-text-primary mt-0.5"
+                      >
+                        Klien A - Retail Mandiri
+                      </div>
+                      <div
+                        class="font-caption text-caption text-text-secondary"
+                      >
+                        Gedung Menara Sentosa Lt. 12, Jl. Thamrin Kav. 8,
+                        Jakarta Pusat
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <span
+                        class="font-label-firm text-caption text-text-secondary uppercase"
+                        >Nomor PO Referensi:</span
+                      >
+                      <div
+                        class="font-code-mono text-body-strong text-text-primary mt-0.5"
+                      >
+                        PO-9912
+                      </div>
+                      <div
+                        class="font-caption text-caption text-text-secondary"
+                      >
+                        Termin Pembayaran: Net 30 Hari
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Document Table -->
+                  <div
+                    class="rounded overflow-hidden border border-surface-sunken"
+                  >
+                    <table class="w-full text-left font-caption text-caption">
+                      <thead
+                        class="bg-surface-muted text-text-secondary font-semibold"
+                      >
+                        <tr>
+                          <th class="p-2">No</th>
+                          <th class="p-2">Keterangan Barang</th>
+                          <th class="p-2 text-right">Qty</th>
+                          <th class="p-2 text-right">Harga Satuan</th>
+                          <th class="p-2 text-right">Total</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-surface-sunken">
+                        <tr>
+                          <td class="p-2">1</td>
+                          <td class="p-2">Kertas HVS A4 80gr Rim Natural</td>
+                          <td class="p-2 text-right font-code-mono">10</td>
+                          <td class="p-2 text-right font-code-mono">
+                            Rp55.000,00
+                          </td>
+                          <td class="p-2 text-right font-code-mono">
+                            Rp550.000,00
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="p-2">2</td>
+                          <td class="p-2">Tinta Cartridge Hitam Seri C-902</td>
+                          <td class="p-2 text-right font-code-mono">2</td>
+                          <td class="p-2 text-right font-code-mono">
+                            Rp225.000,00
+                          </td>
+                          <td class="p-2 text-right font-code-mono">
+                            Rp450.000,00
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="p-2">3</td>
+                          <td class="p-2">
+                            Klip Dokumen Binder Jumbo Box (isi 12)
+                          </td>
+                          <td class="p-2 text-right font-code-mono">5</td>
+                          <td class="p-2 text-right font-code-mono">
+                            Rp25.000,00
+                          </td>
+                          <td class="p-2 text-right font-code-mono">
+                            Rp125.000,00
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="flex justify-between items-start pt-2">
+                    <div class="max-w-xs">
+                      <span
+                        class="font-label-firm text-caption text-text-secondary uppercase"
+                        >Instruksi Pembayaran:</span
+                      >
+                      <!-- Missing bank account alert placeholder simulated -->
+                      <div
+                        class="mt-1 p-2 bg-danger-subtle text-danger rounded text-[11px] font-caption"
+                      >
+                        *Catatan: Nomor rekening transfer tidak tertera pada cap
+                        faktur fisik.
+                      </div>
+                    </div>
+                    <div
+                      class="w-64 flex flex-col gap-1 text-caption text-right"
+                    >
+                      <div class="flex justify-between text-text-secondary">
+                        <span>Subtotal:</span>
+                        <span class="font-code-mono">Rp1.125.000,00</span>
+                      </div>
+                      <div class="flex justify-between text-text-secondary">
+                        <span>PPN (11%):</span>
+                        <span class="font-code-mono">Rp123.750,00</span>
+                      </div>
+                      <div class="flex justify-between text-text-secondary">
+                        <span>Diskon:</span>
+                        <span class="font-code-mono">Rp0,00</span>
+                      </div>
+                      <div
+                        class="flex justify-between font-bold text-text-primary text-body-strong pt-1 border-t border-surface-sunken"
+                      >
+                        <span>Total:</span>
+                        <span class="font-amount-default text-primary"
+                          >Rp1.248.750,00</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pt-8 flex justify-end">
+                    <div class="text-center w-48">
+                      <div
+                        class="font-caption text-caption text-text-secondary"
+                      >
+                        Hormat Kami,
+                      </div>
+                      <div
+                        class="h-14 flex items-center justify-center italic text-text-disabled text-caption"
+                      >
+                        Cap &amp; Tanda Tangan Basah
+                      </div>
+                      <div
+                        class="font-body-strong text-caption text-text-primary underline"
+                      >
+                        Suryanto Gunawan
+                      </div>
+                      <div class="font-caption text-[11px] text-text-secondary">
+                        Finance Manager
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Modal Bottom Information Footer -->
+              <div
+                class="px-5 py-3 bg-surface border-t border-surface-sunken flex items-center justify-between text-caption text-text-secondary"
+              >
+                <div class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-[16px]"
+                    >lock</span
+                  >
+                  <span
+                    >Dokumen dilindungi dalam format read-only arsip
+                    hukum.</span
+                  >
+                </div>
+                <button
+                  class="px-4 py-1.5 rounded bg-surface-muted hover:bg-surface-sunken text-text-primary font-body-strong text-caption transition-colors"
+                  onclick="closeDocumentModal()"
+                  type="button"
+                >
+                  Tutup Pratinjau
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Inline Script for Interactive Prototypes: State Simulator, Zoom, & Modal -->
+          <script>
+            let currentZoom = 100;
+
+            function openDocumentModal() {
+              const modal = document.getElementById('original-file-modal');
+              modal.classList.remove('hidden');
+              document.body.style.overflow = 'hidden';
+            }
+
+            function closeDocumentModal() {
+              const modal = document.getElementById('original-file-modal');
+              modal.classList.add('hidden');
+              document.body.style.overflow = '';
+              resetZoom();
+            }
+
+            function adjustZoom(delta) {
+              currentZoom = Math.min(Math.max(50, currentZoom + delta), 180);
+              const canvas = document.getElementById('pdf-canvas-container');
+              const text = document.getElementById('zoom-level-text');
+              if (canvas && text) {
+                canvas.style.transform = 'scale(' + currentZoom / 100 + ')';
+                text.innerText = currentZoom + '%';
+              }
+            }
+
+            function resetZoom() {
+              currentZoom = 100;
+              const canvas = document.getElementById('pdf-canvas-container');
+              const text = document.getElementById('zoom-level-text');
+              if (canvas && text) {
+                canvas.style.transform = 'scale(1)';
+                text.innerText = '100%';
+              }
+            }
+
+            function toggleAuditTrail() {
+              const content = document.getElementById('audit-trail-content');
+              const icon = document.getElementById('audit-toggle-icon');
+              if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.innerText = 'expand_more';
+              } else {
+                content.classList.add('hidden');
+                icon.innerText = 'expand_less';
+              }
+            }
+
+            // Interactive State Switcher for prototype demonstration
+            function switchState(state) {
+              const viewForbidden = document.getElementById('view-forbidden');
+              const viewDocument = document.getElementById('view-document');
+              const viewProcessing = document.getElementById(
+                'view-processing-state',
+              );
+              const dataBody = document.getElementById('data-body-container');
+
+              const badgeContainer = document.getElementById(
+                'dynamic-status-badge',
+              );
+              const draftPill = document.getElementById('draft-pill');
+
+              const decisionRejected =
+                document.getElementById('decision-rejected');
+              const decisionReviewed =
+                document.getElementById('decision-reviewed');
+              const decisionWaiting =
+                document.getElementById('decision-waiting');
+              const exceptionBox = document.getElementById(
+                'exception-findings-box',
+              );
+              const rekeningField = document.getElementById('field-rekening');
+
+              // Update simulator buttons UI
+              document.querySelectorAll('[data-state-btn]').forEach((btn) => {
+                btn.classList.remove('ring-2', 'ring-primary', 'font-bold');
+              });
+              const activeBtn = document.querySelector(
+                '[data-state-btn="' + state + '"]',
+              );
+              if (activeBtn)
+                activeBtn.classList.add('ring-2', 'ring-primary', 'font-bold');
+
+              // Handle 403 Forbidden State
+              if (state === 'forbidden') {
+                viewForbidden.classList.remove('hidden');
+                viewForbidden.classList.add('flex');
+                viewDocument.classList.add('hidden');
+                return;
+              } else {
+                viewForbidden.classList.add('hidden');
+                viewForbidden.classList.remove('flex');
+                viewDocument.classList.remove('hidden');
+              }
+
+              // Handle PROCESSING State
+              if (state === 'processing') {
+                viewProcessing.classList.remove('hidden');
+                viewProcessing.classList.add('flex');
+                dataBody.classList.add('hidden');
+                badgeContainer.innerHTML =
+                  '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded font-label-firm text-label-firm bg-status-processing-bg text-status-processing-fg border border-status-processing-border"><span class="material-symbols-outlined text-[16px] animate-spin">sync</span><span>PROCESSING</span></span>';
+                draftPill.classList.remove('hidden');
+                return;
+              } else {
+                viewProcessing.classList.add('hidden');
+                viewProcessing.classList.remove('flex');
+                dataBody.classList.remove('hidden');
+              }
+
+              // Reset dynamic blocks
+              decisionRejected.classList.add('hidden');
+              decisionReviewed.classList.add('hidden');
+              decisionWaiting.classList.add('hidden');
+              exceptionBox.classList.add('hidden');
+              draftPill.classList.add('hidden');
+
+              if (state === 'rejected') {
+                badgeContainer.innerHTML =
+                  '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded font-label-firm text-label-firm bg-danger-subtle text-danger border border-status-rejected-border"><span class="material-symbols-outlined text-[16px]">cancel</span><span>REJECTED</span></span>';
+                decisionRejected.classList.remove('hidden');
+                exceptionBox.classList.remove('hidden');
+                rekeningField.innerHTML =
+                  '<span class="font-caption text-caption text-text-secondary">Rekening Tujuan (Bank & No. Rek)</span><span class="font-body-default text-body-default text-text-disabled italic flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-warning">help</span>Tidak ditemukan</span>';
+              } else if (state === 'reviewed') {
+                badgeContainer.innerHTML =
+                  '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded font-label-firm text-label-firm bg-success-subtle text-success border border-status-reviewed-border"><span class="material-symbols-outlined text-[16px]">check_circle</span><span>AMIGA_REVIEWED</span></span>';
+                decisionReviewed.classList.remove('hidden');
+                rekeningField.innerHTML =
+                  '<span class="font-caption text-caption text-text-secondary">Rekening Tujuan (Bank & No. Rek)</span><span class="font-code-mono text-body-strong text-text-primary">BCA - 0881920031</span>';
+              } else if (state === 'exception') {
+                badgeContainer.innerHTML =
+                  '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded font-label-firm text-label-firm bg-warning-subtle text-warning border border-status-exception-border"><span class="material-symbols-outlined text-[16px]">warning</span><span>EXCEPTION</span></span>';
+                draftPill.classList.remove('hidden');
+                decisionWaiting.classList.remove('hidden');
+                exceptionBox.classList.remove('hidden');
+                rekeningField.innerHTML =
+                  '<span class="font-caption text-caption text-text-secondary">Rekening Tujuan (Bank & No. Rek)</span><span class="font-body-default text-body-default text-text-disabled italic flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-warning">help</span>Tidak ditemukan</span>';
+              } else if (state === 'duplicate') {
+                badgeContainer.innerHTML =
+                  '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded font-label-firm text-label-firm bg-status-duplicate-bg text-on-error"><span class="material-symbols-outlined text-[16px]">file_copy</span><span>POSSIBLE_DUPLICATE</span></span>';
+                decisionWaiting.classList.remove('hidden');
+                exceptionBox.classList.remove('hidden');
+                document.getElementById('findings-list').innerHTML =
+                  '<div class="flex items-start gap-3 p-3 bg-surface rounded-lg"><span class="px-2 py-0.5 rounded font-code-mono text-[11px] font-bold bg-status-duplicate-bg text-on-error shrink-0 mt-0.5">POSSIBLE_DUPLICATE</span><span class="font-body-default text-body-default text-text-primary">Invoice dengan nomor dan vendor yang sama sudah ada (Request ID REQ-2026-000089). Dokumen hanya dapat ditolak.</span></div>';
+                rekeningField.innerHTML =
+                  '<span class="font-caption text-caption text-text-secondary">Rekening Tujuan (Bank & No. Rek)</span><span class="font-code-mono text-body-strong text-text-primary">BCA - 0881920031</span>';
+              }
+            }
+
+            // Keyboard accessibility for modal closure
+            window.addEventListener('keydown', function (e) {
+              if (e.key === 'Escape') {
+                closeDocumentModal();
+              }
+            });
+
+            // Initialize default state
+            document.addEventListener('DOMContentLoaded', function () {
+              switchState('rejected');
+            });
+          </script>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
