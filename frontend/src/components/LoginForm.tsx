@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { homeForRole } from "@/lib/navigation";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -74,9 +75,7 @@ export default function LoginForm() {
 
     try {
       const authenticatedUser = await login(email.trim(), password);
-      router.replace(
-        authenticatedUser.role === "SYSTEM_ADMIN" ? "/users" : "/dashboard",
-      );
+      router.replace(homeForRole(authenticatedUser.role));
     } catch (err: unknown) {
       const errorMsg =
         err instanceof Error

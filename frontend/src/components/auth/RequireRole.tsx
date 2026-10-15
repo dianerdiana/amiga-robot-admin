@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { homeForRole } from "@/lib/navigation";
 
 export default function RequireRole({
   role,
@@ -17,7 +18,7 @@ export default function RequireRole({
   useEffect(() => {
     if (isLoading) return;
     if (!user) router.replace("/login");
-    else if (user.role !== role) router.replace("/dashboard");
+    else if (user.role !== role) router.replace(homeForRole(user.role));
   }, [isLoading, role, router, user]);
 
   if (isLoading || !user || user.role !== role) {

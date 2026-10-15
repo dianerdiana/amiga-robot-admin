@@ -1,21 +1,32 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import IntakeView from "@/components/dashboard/IntakeView";
 import ReviewerView from "@/components/dashboard/ReviewerView";
 import ServiceLeadView from "@/components/dashboard/ServiceLeadView";
 
-export default function DashboardPage() {
+// Intake tabs that now have dedicated routes; voucher tabs are still served by the dashboard.
+const INTAKE_ROUTES: Record<string, string> = {
+  invoices: "/invoices",
+  upload: "/invoices/upload",
+};
+
+function DashboardContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<string>("pengguna");
+  const tabParam = searchParams.get("tab");
+  const [activeTab, setActiveTab] = useState<string>(tabParam ?? "pengguna");
 
   useEffect(() => {
     if (user?.role === "SYSTEM_ADMIN") router.replace("/users");
-  }, [router, user?.role]);
+    if (user?.role === "INTAKE" && (!tabParam || tabParam in INTAKE_ROUTES)) {
+      router.replace(INTAKE_ROUTES[tabParam ?? "invoices"]);
+    }
+  }, [router, tabParam, user?.role]);
 
   return (
     <DashboardLayout
@@ -37,5 +48,13 @@ export default function DashboardPage() {
         );
       }}
     />
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={null}>
+      <DashboardContent />
+    </Suspense>
   );
 }
