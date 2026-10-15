@@ -72,7 +72,11 @@ export default function Sidebar({
                   onClick={() => {
                     onSelectTab(item.id);
                     router.push(item.path);
-                    onClose();
+                    // Pertahankan sidenav pada desktop; pada mobile panel overlay
+                    // ditutup agar halaman tujuan langsung dapat digunakan.
+                    if (window.matchMedia("(max-width: 1023px)").matches) {
+                      onClose();
+                    }
                   }}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs transition-colors text-left ${
                     isActive
