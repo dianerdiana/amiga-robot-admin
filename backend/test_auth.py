@@ -1,54 +1,17 @@
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 from database import engine
-from models.user import User, UserRole
-from core.security import hash_password
 from main import app
+from scripts.seed_dev import seed_users
 
 client = TestClient(app)
 
 
 def seed_test_users():
     """Seed akun contoh untuk pengujian autentikasi & role middleware."""
+    # Development users are defined once in scripts/seed_dev.py.
     with Session(engine) as session:
-        users_data = [
-            {
-                "name": "Budi Intake",
-                "email": "intake@amiga.com",
-                "password": "Password123!",
-                "role": UserRole.INTAKE,
-            },
-            {
-                "name": "Siti Finance Reviewer",
-                "email": "reviewer@amiga.com",
-                "password": "Password123!",
-                "role": UserRole.FINANCE_REVIEWER,
-            },
-            {
-                "name": "Admin System",
-                "email": "admin@amiga.com",
-                "password": "Password123!",
-                "role": UserRole.SYSTEM_ADMIN,
-            },
-            {
-                "name": "Rina Service Lead",
-                "email": "service.lead@amiga.com",
-                "password": "Password123!",
-                "role": UserRole.SERVICE_LEAD,
-            },
-        ]
-
-        for u in users_data:
-            existing = session.query(User).filter(User.email == u["email"]).first()
-            if not existing:
-                new_user = User(
-                    name=u["name"],
-                    email=u["email"],
-                    password_hash=hash_password(u["password"]),
-                    role=u["role"],
-                    is_active=True,
-                )
-                session.add(new_user)
+        seed_users(session, verbose=False)
         session.commit()
     print(" [OK] Seed user berhasil disiapkan.")
 
@@ -130,7 +93,9 @@ def run_tests():
     # Kasus C: Reviewer mengakses endpoint finance-reviewer -> Harus 200 OK
     res_role3 = client.get("/auth/test-role/finance-reviewer", headers=headers_reviewer)
     assert res_role3.status_code == 200
-    print(" [OK] FINANCE_REVIEWER mengakses endpoint FINANCE_REVIEWER: DIIZINKAN (200 OK).")
+    print(
+        " [OK] FINANCE_REVIEWER mengakses endpoint FINANCE_REVIEWER: DIIZINKAN (200 OK)."
+    )
 
     # Kasus D: Reviewer mencoba mengakses endpoint admin -> Harus 403 Forbidden!
     res_role4 = client.get("/auth/test-role/admin-only", headers=headers_reviewer)
@@ -147,9 +112,13 @@ def run_tests():
     assert res_multi_admin.status_code == 200
     print(" [OK] SYSTEM_ADMIN mengakses endpoint multi-role: DIIZINKAN (200 OK).")
 
-    res_multi_intake = client.get("/auth/test-role/lead-or-admin", headers=headers_intake)
+    res_multi_intake = client.get(
+        "/auth/test-role/lead-or-admin", headers=headers_intake
+    )
     assert res_multi_intake.status_code == 403
-    print(" [OK] INTAKE mengakses endpoint multi-role (Lead/Admin): DITOLAK (403 Forbidden).")
+    print(
+        " [OK] INTAKE mengakses endpoint multi-role (Lead/Admin): DITOLAK (403 Forbidden)."
+    )
 
     print("\n SEMUA PENGUJIAN OTENTIKASI & ROLE MIDDLEWARE BERHASIL 100%!")
 

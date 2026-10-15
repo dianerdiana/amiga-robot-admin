@@ -1,0 +1,2197 @@
+<!doctype html>
+
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="web_dashboard" name="shell-type" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'primary-active': '#172B6B',
+              'error-container': '#ffdad6',
+              'tertiary-fixed-dim': '#ffb691',
+              'status-queued-border': '#CBD5E1',
+              'surface-variant': '#e3e1e9',
+              'secondary-container': '#99efe5',
+              'secondary-fixed': '#9cf2e8',
+              'on-primary-fixed': '#00164e',
+              'status-rejected-fg': '#991B1B',
+              'on-surface-variant': '#444651',
+              'on-error-container': '#93000a',
+              'tertiary-fixed': '#ffdbcb',
+              'on-tertiary-fixed-variant': '#773205',
+              'status-reviewed-fg': '#166534',
+              'success-subtle': '#DCFCE7',
+              error: '#ba1a1a',
+              'status-processing-bg': '#DBEAFE',
+              'status-ready-bg': '#CCFBF1',
+              'accent-hover': '#0D625B',
+              'status-exception-fg': '#92400E',
+              surface: '#FFFFFF',
+              'on-primary': '#FFFFFF',
+              'status-duplicate-fg': '#FFFFFF',
+              'on-secondary-fixed-variant': '#00504a',
+              'on-tertiary-fixed': '#341100',
+              'status-ready-fg': '#115E59',
+              'status-exception-bg': '#FEF3C7',
+              'on-surface': '#1a1b21',
+              'diff-new-bg': '#DCFCE7',
+              'outline-variant': '#c5c5d3',
+              'status-processing-border': '#93C5FD',
+              'info-subtle': '#DBEAFE',
+              'inverse-on-surface': '#f1f0f7',
+              'surface-sunken': '#E2E8F0',
+              'primary-hover': '#1B3380',
+              tertiary: '#4b1c00',
+              'focus-ring': '#2563EB',
+              'text-link': '#1E40AF',
+              'status-vouchered-border': '#A5B4FC',
+              'inverse-primary': '#b6c4ff',
+              warning: '#92400E',
+              'diff-old-bg': '#FEE2E2',
+              'on-accent': '#FFFFFF',
+              'surface-container-high': '#e9e7ef',
+              'primary-fixed-dim': '#b6c4ff',
+              'border-strong': '#94A3B8',
+              'on-secondary': '#ffffff',
+              border: '#CBD5E1',
+              'surface-tint': '#4059aa',
+              'on-primary-fixed-variant': '#264191',
+              'status-queued-bg': '#F1F5F9',
+              'on-background': '#1a1b21',
+              'status-processing-fg': '#1E40AF',
+              'primary-subtle': '#E0E7FF',
+              'status-vouchered-bg': '#E0E7FF',
+              background: '#F8FAFC',
+              'status-sent-border': '#C4B5FD',
+              'on-primary-container': '#90a8ff',
+              'on-tertiary': '#ffffff',
+              'status-rejected-bg': '#FFFFFF',
+              primary: '#00236f',
+              info: '#1E40AF',
+              'surface-container-low': '#f4f3fa',
+              success: '#166534',
+              'status-exception-border': '#FCD34D',
+              overlay: 'rgba(15, 23, 42, 0.55)',
+              'status-vouchered-fg': '#3730A3',
+              'status-queued-fg': '#334155',
+              'surface-muted': '#F1F5F9',
+              'primary-container': '#1e3a8a',
+              'surface-container-lowest': '#ffffff',
+              'text-secondary': '#475569',
+              'surface-dim': '#dad9e1',
+              'tertiary-container': '#6e2c00',
+              'status-ready-border': '#5EEAD4',
+              'on-secondary-container': '#006f67',
+              'status-sent-fg': '#5B21B6',
+              danger: '#B91C1C',
+              secondary: '#006a63',
+              'diff-new-fg': '#166534',
+              'accent-subtle': '#CCFBF1',
+              'on-tertiary-container': '#f39461',
+              'status-duplicate-bg': '#B91C1C',
+              'on-secondary-fixed': '#00201d',
+              'surface-container': '#eeedf4',
+              'primary-fixed': '#dce1ff',
+              'warning-subtle': '#FEF3C7',
+              'inverse-surface': '#2f3036',
+              'danger-subtle': '#FEE2E2',
+              'text-primary': '#0F172A',
+              outline: '#757682',
+              'status-rejected-border': '#991B1B',
+              'status-reviewed-bg': '#DCFCE7',
+              'surface-bright': '#faf8ff',
+              'surface-container-highest': '#e3e1e9',
+              'status-reviewed-border': '#86EFAC',
+              'status-duplicate-border': '#7F1D1D',
+              'diff-old-fg': '#991B1B',
+              'text-disabled': '#94A3B8',
+              'status-sent-bg': '#EDE9FE',
+              'secondary-fixed-dim': '#80d5cb',
+              'on-error': '#ffffff',
+            },
+            borderRadius: {
+              DEFAULT: '0.25rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              full: '9999px',
+            },
+            spacing: {
+              1: '4px',
+              gutter: '1.5rem',
+              'space-md': '1rem',
+              'margin-mobile': '0.75rem',
+              3: '12px',
+              6: '24px',
+              'gutter-tablet': '1rem',
+              4: '16px',
+              'gutter-mobile': '0.75rem',
+              'base-unit': '4px',
+              0: '0px',
+              2: '8px',
+              12: '48px',
+              'space-xs': '0.25rem',
+              10: '40px',
+              'space-sm': '0.5rem',
+              'margin-tablet': '1rem',
+              'gutter-laptop': '1rem',
+              margin: '1.5rem',
+              'space-xl': '2rem',
+              8: '32px',
+              16: '64px',
+              5: '20px',
+              'space-lg': '1.5rem',
+            },
+            fontFamily: {
+              'headline-sm': ['Inter'],
+              'headline-lg': ['Inter'],
+              'amount-default': ['JetBrains Mono'],
+              'amount-lg': ['JetBrains Mono'],
+              'label-firm': ['Inter'],
+              'code-mono': ['JetBrains Mono'],
+              display: ['Inter'],
+              'body-default': ['Inter'],
+              'headline-md': ['Inter'],
+              'body-strong': ['Inter'],
+              'table-header': ['Inter'],
+              caption: ['Inter'],
+            },
+            fontSize: {
+              'headline-sm': [
+                '16px',
+                { lineHeight: '24px', fontWeight: '600' },
+              ],
+              'headline-lg': [
+                '24px',
+                { lineHeight: '32px', fontWeight: '700' },
+              ],
+              'amount-default': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '600' },
+              ],
+              'amount-lg': ['24px', { lineHeight: '32px', fontWeight: '700' }],
+              'label-firm': [
+                '12px',
+                {
+                  lineHeight: '16px',
+                  letterSpacing: '0.02em',
+                  fontWeight: '600',
+                },
+              ],
+              'code-mono': ['13px', { lineHeight: '20px', fontWeight: '500' }],
+              display: [
+                '28px',
+                {
+                  lineHeight: '36px',
+                  letterSpacing: '-0.01em',
+                  fontWeight: '700',
+                },
+              ],
+              'body-default': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '400' },
+              ],
+              'headline-md': [
+                '20px',
+                { lineHeight: '28px', fontWeight: '600' },
+              ],
+              'body-strong': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '600' },
+              ],
+              'table-header': [
+                '12px',
+                {
+                  lineHeight: '16px',
+                  letterSpacing: '0.04em',
+                  fontWeight: '600',
+                },
+              ],
+              caption: ['12px', { lineHeight: '16px', fontWeight: '400' }],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="bg-background font-body-default text-body-default text-text-primary antialiased min-h-screen"
+  >
+    <header
+      class="fixed top-0 left-0 right-0 h-14 bg-surface z-50 border-b border-border"
+    >
+      <div class="h-14 w-full px-6 flex items-center justify-between">
+        <div class="flex items-center gap-3 w-60">
+          <div
+            class="w-8 h-8 rounded-lg bg-primary-container text-on-primary flex items-center justify-center shrink-0"
+          >
+            <span class="material-symbols-outlined text-[20px]">smart_toy</span>
+          </div>
+          <div class="flex flex-col">
+            <span
+              class="font-label-firm text-label-firm text-primary tracking-wide leading-none uppercase"
+              >AMIGA</span
+            ><span
+              class="font-caption text-caption text-text-secondary leading-tight tracking-wider uppercase font-semibold"
+              >ROBOT ADMIN</span
+            >
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <div
+            class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded bg-primary-subtle text-text-link border border-status-vouchered-border"
+          >
+            <span class="material-symbols-outlined text-[15px]"
+              >verified_user</span
+            ><span class="font-label-firm text-label-firm uppercase"
+              >SYSTEM ADMIN</span
+            >
+          </div>
+          <div class="h-4 w-[1px] bg-border"></div>
+          <button
+            aria-label="Notifikasi"
+            class="relative w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+            type="button"
+          >
+            <span class="material-symbols-outlined text-[20px]"
+              >notifications</span
+            ><span
+              class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-danger ring-2 ring-surface"
+            ></span>
+          </button>
+          <div class="flex items-center gap-3 pl-2">
+            <div
+              class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-body-strong text-body-strong tracking-wider"
+            >
+              <span
+                class="material-symbols-outlined text-on-primary text-[18px]"
+                >person</span
+              >
+            </div>
+            <div class="hidden md:flex flex-col text-left">
+              <span
+                class="font-body-strong text-body-strong text-text-primary leading-tight"
+                >Budi Santoso</span
+              ><span
+                class="font-code-mono text-code-mono text-text-secondary text-[11px] leading-tight"
+                >SA #1001</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <aside
+      class="fixed left-0 top-14 bottom-0 w-60 bg-surface z-40 border-r border-border flex flex-col justify-between overflow-y-auto"
+    >
+      <div class="py-4 flex flex-col">
+        <div class="px-4 pb-2">
+          <span
+            class="font-table-header text-table-header uppercase text-text-secondary tracking-wider"
+            >MODUL ADMINISTRASI</span
+          >
+        </div>
+        <nav
+          class="flex flex-col gap-0.5"
+          data-active-classes="bg-primary-subtle text-primary-container font-semibold border-l-[3px] border-primary-container"
+        >
+          <a
+            class="flex items-center gap-3 h-10 px-4 text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-all border-l-[3px] border-transparent font-body-default text-body-default"
+            data-path="pengguna"
+            href="#"
+            ><span class="material-symbols-outlined text-[18px]">group</span
+            ><span>Pengguna</span></a
+          ><a
+            aria-current="page"
+            class="flex items-center gap-3 h-10 px-4 transition-all bg-primary-subtle text-primary-container font-semibold border-l-[3px] border-primary-container"
+            data-path="klien-dan-penugasan"
+            href="#"
+            ><span class="material-symbols-outlined text-[18px]">domain</span
+            ><span>Klien &amp; Penugasan</span></a
+          ><a
+            class="flex items-center gap-3 h-10 px-4 text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-all border-l-[3px] border-transparent font-body-default text-body-default"
+            data-path="penugasan-intake"
+            href="#"
+            ><span class="material-symbols-outlined text-[18px]"
+              >assignment_ind</span
+            ><span>Penugasan Intake</span></a
+          ><a
+            class="flex items-center gap-3 h-10 px-4 text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-all border-l-[3px] border-transparent font-body-default text-body-default"
+            data-path="daftar-klien-read-only"
+            href="#"
+            ><span class="material-symbols-outlined text-[18px]"
+              >format_list_bulleted</span
+            ><span>Daftar Klien (Read-Only)</span></a
+          >
+        </nav>
+      </div>
+      <div
+        class="p-4 flex flex-col gap-3 border-t border-border bg-surface-muted"
+      >
+        <div
+          class="p-3 rounded bg-warning-subtle border border-status-exception-border flex items-start gap-2.5"
+        >
+          <span
+            class="material-symbols-outlined text-warning text-[18px] shrink-0 mt-0.5"
+            >shield_lock</span
+          >
+          <p class="font-caption text-caption text-warning leading-snug">
+            Akses Terbatas: Khusus manajemen master data klien, pengguna, dan
+            konfigurasi penugasan.
+          </p>
+        </div>
+        <a
+          class="flex items-center justify-center gap-2 h-9 px-3 rounded border border-border bg-surface hover:bg-danger-subtle hover:text-danger hover:border-status-rejected-border text-text-secondary font-body-strong text-body-strong transition-colors"
+          data-path="login"
+          href="#"
+          ><span class="material-symbols-outlined text-[18px]">logout</span
+          ><span>Keluar</span></a
+        >
+      </div>
+    </aside>
+    <div class="pl-60">
+      <main
+        class="relative pt-14 bg-background min-h-[calc(100vh-3.5rem)] px-6 py-6"
+      >
+        <div class="flex flex-col w-full">
+          <!-- QA STATE BAR (TOP SIMULATOR TOOLBAR) -->
+          <aside
+            aria-label="Simulator Kontrol QA"
+            class="w-full bg-surface shadow-sm rounded-lg p-3 mb-6 flex flex-col gap-2.5"
+          >
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 text-text-secondary">
+                <span
+                  class="material-symbols-outlined text-[18px] text-text-link"
+                  >tune</span
+                >
+                <span
+                  class="font-table-header text-table-header uppercase text-text-secondary tracking-wider"
+                  >Simulasi State QA (Interactive Audit Testing)</span
+                >
+              </div>
+              <span
+                class="font-caption text-caption text-text-secondary bg-surface-muted px-2 py-0.5 rounded"
+                >Hanya Mode Pengujian Dev/Admin</span
+              >
+            </div>
+            <!-- Simulator Buttons -->
+            <div
+              class="flex flex-wrap items-center gap-1.5"
+              id="qa-state-controller"
+            >
+              <button
+                class="h-8 px-2.5 rounded bg-primary-subtle text-primary font-body-strong text-caption hover:bg-primary hover:text-on-primary transition-colors flex items-center gap-1.5"
+                id="btn-qa-1"
+                onclick="setQAState('populated_klien')"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[15px]"
+                  >table_rows</span
+                >
+                <span>1. Populated (Klien)</span>
+              </button>
+              <button
+                class="h-8 px-2.5 rounded bg-surface-muted text-text-secondary font-body-strong text-caption hover:bg-primary hover:text-on-primary transition-colors flex items-center gap-1.5"
+                id="btn-qa-2"
+                onclick="setQAState('populated_intake')"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[15px]"
+                  >assignment_ind</span
+                >
+                <span>2. Populated (Penugasan Intake)</span>
+              </button>
+              <button
+                class="h-8 px-2.5 rounded bg-surface-muted text-text-secondary font-body-strong text-caption hover:bg-primary hover:text-on-primary transition-colors flex items-center gap-1.5"
+                id="btn-qa-3"
+                onclick="setQAState('loading')"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[15px] animate-spin"
+                  >refresh</span
+                >
+                <span>3. Loading Skeleton</span>
+              </button>
+              <button
+                class="h-8 px-2.5 rounded bg-surface-muted text-text-secondary font-body-strong text-caption hover:bg-primary hover:text-on-primary transition-colors flex items-center gap-1.5"
+                id="btn-qa-4"
+                onclick="setQAState('empty')"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[15px]"
+                  >domain_disabled</span
+                >
+                <span>4. Data Kosong (Empty)</span>
+              </button>
+              <button
+                class="h-8 px-2.5 rounded bg-surface-muted text-text-secondary font-body-strong text-caption hover:bg-primary hover:text-on-primary transition-colors flex items-center gap-1.5"
+                id="btn-qa-5"
+                onclick="openAddClientModal()"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[15px]"
+                  >add_business</span
+                >
+                <span>5. Modal Tambah Klien</span>
+              </button>
+              <button
+                class="h-8 px-2.5 rounded bg-surface-muted text-text-secondary font-body-strong text-caption hover:bg-primary hover:text-on-primary transition-colors flex items-center gap-1.5"
+                id="btn-qa-6"
+                onclick="simulateDuplicateError()"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[15px] text-danger"
+                  >report_problem</span
+                >
+                <span>6. Validasi Duplikat Kode</span>
+              </button>
+              <button
+                class="h-8 px-2.5 rounded bg-surface-muted text-text-secondary font-body-strong text-caption hover:bg-primary hover:text-on-primary transition-colors flex items-center gap-1.5"
+                id="btn-qa-7"
+                onclick="
+                  openAssignIntakeModal(
+                    'CL-RT-0082',
+                    'Klien A - Retail Mandiri',
+                  )
+                "
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[15px]"
+                  >manage_accounts</span
+                >
+                <span>7. Modal Atur Intake</span>
+              </button>
+              <button
+                class="h-8 px-2.5 rounded bg-danger-subtle text-danger font-body-strong text-caption hover:bg-danger hover:text-on-error transition-colors flex items-center gap-1.5"
+                id="btn-qa-8"
+                onclick="toggleErrorBanner(true)"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[15px]">error</span>
+                <span>8. Transaksi Gagal (Banner)</span>
+              </button>
+            </div>
+          </aside>
+          <!-- ERROR NOTIFICATION BANNER (TRANSAKSI GAGAL) -->
+          <section
+            class="hidden mb-6 p-4 rounded-lg bg-danger-subtle text-danger shadow-sm flex items-start justify-between"
+            id="banner-transaksi-gagal"
+          >
+            <div class="flex items-start gap-3">
+              <div
+                class="w-8 h-8 rounded-lg bg-danger text-on-error flex items-center justify-center shrink-0"
+              >
+                <span class="material-symbols-outlined text-[20px]"
+                  >warning</span
+                >
+              </div>
+              <div class="flex flex-col">
+                <span
+                  class="font-headline-sm text-headline-sm leading-tight text-status-rejected-fg"
+                  >Transaksi Gagal Diproses oleh Server AMIGA</span
+                >
+                <p
+                  class="font-body-default text-body-default text-status-rejected-fg mt-1"
+                >
+                  Koneksi ke pangkalan data master klien mengalami kendala
+                  timeout (ERR_DB_TIMEOUT_408). Perubahan mutasi entitas dan
+                  penugasan belum tercatat ke audit log.
+                </p>
+                <div class="flex items-center gap-3 mt-3">
+                  <button
+                    class="h-8 px-3 rounded bg-danger text-on-error font-body-strong text-caption flex items-center gap-1.5 hover:opacity-90 transition-opacity"
+                    onclick="location.reload()"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-[16px]"
+                      >sync</span
+                    >
+                    Coba Sinkronisasi Ulang
+                  </button>
+                  <span
+                    class="font-code-mono text-code-mono text-[12px] text-status-rejected-fg"
+                    >Trace ID: AMIGA-SYS-983142</span
+                  >
+                </div>
+              </div>
+            </div>
+            <button
+              class="text-status-rejected-fg hover:opacity-75 transition-opacity"
+              onclick="toggleErrorBanner(false)"
+              title="Tutup Notifikasi"
+              type="button"
+            >
+              <span class="material-symbols-outlined text-[20px]">close</span>
+            </button>
+          </section>
+          <!-- BREADCRUMB & HEADER SECTION -->
+          <header class="flex flex-col gap-4 mb-6">
+            <div
+              class="flex items-center gap-2 text-text-secondary font-caption text-caption"
+            >
+              <span>Konsol System Admin</span>
+              <span class="material-symbols-outlined text-[14px]"
+                >chevron_right</span
+              >
+              <span class="text-text-primary font-body-strong"
+                >Master Klien &amp; Penugasan</span
+              >
+            </div>
+            <div
+              class="flex flex-col md:flex-row md:items-center justify-between gap-4"
+            >
+              <div class="flex items-start gap-3.5">
+                <div
+                  class="w-12 h-12 rounded-xl bg-primary-subtle text-primary flex items-center justify-center shrink-0 shadow-sm"
+                >
+                  <span class="material-symbols-outlined text-[28px]"
+                    >domain</span
+                  >
+                </div>
+                <div class="flex flex-col">
+                  <div class="flex items-center gap-2.5">
+                    <h1
+                      class="font-display text-display text-text-primary leading-tight"
+                    >
+                      Master Klien &amp; Penugasan Intake
+                    </h1>
+                    <span
+                      class="px-2 py-0.5 rounded text-[11px] font-label-firm uppercase bg-accent-subtle text-status-ready-fg"
+                      >Master Role Admin</span
+                    >
+                  </div>
+                  <p
+                    class="font-body-default text-body-default text-text-secondary mt-1"
+                  >
+                    Kelola master data entitas klien bisnis, kode unik sistem,
+                    serta alokasi staf Intake operasional.
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2.5 shrink-0">
+                <button
+                  class="h-10 px-4 rounded-lg bg-primary-container text-on-primary hover:bg-primary-hover active:bg-primary-active font-body-strong text-body-strong flex items-center gap-2 shadow-sm transition-colors"
+                  onclick="openAddClientModal()"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[20px]"
+                    >add_business</span
+                  >
+                  <span>Tambah Klien</span>
+                </button>
+              </div>
+            </div>
+          </header>
+          <!-- METRIC STATS CARDS (DATA OVERVIEW) -->
+          <section
+            aria-label="Statistik Master Entitas"
+            class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"
+          >
+            <!-- Card 1 -->
+            <div
+              class="bg-surface rounded-xl p-4 shadow-sm flex items-center justify-between"
+            >
+              <div class="flex flex-col">
+                <span
+                  class="font-table-header text-table-header uppercase text-text-secondary tracking-wider"
+                  >Total Entitas Klien</span
+                >
+                <div class="flex items-baseline gap-2 mt-1">
+                  <span class="font-amount-lg text-amount-lg text-text-primary"
+                    >4</span
+                  >
+                  <span
+                    class="font-body-default text-body-default text-text-secondary"
+                    >Entitas Aktif</span
+                  >
+                </div>
+                <span
+                  class="font-caption text-caption text-status-ready-fg mt-2 flex items-center gap-1"
+                >
+                  <span class="material-symbols-outlined text-[14px]"
+                    >check_circle</span
+                  >
+                  100% Terdaftar di Sistem
+                </span>
+              </div>
+              <div
+                class="w-12 h-12 rounded-lg bg-surface-muted text-text-secondary flex items-center justify-center"
+              >
+                <span class="material-symbols-outlined text-[26px]"
+                  >corporate_fare</span
+                >
+              </div>
+            </div>
+            <!-- Card 2 -->
+            <div
+              class="bg-surface rounded-xl p-4 shadow-sm flex items-center justify-between"
+            >
+              <div class="flex flex-col">
+                <span
+                  class="font-table-header text-table-header uppercase text-text-secondary tracking-wider"
+                  >Reviewer Ditugaskan</span
+                >
+                <div class="flex items-baseline gap-2 mt-1">
+                  <span class="font-amount-lg text-amount-lg text-primary"
+                    >3</span
+                  >
+                  <span
+                    class="font-body-default text-body-default text-text-secondary"
+                    >dari 4 Entitas</span
+                  >
+                </div>
+                <span
+                  class="font-caption text-caption text-warning mt-2 flex items-center gap-1 font-semibold"
+                >
+                  <span class="material-symbols-outlined text-[14px]"
+                    >warning</span
+                  >
+                  1 Entitas Belum Ada Reviewer
+                </span>
+              </div>
+              <div
+                class="w-12 h-12 rounded-lg bg-warning-subtle text-warning flex items-center justify-center"
+              >
+                <span class="material-symbols-outlined text-[26px]">badge</span>
+              </div>
+            </div>
+            <!-- Card 3 -->
+            <div
+              class="bg-surface rounded-xl p-4 shadow-sm flex items-center justify-between"
+            >
+              <div class="flex flex-col">
+                <span
+                  class="font-table-header text-table-header uppercase text-text-secondary tracking-wider"
+                  >Staf Intake Aktif</span
+                >
+                <div class="flex items-baseline gap-2 mt-1">
+                  <span
+                    class="font-amount-lg text-amount-lg text-status-ready-fg"
+                    >6</span
+                  >
+                  <span
+                    class="font-body-default text-body-default text-text-secondary"
+                    >Petugas Alokasi</span
+                  >
+                </div>
+                <span
+                  class="font-caption text-caption text-text-secondary mt-2 flex items-center gap-1"
+                >
+                  <span class="material-symbols-outlined text-[14px]"
+                    >bolt</span
+                  >
+                  Kapasitas merata (1-2 klien/staf)
+                </span>
+              </div>
+              <div
+                class="w-12 h-12 rounded-lg bg-accent-subtle text-secondary flex items-center justify-center"
+              >
+                <span class="material-symbols-outlined text-[26px]"
+                  >groups</span
+                >
+              </div>
+            </div>
+          </section>
+          <!-- SEGMENTED NAVIGATION TABS -->
+          <nav
+            aria-label="Segmentasi Tampilan"
+            class="flex items-center gap-1 bg-surface p-1.5 rounded-lg shadow-sm mb-4"
+          >
+            <button
+              class="h-9 px-4 rounded-lg bg-primary-subtle text-primary font-body-strong text-body-default flex items-center gap-2 transition-all"
+              id="tab-nav-klien"
+              onclick="switchNavTab('klien')"
+              type="button"
+            >
+              <span class="material-symbols-outlined text-[18px]">domain</span>
+              <span>Master Klien</span>
+              <span
+                class="px-1.5 py-0.2 rounded-full text-[11px] bg-primary text-on-primary font-code-mono"
+                >4</span
+              >
+            </button>
+            <button
+              class="h-9 px-4 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary font-body-default text-body-default flex items-center gap-2 transition-all"
+              id="tab-nav-intake"
+              onclick="switchNavTab('intake')"
+              type="button"
+            >
+              <span class="material-symbols-outlined text-[18px]"
+                >assignment_ind</span
+              >
+              <span>Penugasan Intake</span>
+              <span
+                class="px-1.5 py-0.2 rounded-full text-[11px] bg-surface-muted text-text-secondary font-code-mono"
+                >6 Petugas</span
+              >
+            </button>
+            <button
+              class="h-9 px-4 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary font-body-default text-body-default flex items-center gap-2 transition-all"
+              id="tab-nav-readonly"
+              onclick="switchNavTab('readonly')"
+              type="button"
+            >
+              <span class="material-symbols-outlined text-[18px]"
+                >format_list_bulleted</span
+              >
+              <span>Daftar Klien (Read-Only)</span>
+              <span
+                class="px-1.5 py-0.2 rounded text-[10px] uppercase font-label-firm bg-surface-muted text-text-secondary"
+                >Audit View</span
+              >
+            </button>
+          </nav>
+          <!-- FILTER & SEARCH BAR -->
+          <section
+            class="bg-surface rounded-xl p-3.5 shadow-sm mb-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3"
+          >
+            <div class="flex flex-1 items-center gap-3">
+              <!-- Search Input -->
+              <div class="relative flex-1 max-w-md">
+                <span
+                  class="material-symbols-outlined absolute left-3 top-2.5 text-text-secondary text-[20px]"
+                  >search</span
+                >
+                <input
+                  class="w-full h-10 pl-10 pr-4 rounded-lg bg-surface text-text-primary placeholder:text-text-disabled font-body-default text-body-default focus:outline-none focus:ring-2 focus:ring-focus-ring shadow-sm"
+                  id="filter-search-input"
+                  onkeyup="handleFilterSearch(this.value)"
+                  placeholder="Cari nama atau kode klien (cth. CL-RT-0082)..."
+                  type="text"
+                />
+              </div>
+              <!-- Dropdown Filter Reviewer -->
+              <div class="relative shrink-0 hidden sm:block">
+                <select
+                  class="h-10 px-3 pr-8 rounded-lg bg-surface text-text-primary font-body-default text-body-default focus:outline-none focus:ring-2 focus:ring-focus-ring cursor-pointer appearance-none shadow-sm"
+                  id="filter-reviewer-select"
+                  onchange="applyFilters()"
+                >
+                  <option value="all">Semua Status Reviewer</option>
+                  <option value="assigned">Reviewer Aktif</option>
+                  <option value="unassigned">Belum Ada Reviewer</option>
+                </select>
+                <span
+                  class="material-symbols-outlined absolute right-2.5 top-2.5 text-text-secondary text-[20px] pointer-events-none"
+                  >expand_more</span
+                >
+              </div>
+              <!-- Dropdown Filter Intake -->
+              <div class="relative shrink-0 hidden lg:block">
+                <select
+                  class="h-10 px-3 pr-8 rounded-lg bg-surface text-text-primary font-body-default text-body-default focus:outline-none focus:ring-2 focus:ring-focus-ring cursor-pointer appearance-none shadow-sm"
+                  id="filter-intake-select"
+                  onchange="applyFilters()"
+                >
+                  <option value="all">Semua Status Intake</option>
+                  <option value="complete">
+                    Alokasi Lengkap (&gt;1 Petugas)
+                  </option>
+                  <option value="single">Alokasi Tunggal (1 Petugas)</option>
+                </select>
+                <span
+                  class="material-symbols-outlined absolute right-2.5 top-2.5 text-text-secondary text-[20px] pointer-events-none"
+                  >expand_more</span
+                >
+              </div>
+            </div>
+            <!-- Actions & Indicator -->
+            <div
+              class="flex items-center justify-between md:justify-end gap-3 pt-2 md:pt-0"
+            >
+              <span
+                class="font-caption text-caption text-text-secondary"
+                id="label-table-count"
+                >Menampilkan
+                <strong class="text-text-primary font-body-strong">4</strong>
+                entitas klien</span
+              >
+              <button
+                class="h-8 px-2.5 rounded bg-surface-muted text-text-secondary hover:text-text-primary hover:bg-surface-sunken font-body-strong text-caption flex items-center gap-1 transition-colors"
+                onclick="resetFilters()"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[16px]"
+                  >restart_alt</span
+                >
+                <span>Reset Filter</span>
+              </button>
+            </div>
+          </section>
+          <!-- MAIN TABULAR WORKSPACE PANEL -->
+          <main
+            class="bg-surface rounded-xl shadow-sm overflow-hidden flex flex-col"
+          >
+            <!-- Populated Table State Container -->
+            <div class="w-full overflow-x-auto" id="container-table-populated">
+              <table class="w-full text-left border-collapse min-w-[960px]">
+                <thead>
+                  <tr
+                    class="h-10 bg-surface-muted text-text-secondary font-table-header text-table-header uppercase tracking-wider"
+                  >
+                    <th class="px-4 py-2 w-36">KODE KLIEN</th>
+                    <th class="px-4 py-2 min-w-[240px]">NAMA ENTITAS KLIEN</th>
+                    <th class="px-4 py-2 min-w-[200px]">
+                      REVIEWER (READ-ONLY)
+                    </th>
+                    <th class="px-4 py-2 min-w-[250px]">
+                      STAF INTAKE DITUGASKAN
+                    </th>
+                    <th class="px-4 py-2 w-48 text-center">STATUS REVIEWER</th>
+                    <th class="px-4 py-2 w-32 text-right">AKSI</th>
+                  </tr>
+                </thead>
+                <tbody
+                  class="divide-y divide-surface-muted"
+                  id="client-table-body"
+                >
+                  <!-- Row 1: CL-RT-0082 -->
+                  <tr
+                    class="h-11 hover:bg-primary-subtle/50 transition-colors group"
+                    data-code="CL-RT-0082"
+                    data-intake="complete"
+                    data-name="Klien A - Retail Mandiri"
+                    data-reviewer="assigned"
+                  >
+                    <td class="px-4 py-2">
+                      <span
+                        class="font-code-mono text-code-mono font-semibold text-primary"
+                        >CL-RT-0082</span
+                      >
+                    </td>
+                    <td class="px-4 py-2">
+                      <div class="flex flex-col">
+                        <span
+                          class="font-body-strong text-body-strong text-text-primary"
+                          >Klien A - Retail Mandiri</span
+                        >
+                        <span
+                          class="font-caption text-caption text-text-secondary"
+                          >Entitas Perdagangan Ritel</span
+                        >
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <div class="flex items-center gap-2">
+                        <div class="flex -space-x-2 overflow-hidden">
+                          <div
+                            class="w-7 h-7 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-caption font-bold shadow-sm"
+                            title="Dian Wulandari (Lead Reviewer)"
+                          >
+                            DW
+                          </div>
+                          <div
+                            class="w-7 h-7 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-caption font-bold shadow-sm"
+                            title="Agus Riyadi (Senior Reviewer)"
+                          >
+                            AR
+                          </div>
+                        </div>
+                        <span
+                          class="font-caption text-caption text-text-secondary"
+                          >2 Reviewer</span
+                        >
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <div class="flex flex-wrap items-center gap-1.5">
+                        <div
+                          class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-primary-subtle text-primary text-caption font-medium"
+                        >
+                          <span
+                            class="w-4 h-4 rounded-full bg-primary text-on-primary text-[10px] flex items-center justify-center font-bold"
+                            >S</span
+                          >
+                          <span>Siti R.</span>
+                        </div>
+                        <div
+                          class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-accent-subtle text-status-ready-fg text-caption font-medium"
+                        >
+                          <span
+                            class="w-4 h-4 rounded-full bg-secondary text-on-secondary text-[10px] flex items-center justify-center font-bold"
+                            >D</span
+                          >
+                          <span>Dimas P.</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2 text-center">
+                      <span
+                        class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded font-label-firm text-label-firm bg-status-reviewed-bg text-status-reviewed-fg"
+                      >
+                        <span class="material-symbols-outlined text-[15px]"
+                          >check_circle</span
+                        >
+                        <span>Reviewer Aktif</span>
+                      </span>
+                    </td>
+                    <td class="px-4 py-2 text-right">
+                      <div class="flex items-center justify-end gap-1">
+                        <button
+                          class="w-8 h-8 rounded-lg text-text-secondary hover:text-primary hover:bg-surface-muted flex items-center justify-center transition-colors"
+                          onclick="
+                            openAssignIntakeModal(
+                              'CL-RT-0082',
+                              'Klien A - Retail Mandiri',
+                            )
+                          "
+                          title="Atur Penugasan Intake"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]"
+                            >person_add</span
+                          >
+                        </button>
+                        <button
+                          class="w-8 h-8 rounded-lg text-text-secondary hover:text-primary hover:bg-surface-muted flex items-center justify-center transition-colors"
+                          onclick="
+                            openEditModal(
+                              'CL-RT-0082',
+                              'Klien A - Retail Mandiri',
+                              'Entitas Perdagangan Ritel',
+                            )
+                          "
+                          title="Edit Master Klien"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]"
+                            >edit</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- Row 2: CL-LG-0019 -->
+                  <tr
+                    class="h-11 hover:bg-primary-subtle/50 transition-colors group"
+                    data-code="CL-LG-0019"
+                    data-intake="complete"
+                    data-name="Klien B - Sentosa Logistik"
+                    data-reviewer="assigned"
+                  >
+                    <td class="px-4 py-2">
+                      <span
+                        class="font-code-mono text-code-mono font-semibold text-primary"
+                        >CL-LG-0019</span
+                      >
+                    </td>
+                    <td class="px-4 py-2">
+                      <div class="flex flex-col">
+                        <span
+                          class="font-body-strong text-body-strong text-text-primary"
+                          >Klien B - Sentosa Logistik</span
+                        >
+                        <span
+                          class="font-caption text-caption text-text-secondary"
+                          >Transportasi &amp; Kargo Logistik</span
+                        >
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <div class="flex items-center gap-2">
+                        <div class="flex -space-x-2 overflow-hidden">
+                          <div
+                            class="w-7 h-7 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-caption font-bold shadow-sm"
+                            title="Hendra Setiawan"
+                          >
+                            HS
+                          </div>
+                        </div>
+                        <span
+                          class="font-caption text-caption text-text-secondary"
+                          >1 Reviewer</span
+                        >
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <div class="flex flex-wrap items-center gap-1.5">
+                        <div
+                          class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-primary-subtle text-primary text-caption font-medium"
+                        >
+                          <span
+                            class="w-4 h-4 rounded-full bg-primary text-on-primary text-[10px] flex items-center justify-center font-bold"
+                            >S</span
+                          >
+                          <span>Siti R.</span>
+                        </div>
+                        <div
+                          class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-muted text-text-secondary text-caption font-medium"
+                        >
+                          <span
+                            class="w-4 h-4 rounded-full bg-border-strong text-on-primary text-[10px] flex items-center justify-center font-bold"
+                            >F</span
+                          >
+                          <span>Fajar A.</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2 text-center">
+                      <span
+                        class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded font-label-firm text-label-firm bg-status-reviewed-bg text-status-reviewed-fg"
+                      >
+                        <span class="material-symbols-outlined text-[15px]"
+                          >check_circle</span
+                        >
+                        <span>Reviewer Aktif</span>
+                      </span>
+                    </td>
+                    <td class="px-4 py-2 text-right">
+                      <div class="flex items-center justify-end gap-1">
+                        <button
+                          class="w-8 h-8 rounded-lg text-text-secondary hover:text-primary hover:bg-surface-muted flex items-center justify-center transition-colors"
+                          onclick="
+                            openAssignIntakeModal(
+                              'CL-LG-0019',
+                              'Klien B - Sentosa Logistik',
+                            )
+                          "
+                          title="Atur Penugasan Intake"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]"
+                            >person_add</span
+                          >
+                        </button>
+                        <button
+                          class="w-8 h-8 rounded-lg text-text-secondary hover:text-primary hover:bg-surface-muted flex items-center justify-center transition-colors"
+                          onclick="
+                            openEditModal(
+                              'CL-LG-0019',
+                              'Klien B - Sentosa Logistik',
+                              'Transportasi &amp; Kargo Logistik',
+                            )
+                          "
+                          title="Edit Master Klien"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]"
+                            >edit</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- Row 3: CL-MF-0054 (Exception: Unassigned Reviewer) -->
+                  <tr
+                    class="h-11 hover:bg-primary-subtle/50 transition-colors group bg-warning-subtle/20"
+                    data-code="CL-MF-0054"
+                    data-intake="single"
+                    data-name="Klien C - Mega Manufaktur"
+                    data-reviewer="unassigned"
+                  >
+                    <td class="px-4 py-2">
+                      <span
+                        class="font-code-mono text-code-mono font-semibold text-primary"
+                        >CL-MF-0054</span
+                      >
+                    </td>
+                    <td class="px-4 py-2">
+                      <div class="flex flex-col">
+                        <span
+                          class="font-body-strong text-body-strong text-text-primary"
+                          >Klien C - Mega Manufaktur</span
+                        >
+                        <span
+                          class="font-caption text-caption text-text-secondary"
+                          >Fabrikasi Otomotif &amp; Mesin</span
+                        >
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="font-caption text-caption text-text-disabled italic"
+                        >Belum ada reviewer</span
+                      >
+                    </td>
+                    <td class="px-4 py-2">
+                      <div class="flex flex-wrap items-center gap-1.5">
+                        <div
+                          class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-accent-subtle text-status-ready-fg text-caption font-medium"
+                        >
+                          <span
+                            class="w-4 h-4 rounded-full bg-secondary text-on-secondary text-[10px] flex items-center justify-center font-bold"
+                            >R</span
+                          >
+                          <span>Rina N.</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2 text-center">
+                      <span
+                        class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded font-label-firm text-label-firm bg-warning-subtle text-status-exception-fg"
+                      >
+                        <span class="material-symbols-outlined text-[15px]"
+                          >person_off</span
+                        >
+                        <span>Belum Ada Reviewer</span>
+                      </span>
+                    </td>
+                    <td class="px-4 py-2 text-right">
+                      <div class="flex items-center justify-end gap-1">
+                        <button
+                          class="w-8 h-8 rounded-lg text-text-secondary hover:text-primary hover:bg-surface-muted flex items-center justify-center transition-colors"
+                          onclick="
+                            openAssignIntakeModal(
+                              'CL-MF-0054',
+                              'Klien C - Mega Manufaktur',
+                            )
+                          "
+                          title="Atur Penugasan Intake"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]"
+                            >person_add</span
+                          >
+                        </button>
+                        <button
+                          class="w-8 h-8 rounded-lg text-text-secondary hover:text-primary hover:bg-surface-muted flex items-center justify-center transition-colors"
+                          onclick="
+                            openEditModal(
+                              'CL-MF-0054',
+                              'Klien C - Mega Manufaktur',
+                              'Fabrikasi Otomotif &amp; Mesin',
+                            )
+                          "
+                          title="Edit Master Klien"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]"
+                            >edit</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- Row 4: CL-FD-0031 -->
+                  <tr
+                    class="h-11 hover:bg-primary-subtle/50 transition-colors group"
+                    data-code="CL-FD-0031"
+                    data-intake="single"
+                    data-name="Klien D - Pangan Sejahtera"
+                    data-reviewer="assigned"
+                  >
+                    <td class="px-4 py-2">
+                      <span
+                        class="font-code-mono text-code-mono font-semibold text-primary"
+                        >CL-FD-0031</span
+                      >
+                    </td>
+                    <td class="px-4 py-2">
+                      <div class="flex flex-col">
+                        <span
+                          class="font-body-strong text-body-strong text-text-primary"
+                          >Klien D - Pangan Sejahtera</span
+                        >
+                        <span
+                          class="font-caption text-caption text-text-secondary"
+                          >Distribusi FMCG &amp; Bahan Pokok</span
+                        >
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <div class="flex items-center gap-2">
+                        <div class="flex -space-x-2 overflow-hidden">
+                          <div
+                            class="w-7 h-7 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-caption font-bold shadow-sm"
+                            title="Dian Wulandari"
+                          >
+                            DW
+                          </div>
+                        </div>
+                        <span
+                          class="font-caption text-caption text-text-secondary"
+                          >1 Reviewer</span
+                        >
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <div class="flex flex-wrap items-center gap-1.5">
+                        <div
+                          class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-muted text-text-secondary text-caption font-medium"
+                        >
+                          <span
+                            class="w-4 h-4 rounded-full bg-border-strong text-on-primary text-[10px] flex items-center justify-center font-bold"
+                            >F</span
+                          >
+                          <span>Fajar A.</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2 text-center">
+                      <span
+                        class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded font-label-firm text-label-firm bg-status-reviewed-bg text-status-reviewed-fg"
+                      >
+                        <span class="material-symbols-outlined text-[15px]"
+                          >check_circle</span
+                        >
+                        <span>Reviewer Aktif</span>
+                      </span>
+                    </td>
+                    <td class="px-4 py-2 text-right">
+                      <div class="flex items-center justify-end gap-1">
+                        <button
+                          class="w-8 h-8 rounded-lg text-text-secondary hover:text-primary hover:bg-surface-muted flex items-center justify-center transition-colors"
+                          onclick="
+                            openAssignIntakeModal(
+                              'CL-FD-0031',
+                              'Klien D - Pangan Sejahtera',
+                            )
+                          "
+                          title="Atur Penugasan Intake"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]"
+                            >person_add</span
+                          >
+                        </button>
+                        <button
+                          class="w-8 h-8 rounded-lg text-text-secondary hover:text-primary hover:bg-surface-muted flex items-center justify-center transition-colors"
+                          onclick="
+                            openEditModal(
+                              'CL-FD-0031',
+                              'Klien D - Pangan Sejahtera',
+                              'Distribusi FMCG &amp; Bahan Pokok',
+                            )
+                          "
+                          title="Edit Master Klien"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]"
+                            >edit</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- SKELETON LOADING STATE CONTAINER -->
+            <div
+              class="hidden w-full overflow-x-auto p-4"
+              id="container-table-skeleton"
+            >
+              <div class="flex flex-col gap-3">
+                <div
+                  class="h-10 bg-surface-muted rounded animate-pulse w-full"
+                ></div>
+                <div
+                  class="h-11 bg-surface-muted/60 rounded animate-pulse w-full"
+                ></div>
+                <div
+                  class="h-11 bg-surface-muted/60 rounded animate-pulse w-full"
+                ></div>
+                <div
+                  class="h-11 bg-surface-muted/60 rounded animate-pulse w-full"
+                ></div>
+                <div
+                  class="h-11 bg-surface-muted/60 rounded animate-pulse w-full"
+                ></div>
+              </div>
+              <div
+                class="py-6 flex items-center justify-center gap-2 text-text-secondary"
+              >
+                <span class="material-symbols-outlined text-[18px] animate-spin"
+                  >sync</span
+                >
+                <span class="font-body-default text-body-default"
+                  >Memuat master entitas dan daftar penugasan...</span
+                >
+              </div>
+            </div>
+            <!-- EMPTY STATE CONTAINER -->
+            <div
+              class="hidden flex-col items-center justify-center py-16 px-4 text-center"
+              id="container-table-empty"
+            >
+              <div
+                class="w-16 h-16 rounded-full bg-surface-muted flex items-center justify-center text-text-disabled mb-4"
+              >
+                <span class="material-symbols-outlined text-[36px]"
+                  >domain_disabled</span
+                >
+              </div>
+              <h3 class="font-headline-md text-headline-md text-text-primary">
+                Belum Ada Klien Terdaftar
+              </h3>
+              <p
+                class="font-body-default text-body-default text-text-secondary max-w-md mt-1 mb-6"
+              >
+                Sistem belum memiliki catatan entitas klien bisnis. Silakan buat
+                entitas klien pertama untuk memulai konfigurasi nomor voucher
+                dan alokasi reviewer/intake.
+              </p>
+              <button
+                class="h-10 px-4 rounded-lg bg-primary text-on-primary hover:bg-primary-hover font-body-strong text-body-strong flex items-center gap-2 shadow-sm transition-colors"
+                onclick="openAddClientModal()"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[20px]"
+                  >add_business</span
+                >
+                <span>Tambah Klien Pertama</span>
+              </button>
+            </div>
+            <!-- Table Footer / Audit Meta -->
+            <footer
+              class="h-11 bg-surface-muted px-4 flex items-center justify-between text-text-secondary font-caption text-caption"
+            >
+              <div class="flex items-center gap-2">
+                <span
+                  class="material-symbols-outlined text-[16px] text-text-link"
+                  >security</span
+                >
+                <span
+                  >Akses Edit Kode: Terkunci setelah voucher invoice pertama
+                  diterbitkan.</span
+                >
+              </div>
+              <div class="flex items-center gap-4">
+                <span class="font-code-mono text-[11px]"
+                  >Terakhir disinkronkan: Hari ini, 09:41 WIB</span
+                >
+              </div>
+            </footer>
+          </main>
+          <!-- MODAL FORM 1: TAMBAH KLIEN BARU (MD 640px) -->
+          <div
+            class="fixed inset-0 z-50 hidden flex items-center justify-center p-4"
+            id="modal-tambah-klien"
+          >
+            <!-- Backdrop with blur -->
+            <div
+              class="absolute inset-0 bg-overlay backdrop-blur-sm"
+              onclick="closeAddClientModal()"
+            ></div>
+            <!-- Modal Content -->
+            <div
+              class="relative w-full max-w-[640px] bg-surface rounded-xl shadow-xl overflow-hidden flex flex-col z-10 animate-in fade-in zoom-in-95 duration-150"
+            >
+              <!-- Modal Header -->
+              <div
+                class="px-6 py-4 bg-surface flex items-center justify-between"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-9 h-9 rounded-lg bg-primary-subtle text-primary flex items-center justify-center"
+                  >
+                    <span class="material-symbols-outlined text-[22px]"
+                      >domain_add</span
+                    >
+                  </div>
+                  <div class="flex flex-col">
+                    <h2
+                      class="font-headline-sm text-headline-sm text-text-primary leading-tight"
+                      id="modal-client-title"
+                    >
+                      Tambah Klien Baru
+                    </h2>
+                    <span class="font-caption text-caption text-text-secondary"
+                      >Pendaftaran master entitas klien akuntansi AMIGA</span
+                    >
+                  </div>
+                </div>
+                <button
+                  class="w-8 h-8 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary flex items-center justify-center transition-colors"
+                  onclick="closeAddClientModal()"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[20px]"
+                    >close</span
+                  >
+                </button>
+              </div>
+              <!-- Modal Body -->
+              <form
+                class="p-6 flex flex-col gap-4 overflow-y-auto max-h-[calc(85vh-120px)]"
+                id="form-add-client"
+                onsubmit="handleSaveClient(event)"
+              >
+                <!-- Callout Info -->
+                <div
+                  class="p-3.5 rounded-lg bg-info-subtle flex items-start gap-3"
+                >
+                  <span
+                    class="material-symbols-outlined text-info text-[20px] shrink-0 mt-0.5"
+                    >info</span
+                  >
+                  <p class="font-caption text-caption text-info leading-snug">
+                    <strong>Aturan Kode Klien:</strong> Kode klien bersifat
+                    <strong>unik dan permanen</strong> setelah disimpan. Kode
+                    ini secara otomatis digunakan sebagai format prefix nomor
+                    voucher pembayaran sistem AMIGA (<code
+                      class="font-code-mono font-bold"
+                      >VCH-{KODE}-{TAHUN}-{URUT}</code
+                    >).
+                  </p>
+                </div>
+                <!-- Field 1: Nama Klien -->
+                <div class="flex flex-col gap-1.5">
+                  <label
+                    class="font-body-strong text-body-strong text-text-primary flex items-center gap-1"
+                    for="client-name"
+                  >
+                    <span>Nama Entitas Klien</span>
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    class="h-10 px-3 rounded-lg bg-surface text-text-primary placeholder:text-text-disabled font-body-default text-body-default focus:outline-none focus:ring-2 focus:ring-focus-ring shadow-sm"
+                    id="client-name"
+                    placeholder="Contoh: PT Klien Maju Bersama"
+                    required=""
+                    type="text"
+                  />
+                  <span class="font-caption text-caption text-text-secondary"
+                    >Nama resmi badan usaha atau divisi komersial yang
+                    terdaftar.</span
+                  >
+                </div>
+                <!-- Field 2: Kode Klien (with duplicate error display state) -->
+                <div class="flex flex-col gap-1.5">
+                  <label
+                    class="font-body-strong text-body-strong text-text-primary flex items-center gap-1"
+                    for="client-code"
+                  >
+                    <span>Kode Unik Klien (Prefix Voucher)</span>
+                    <span class="text-danger">*</span>
+                  </label>
+                  <div class="relative">
+                    <input
+                      class="h-10 px-3 rounded-lg bg-surface text-primary font-code-mono text-code-mono uppercase focus:outline-none focus:ring-2 focus:ring-focus-ring w-full shadow-sm"
+                      id="client-code"
+                      maxlength="10"
+                      oninput="validateClientCode(this)"
+                      placeholder="CL-XX-XXXX"
+                      required=""
+                      type="text"
+                    />
+                    <div
+                      class="hidden absolute right-3 top-2.5"
+                      id="code-loading-spinner"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[18px] animate-spin text-text-secondary"
+                        >sync</span
+                      >
+                    </div>
+                  </div>
+                  <!-- Inline Error Container (Default hidden, triggered by QA State 6) -->
+                  <div
+                    class="hidden items-center gap-1.5 p-2 rounded bg-danger-subtle text-danger font-caption text-caption"
+                    id="duplicate-code-error"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[16px] text-danger"
+                      >error</span
+                    >
+                    <span
+                      ><strong>Kode klien sudah dipakai:</strong> Kode
+                      <code class="font-code-mono font-bold" id="dup-code-label"
+                        >CL-RT-0082</code
+                      >
+                      telah dimiliki oleh "Klien A - Retail Mandiri". Harap
+                      gunakan kode unik lain.</span
+                    >
+                  </div>
+                  <span class="font-caption text-caption text-text-secondary"
+                    >Gunakan format standar 2 digit kategori dan 4 digit numerik
+                    unik.</span
+                  >
+                </div>
+                <!-- Field 3: Kategori Bisnis -->
+                <div class="flex flex-col gap-1.5">
+                  <label
+                    class="font-body-strong text-body-strong text-text-primary"
+                    for="client-category"
+                  >
+                    Kategori Bisnis / Keterangan Operasional
+                    <span class="font-caption text-text-secondary font-normal"
+                      >(Opsional)</span
+                    >
+                  </label>
+                  <input
+                    class="h-10 px-3 rounded-lg bg-surface text-text-primary placeholder:text-text-disabled font-body-default text-body-default focus:outline-none focus:ring-2 focus:ring-focus-ring shadow-sm"
+                    id="client-category"
+                    placeholder="Contoh: Manufaktur Komponen / Ritel Elektronik"
+                    type="text"
+                  />
+                </div>
+                <!-- System Admin Policy Check -->
+                <div
+                  class="p-3 rounded-lg bg-surface-muted flex items-start gap-2.5"
+                >
+                  <input
+                    class="w-4 h-4 mt-0.5 rounded text-primary focus:ring-focus-ring cursor-pointer"
+                    id="policy-confirm"
+                    required=""
+                    type="checkbox"
+                  />
+                  <label
+                    class="font-caption text-caption text-text-secondary cursor-pointer"
+                    for="policy-confirm"
+                  >
+                    Saya mengonfirmasi bahwa data entitas klien ini sudah
+                    diverifikasi legalitasnya sesuai mandat audit tata kelola
+                    data perusahaan.
+                  </label>
+                </div>
+                <!-- Modal Footer -->
+                <div class="pt-4 flex items-center justify-end gap-3">
+                  <button
+                    class="h-10 px-4 rounded-lg bg-surface text-primary hover:bg-surface-muted font-body-strong text-body-strong transition-colors"
+                    onclick="closeAddClientModal()"
+                    type="button"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    class="h-10 px-5 rounded-lg bg-primary-container text-on-primary hover:bg-primary-hover active:bg-primary-active font-body-strong text-body-strong flex items-center gap-2 shadow-sm transition-colors"
+                    type="submit"
+                  >
+                    <span class="material-symbols-outlined text-[18px]"
+                      >check</span
+                    >
+                    <span>Simpan Klien</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <!-- MODAL FORM 2: ATUR PENUGASAN INTAKE (MD 640px) -->
+          <div
+            class="fixed inset-0 z-50 hidden flex items-center justify-center p-4"
+            id="modal-atur-intake"
+          >
+            <!-- Backdrop with blur -->
+            <div
+              class="absolute inset-0 bg-overlay backdrop-blur-sm"
+              onclick="closeAssignIntakeModal()"
+            ></div>
+            <!-- Modal Content -->
+            <div
+              class="relative w-full max-w-[640px] bg-surface rounded-xl shadow-xl overflow-hidden flex flex-col z-10 animate-in fade-in zoom-in-95 duration-150"
+            >
+              <!-- Modal Header -->
+              <div
+                class="px-6 py-4 bg-surface flex items-center justify-between"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-9 h-9 rounded-lg bg-accent-subtle text-status-ready-fg flex items-center justify-center"
+                  >
+                    <span class="material-symbols-outlined text-[22px]"
+                      >assignment_ind</span
+                    >
+                  </div>
+                  <div class="flex flex-col">
+                    <h2
+                      class="font-headline-sm text-headline-sm text-text-primary leading-tight"
+                    >
+                      Atur Penugasan Intake
+                    </h2>
+                    <span
+                      class="font-code-mono text-code-mono text-[12px] text-text-secondary"
+                      id="modal-intake-subtitle"
+                      >Klien: CL-RT-0082 — Klien A - Retail Mandiri</span
+                    >
+                  </div>
+                </div>
+                <button
+                  class="w-8 h-8 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary flex items-center justify-center transition-colors"
+                  onclick="closeAssignIntakeModal()"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[20px]"
+                    >close</span
+                  >
+                </button>
+              </div>
+              <!-- Modal Body -->
+              <div
+                class="p-6 flex flex-col gap-4 overflow-y-auto max-h-[calc(85vh-120px)]"
+              >
+                <!-- Info Callout -->
+                <div
+                  class="p-3 rounded-lg bg-info-subtle flex items-start gap-2.5"
+                >
+                  <span
+                    class="material-symbols-outlined text-info text-[18px] shrink-0 mt-0.5"
+                    >info</span
+                  >
+                  <p class="font-caption text-caption text-info leading-snug">
+                    Penugasan memberikan izin bagi staf Intake untuk mengunggah
+                    berkas invoice dan menerbitkan draft voucher pembayaran atas
+                    nama entitas klien ini.
+                  </p>
+                </div>
+                <!-- Strict Warning Callout -->
+                <div
+                  class="p-3 rounded-lg bg-warning-subtle flex items-start gap-2.5"
+                >
+                  <span
+                    class="material-symbols-outlined text-warning text-[18px] shrink-0 mt-0.5"
+                    >warning</span
+                  >
+                  <p
+                    class="font-caption text-caption text-warning leading-snug"
+                  >
+                    <strong>Peringatan Pencabutan Hak Akses:</strong> Pencabutan
+                    penugasan berlaku seketika. Jika user sedang aktif
+                    mengunggah atau membuat voucher untuk klien ini, proses
+                    tidak tersimpan dan akses langsung dicabut.
+                  </p>
+                </div>
+                <!-- Current Assignment Chips Section -->
+                <div class="flex flex-col gap-2">
+                  <label
+                    class="font-table-header text-table-header uppercase text-text-secondary tracking-wider"
+                  >
+                    Staf Intake Ditugaskan Saat Ini
+                  </label>
+                  <div
+                    class="flex flex-wrap gap-2 p-2.5 rounded-lg bg-surface-muted min-h-[46px] items-center"
+                    id="assigned-intake-chips"
+                  >
+                    <span
+                      class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface text-primary shadow-sm font-body-strong text-caption"
+                    >
+                      <span
+                        class="w-5 h-5 rounded-full bg-primary text-on-primary text-[10px] flex items-center justify-center font-bold"
+                        >SR</span
+                      >
+                      <span>Siti Rahmawati (USR-10842)</span>
+                      <button
+                        class="w-4 h-4 rounded hover:bg-danger-subtle hover:text-danger flex items-center justify-center ml-1"
+                        onclick="removeAssignedStaff('SR')"
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-[14px]"
+                          >close</span
+                        >
+                      </button>
+                    </span>
+                    <span
+                      class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface text-status-ready-fg shadow-sm font-body-strong text-caption"
+                    >
+                      <span
+                        class="w-5 h-5 rounded-full bg-secondary text-on-secondary text-[10px] flex items-center justify-center font-bold"
+                        >DP</span
+                      >
+                      <span>Dimas Pratama (USR-10850)</span>
+                      <button
+                        class="w-4 h-4 rounded hover:bg-danger-subtle hover:text-danger flex items-center justify-center ml-1"
+                        onclick="removeAssignedStaff('DP')"
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-[14px]"
+                          >close</span
+                        >
+                      </button>
+                    </span>
+                  </div>
+                </div>
+                <!-- Available Candidate Picker List -->
+                <div class="flex flex-col gap-2">
+                  <div class="flex items-center justify-between">
+                    <label
+                      class="font-table-header text-table-header uppercase text-text-secondary tracking-wider"
+                    >
+                      Pilih Staf Intake Kandidat
+                    </label>
+                    <span class="font-caption text-caption text-text-secondary"
+                      >Hanya menampilkan staf aktif ber-role INTAKE</span
+                    >
+                  </div>
+                  <div
+                    class="flex flex-col divide-y divide-surface-muted rounded-lg shadow-sm overflow-hidden bg-surface"
+                  >
+                    <!-- Candidate 1 -->
+                    <label
+                      class="p-3 flex items-center justify-between hover:bg-surface-muted/60 cursor-pointer transition-colors"
+                    >
+                      <div class="flex items-center gap-3">
+                        <input
+                          checked=""
+                          class="w-4 h-4 rounded text-primary focus:ring-focus-ring intake-checkbox"
+                          type="checkbox"
+                          value="USR-10842"
+                        />
+                        <div class="flex items-center gap-2.5">
+                          <div
+                            class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-caption font-bold"
+                          >
+                            SR
+                          </div>
+                          <div class="flex flex-col">
+                            <span
+                              class="font-body-strong text-body-strong text-text-primary leading-tight"
+                              >Siti Rahmawati</span
+                            >
+                            <span
+                              class="font-code-mono text-code-mono text-[11px] text-text-secondary"
+                              >USR-10842 • Jakarta Operasional</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                      <span
+                        class="font-caption text-caption text-text-secondary bg-surface-muted px-2 py-0.5 rounded"
+                        >Beban: 2 Klien</span
+                      >
+                    </label>
+                    <!-- Candidate 2 -->
+                    <label
+                      class="p-3 flex items-center justify-between hover:bg-surface-muted/60 cursor-pointer transition-colors"
+                    >
+                      <div class="flex items-center gap-3">
+                        <input
+                          checked=""
+                          class="w-4 h-4 rounded text-primary focus:ring-focus-ring intake-checkbox"
+                          type="checkbox"
+                          value="USR-10850"
+                        />
+                        <div class="flex items-center gap-2.5">
+                          <div
+                            class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-caption font-bold"
+                          >
+                            DP
+                          </div>
+                          <div class="flex flex-col">
+                            <span
+                              class="font-body-strong text-body-strong text-text-primary leading-tight"
+                              >Dimas Pratama</span
+                            >
+                            <span
+                              class="font-code-mono text-code-mono text-[11px] text-text-secondary"
+                              >USR-10850 • Surabaya Operasional</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                      <span
+                        class="font-caption text-caption text-text-secondary bg-surface-muted px-2 py-0.5 rounded"
+                        >Beban: 1 Klien</span
+                      >
+                    </label>
+                    <!-- Candidate 3 -->
+                    <label
+                      class="p-3 flex items-center justify-between hover:bg-surface-muted/60 cursor-pointer transition-colors"
+                    >
+                      <div class="flex items-center gap-3">
+                        <input
+                          class="w-4 h-4 rounded text-primary focus:ring-focus-ring intake-checkbox"
+                          type="checkbox"
+                          value="USR-10862"
+                        />
+                        <div class="flex items-center gap-2.5">
+                          <div
+                            class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-caption font-bold"
+                          >
+                            FA
+                          </div>
+                          <div class="flex flex-col">
+                            <span
+                              class="font-body-strong text-body-strong text-text-primary leading-tight"
+                              >Fajar Ananda</span
+                            >
+                            <span
+                              class="font-code-mono text-code-mono text-[11px] text-text-secondary"
+                              >USR-10862 • Medan Operasional</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                      <span
+                        class="font-caption text-caption text-text-secondary bg-surface-muted px-2 py-0.5 rounded"
+                        >Beban: 2 Klien</span
+                      >
+                    </label>
+                    <!-- Candidate 4 -->
+                    <label
+                      class="p-3 flex items-center justify-between hover:bg-surface-muted/60 cursor-pointer transition-colors"
+                    >
+                      <div class="flex items-center gap-3">
+                        <input
+                          class="w-4 h-4 rounded text-primary focus:ring-focus-ring intake-checkbox"
+                          type="checkbox"
+                          value="USR-10871"
+                        />
+                        <div class="flex items-center gap-2.5">
+                          <div
+                            class="w-8 h-8 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant flex items-center justify-center font-caption font-bold"
+                          >
+                            RN
+                          </div>
+                          <div class="flex flex-col">
+                            <span
+                              class="font-body-strong text-body-strong text-text-primary leading-tight"
+                              >Rina Novita</span
+                            >
+                            <span
+                              class="font-code-mono text-code-mono text-[11px] text-text-secondary"
+                              >USR-10871 • Bandung Operasional</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                      <span
+                        class="font-caption text-caption text-text-secondary bg-surface-muted px-2 py-0.5 rounded"
+                        >Beban: 1 Klien</span
+                      >
+                    </label>
+                  </div>
+                </div>
+                <!-- Modal Footer -->
+                <div class="pt-4 flex items-center justify-end gap-3">
+                  <button
+                    class="h-10 px-4 rounded-lg bg-surface text-primary hover:bg-surface-muted font-body-strong text-body-strong transition-colors"
+                    onclick="closeAssignIntakeModal()"
+                    type="button"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    class="h-10 px-5 rounded-lg bg-primary-container text-on-primary hover:bg-primary-hover active:bg-primary-active font-body-strong text-body-strong flex items-center gap-2 shadow-sm transition-colors"
+                    onclick="saveIntakeAssignment()"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-[18px]"
+                      >group_add</span
+                    >
+                    <span>Simpan Assignment</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- TOAST NOTIFICATION CONTAINER (FOR MICRO-INTERACTIONS) -->
+          <div
+            class="fixed bottom-6 right-6 z-50 hidden flex items-center gap-3 px-4 py-3 rounded-lg bg-status-reviewed-fg text-on-primary shadow-xl transition-all animate-in slide-in-from-bottom-5"
+            id="toast-notification"
+          >
+            <span
+              class="material-symbols-outlined text-[20px] text-accent-subtle"
+              >task_alt</span
+            >
+            <span class="font-body-strong text-body-strong" id="toast-message"
+              >Data klien dan penugasan berhasil disimpan</span
+            >
+          </div>
+          <!-- INLINE CLIENT-SIDE JAVASCRIPT FOR QA TESTING & INTERACTIVITY -->
+          <script>
+            // QA STATE SWITCHER CONTROLLER
+            function setQAState(state) {
+              const containerPopulated = document.getElementById(
+                'container-table-populated',
+              );
+              const containerSkeleton = document.getElementById(
+                'container-table-skeleton',
+              );
+              const containerEmpty = document.getElementById(
+                'container-table-empty',
+              );
+              const bannerError = document.getElementById(
+                'banner-transaksi-gagal',
+              );
+
+              // Reset Active QA Button states
+              document
+                .querySelectorAll('#qa-state-controller button')
+                .forEach((btn) => {
+                  btn.classList.remove('bg-primary', 'text-on-primary');
+                });
+
+              // Hide all main containers first
+              containerPopulated.classList.add('hidden');
+              containerSkeleton.classList.add('hidden');
+              containerEmpty.classList.add('hidden');
+
+              if (state === 'populated_klien') {
+                containerPopulated.classList.remove('hidden');
+                switchNavTab('klien');
+                highlightQAButton('btn-qa-1');
+                showToast('Mode Tampilan: Data Klien Populated');
+              } else if (state === 'populated_intake') {
+                containerPopulated.classList.remove('hidden');
+                switchNavTab('intake');
+                highlightQAButton('btn-qa-2');
+                showToast('Mode Tampilan: Penugasan Intake Aktif');
+              } else if (state === 'loading') {
+                containerSkeleton.classList.remove('hidden');
+                highlightQAButton('btn-qa-3');
+              } else if (state === 'empty') {
+                containerEmpty.classList.remove('hidden');
+                containerEmpty.classList.add('flex');
+                highlightQAButton('btn-qa-4');
+                showToast('Mode Tampilan: State Data Kosong');
+              }
+            }
+
+            function highlightQAButton(btnId) {
+              const btn = document.getElementById(btnId);
+              if (btn) {
+                btn.classList.add('bg-primary', 'text-on-primary');
+              }
+            }
+
+            // SEGMENTED TABS SWITCHER
+            function switchNavTab(tab) {
+              const tabKlien = document.getElementById('tab-nav-klien');
+              const tabIntake = document.getElementById('tab-nav-intake');
+              const tabReadonly = document.getElementById('tab-nav-readonly');
+
+              const tabs = [tabKlien, tabIntake, tabReadonly];
+              tabs.forEach((t) => {
+                t.className =
+                  'h-9 px-4 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary font-body-default text-body-default flex items-center gap-2 transition-all';
+              });
+
+              if (tab === 'klien') {
+                tabKlien.className =
+                  'h-9 px-4 rounded-lg bg-primary-subtle text-primary font-body-strong text-body-default flex items-center gap-2 transition-all';
+              } else if (tab === 'intake') {
+                tabIntake.className =
+                  'h-9 px-4 rounded-lg bg-primary-subtle text-primary font-body-strong text-body-default flex items-center gap-2 transition-all';
+              } else if (tab === 'readonly') {
+                tabReadonly.className =
+                  'h-9 px-4 rounded-lg bg-primary-subtle text-primary font-body-strong text-body-default flex items-center gap-2 transition-all';
+              }
+            }
+
+            // SEARCH & FILTER LOGIC
+            function handleFilterSearch(query) {
+              const rows = document.querySelectorAll('#client-table-body tr');
+              let visibleCount = 0;
+              const lower = query.toLowerCase().trim();
+
+              rows.forEach((row) => {
+                const code = row.getAttribute('data-code').toLowerCase();
+                const name = row.getAttribute('data-name').toLowerCase();
+                if (code.includes(lower) || name.includes(lower)) {
+                  row.style.display = '';
+                  visibleCount++;
+                } else {
+                  row.style.display = 'none';
+                }
+              });
+
+              document.getElementById('label-table-count').innerHTML =
+                `Menampilkan <strong class="text-text-primary font-body-strong">${visibleCount}</strong> entitas klien`;
+            }
+
+            function applyFilters() {
+              const revVal = document.getElementById(
+                'filter-reviewer-select',
+              ).value;
+              const intakeVal = document.getElementById(
+                'filter-intake-select',
+              ).value;
+              const rows = document.querySelectorAll('#client-table-body tr');
+              let visibleCount = 0;
+
+              rows.forEach((row) => {
+                const rowRev = row.getAttribute('data-reviewer');
+                const rowIntake = row.getAttribute('data-intake');
+
+                const matchRev = revVal === 'all' || rowRev === revVal;
+                const matchIntake =
+                  intakeVal === 'all' || rowIntake === intakeVal;
+
+                if (matchRev && matchIntake) {
+                  row.style.display = '';
+                  visibleCount++;
+                } else {
+                  row.style.display = 'none';
+                }
+              });
+
+              document.getElementById('label-table-count').innerHTML =
+                `Menampilkan <strong class="text-text-primary font-body-strong">${visibleCount}</strong> entitas klien`;
+            }
+
+            function resetFilters() {
+              document.getElementById('filter-search-input').value = '';
+              document.getElementById('filter-reviewer-select').value = 'all';
+              document.getElementById('filter-intake-select').value = 'all';
+              handleFilterSearch('');
+            }
+
+            // MODAL TAMBAH KLIEN
+            function openAddClientModal() {
+              document.getElementById('modal-client-title').innerText =
+                'Tambah Klien Baru';
+              document.getElementById('client-name').value = '';
+              document.getElementById('client-code').value = '';
+              document.getElementById('client-category').value = '';
+              document
+                .getElementById('duplicate-code-error')
+                .classList.add('hidden');
+              document
+                .getElementById('modal-tambah-klien')
+                .classList.remove('hidden');
+            }
+
+            function closeAddClientModal() {
+              document
+                .getElementById('modal-tambah-klien')
+                .classList.add('hidden');
+            }
+
+            function openEditModal(code, name, category) {
+              document.getElementById('modal-client-title').innerText =
+                `Edit Master Klien — ${code}`;
+              document.getElementById('client-name').value = name;
+              document.getElementById('client-code').value = code;
+              document.getElementById('client-category').value = category;
+              document
+                .getElementById('duplicate-code-error')
+                .classList.add('hidden');
+              document
+                .getElementById('modal-tambah-klien')
+                .classList.remove('hidden');
+            }
+
+            // SIMULASI VALIDASI DUPLIKAT KODE (QA STATE 6)
+            function simulateDuplicateError() {
+              openAddClientModal();
+              const codeInput = document.getElementById('client-code');
+              codeInput.value = 'CL-RT-0082';
+              document.getElementById('dup-code-label').innerText =
+                'CL-RT-0082';
+              const errBox = document.getElementById('duplicate-code-error');
+              errBox.classList.remove('hidden');
+              errBox.classList.add('flex');
+              highlightQAButton('btn-qa-6');
+            }
+
+            function validateClientCode(input) {
+              input.value = input.value.toUpperCase();
+              const errBox = document.getElementById('duplicate-code-error');
+              // Simulasi inline check bila user mengetik CL-RT-0082
+              if (input.value.trim() === 'CL-RT-0082') {
+                document.getElementById('dup-code-label').innerText =
+                  input.value;
+                errBox.classList.remove('hidden');
+                errBox.classList.add('flex');
+              } else {
+                errBox.classList.add('hidden');
+                errBox.classList.remove('flex');
+              }
+            }
+
+            function handleSaveClient(event) {
+              event.preventDefault();
+              const code = document.getElementById('client-code').value.trim();
+              if (code === 'CL-RT-0082') {
+                simulateDuplicateError();
+                return;
+              }
+              closeAddClientModal();
+              showToast(
+                'Data master entitas klien berhasil disimpan ke AMIGA DB',
+              );
+            }
+
+            // MODAL ATUR INTAKE
+            function openAssignIntakeModal(code, name) {
+              document.getElementById('modal-intake-subtitle').innerText =
+                `Klien: ${code} — ${name}`;
+              document
+                .getElementById('modal-atur-intake')
+                .classList.remove('hidden');
+            }
+
+            function closeAssignIntakeModal() {
+              document
+                .getElementById('modal-atur-intake')
+                .classList.add('hidden');
+            }
+
+            function removeAssignedStaff(code) {
+              showToast(`Pencabutan akses sementara untuk staf ${code}`);
+            }
+
+            function saveIntakeAssignment() {
+              closeAssignIntakeModal();
+              showToast('Alokasi penugasan staf Intake berhasil diperbarui');
+            }
+
+            // ERROR BANNER TOGGLE (QA STATE 8)
+            function toggleErrorBanner(show) {
+              const banner = document.getElementById('banner-transaksi-gagal');
+              if (show) {
+                banner.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              } else {
+                banner.classList.add('hidden');
+              }
+            }
+
+            // TOAST UTILITY
+            let toastTimeout;
+            function showToast(message) {
+              const toast = document.getElementById('toast-notification');
+              const label = document.getElementById('toast-message');
+              label.innerText = message;
+              toast.classList.remove('hidden');
+
+              clearTimeout(toastTimeout);
+              toastTimeout = setTimeout(() => {
+                toast.classList.add('hidden');
+              }, 3500);
+            }
+
+            // ESCAPE KEY LISTENER TO CLOSE MODALS
+            window.addEventListener('keydown', function (event) {
+              if (event.key === 'Escape') {
+                closeAddClientModal();
+                closeAssignIntakeModal();
+              }
+            });
+          </script>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
