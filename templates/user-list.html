@@ -1,0 +1,2399 @@
+<!doctype html>
+
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="web_dashboard" name="shell-type" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'on-surface': '#1a1b21',
+              'surface-bright': '#faf8ff',
+              'surface-muted': '#F1F5F9',
+              'info-subtle': '#DBEAFE',
+              'text-link': '#1E40AF',
+              'status-processing-bg': '#DBEAFE',
+              'diff-new-bg': '#DCFCE7',
+              'on-secondary-fixed-variant': '#00504a',
+              'surface-container-low': '#f4f3fa',
+              'on-accent': '#FFFFFF',
+              'primary-fixed-dim': '#b6c4ff',
+              'status-exception-bg': '#FEF3C7',
+              'status-sent-bg': '#EDE9FE',
+              'on-error-container': '#93000a',
+              'on-surface-variant': '#444651',
+              'status-rejected-fg': '#991B1B',
+              'on-tertiary-fixed': '#341100',
+              'status-reviewed-fg': '#166534',
+              'status-exception-border': '#FCD34D',
+              'status-queued-border': '#CBD5E1',
+              'status-sent-fg': '#5B21B6',
+              'diff-old-bg': '#FEE2E2',
+              'on-background': '#1a1b21',
+              warning: '#92400E',
+              'focus-ring': '#2563EB',
+              'tertiary-fixed-dim': '#ffb691',
+              'on-secondary': '#ffffff',
+              border: '#CBD5E1',
+              'warning-subtle': '#FEF3C7',
+              'surface-tint': '#4059aa',
+              'on-primary-fixed-variant': '#264191',
+              'status-queued-bg': '#F1F5F9',
+              'surface-container-highest': '#e3e1e9',
+              'text-disabled': '#94A3B8',
+              'inverse-surface': '#2f3036',
+              'text-primary': '#0F172A',
+              'secondary-container': '#99efe5',
+              'text-secondary': '#475569',
+              'surface-container-high': '#e9e7ef',
+              'status-exception-fg': '#92400E',
+              'on-tertiary-container': '#f39461',
+              'status-duplicate-border': '#7F1D1D',
+              'inverse-on-surface': '#f1f0f7',
+              'status-duplicate-fg': '#FFFFFF',
+              surface: '#FFFFFF',
+              'status-queued-fg': '#334155',
+              danger: '#B91C1C',
+              'primary-fixed': '#dce1ff',
+              tertiary: '#4b1c00',
+              'accent-subtle': '#CCFBF1',
+              'primary-subtle': '#E0E7FF',
+              'on-primary': '#FFFFFF',
+              'surface-container-lowest': '#ffffff',
+              'danger-subtle': '#FEE2E2',
+              'status-duplicate-bg': '#B91C1C',
+              'tertiary-container': '#6e2c00',
+              'error-container': '#ffdad6',
+              info: '#1E40AF',
+              'surface-variant': '#e3e1e9',
+              'accent-hover': '#0D625B',
+              'diff-new-fg': '#166534',
+              'status-processing-border': '#93C5FD',
+              'secondary-fixed': '#9cf2e8',
+              'status-sent-border': '#C4B5FD',
+              secondary: '#006a63',
+              'status-processing-fg': '#1E40AF',
+              error: '#ba1a1a',
+              'status-rejected-bg': '#FFFFFF',
+              'secondary-fixed-dim': '#80d5cb',
+              'status-ready-bg': '#CCFBF1',
+              'surface-sunken': '#E2E8F0',
+              'surface-container': '#eeedf4',
+              'diff-old-fg': '#991B1B',
+              'on-tertiary-fixed-variant': '#773205',
+              outline: '#757682',
+              'on-primary-container': '#90a8ff',
+              'status-ready-fg': '#115E59',
+              primary: '#00236f',
+              'on-tertiary': '#ffffff',
+              'status-vouchered-bg': '#E0E7FF',
+              'status-reviewed-bg': '#DCFCE7',
+              'primary-container': '#1e3a8a',
+              'on-error': '#ffffff',
+              'on-primary-fixed': '#00164e',
+              'border-strong': '#94A3B8',
+              'outline-variant': '#c5c5d3',
+              'on-secondary-container': '#006f67',
+              background: '#F8FAFC',
+              'on-secondary-fixed': '#00201d',
+              'inverse-primary': '#b6c4ff',
+              'surface-dim': '#dad9e1',
+              'primary-active': '#172B6B',
+              'status-ready-border': '#5EEAD4',
+              'status-vouchered-border': '#A5B4FC',
+              'status-vouchered-fg': '#3730A3',
+              'tertiary-fixed': '#ffdbcb',
+              'primary-hover': '#1B3380',
+              'status-rejected-border': '#991B1B',
+              overlay: 'rgba(15, 23, 42, 0.55)',
+              'status-reviewed-border': '#86EFAC',
+              'success-subtle': '#DCFCE7',
+              success: '#166534',
+            },
+            borderRadius: {
+              DEFAULT: '0.25rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              full: '9999px',
+            },
+            spacing: {
+              5: '20px',
+              16: '64px',
+              'gutter-laptop': '1rem',
+              'space-lg': '1.5rem',
+              'margin-tablet': '1rem',
+              'space-xl': '2rem',
+              'space-sm': '0.5rem',
+              margin: '1.5rem',
+              8: '32px',
+              'base-unit': '4px',
+              'gutter-mobile': '0.75rem',
+              'gutter-tablet': '1rem',
+              'margin-mobile': '0.75rem',
+              'space-xs': '0.25rem',
+              gutter: '1.5rem',
+              1: '4px',
+              10: '40px',
+              4: '16px',
+              'space-md': '1rem',
+              3: '12px',
+              6: '24px',
+              0: '0px',
+              12: '48px',
+              2: '8px',
+            },
+            fontFamily: {
+              'amount-default': ['JetBrains Mono'],
+              'headline-md': ['Inter'],
+              'code-mono': ['JetBrains Mono'],
+              'body-strong': ['Inter'],
+              'body-default': ['Inter'],
+              'table-header': ['Inter'],
+              display: ['Inter'],
+              'headline-lg': ['Inter'],
+              'headline-sm': ['Inter'],
+              'label-firm': ['Inter'],
+              'amount-lg': ['JetBrains Mono'],
+              caption: ['Inter'],
+            },
+            fontSize: {
+              'amount-default': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '600' },
+              ],
+              'headline-md': [
+                '20px',
+                { lineHeight: '28px', fontWeight: '600' },
+              ],
+              'code-mono': ['13px', { lineHeight: '20px', fontWeight: '500' }],
+              'body-strong': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '600' },
+              ],
+              'body-default': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '400' },
+              ],
+              'table-header': [
+                '12px',
+                {
+                  lineHeight: '16px',
+                  letterSpacing: '0.04em',
+                  fontWeight: '600',
+                },
+              ],
+              display: [
+                '28px',
+                {
+                  lineHeight: '36px',
+                  letterSpacing: '-0.01em',
+                  fontWeight: '700',
+                },
+              ],
+              'headline-lg': [
+                '24px',
+                { lineHeight: '32px', fontWeight: '700' },
+              ],
+              'headline-sm': [
+                '16px',
+                { lineHeight: '24px', fontWeight: '600' },
+              ],
+              'label-firm': [
+                '12px',
+                {
+                  lineHeight: '16px',
+                  letterSpacing: '0.02em',
+                  fontWeight: '600',
+                },
+              ],
+              'amount-lg': ['24px', { lineHeight: '32px', fontWeight: '700' }],
+              caption: ['12px', { lineHeight: '16px', fontWeight: '400' }],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="bg-background font-body-default text-text-primary antialiased min-h-screen"
+  >
+    <header
+      class="fixed top-0 left-0 right-0 h-14 bg-surface z-50 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"
+    >
+      <div class="w-full h-14 px-6 flex items-center justify-between">
+        <div class="flex items-center gap-3 w-60">
+          <div
+            class="w-8 h-8 rounded bg-primary-container flex items-center justify-center"
+          >
+            <span class="material-symbols-outlined text-on-primary text-[20px]"
+              >smart_toy</span
+            >
+          </div>
+          <div class="flex flex-col">
+            <span
+              class="font-headline-sm text-headline-sm text-primary-container tracking-tight leading-none"
+              >AMIGA</span
+            ><span
+              class="font-caption text-caption text-text-secondary leading-none mt-1 uppercase tracking-wider"
+              >Robot Admin</span
+            >
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
+            <span
+              class="inline-flex items-center px-2 py-0.5 rounded bg-status-sent-bg text-status-sent-fg font-label-firm text-label-firm"
+              ><span class="material-symbols-outlined text-[14px] mr-1"
+                >admin_panel_settings</span
+              >SYSTEM ADMIN</span
+            >
+          </div>
+          <button
+            aria-label="Notifikasi"
+            class="relative p-2 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+            type="button"
+          >
+            <span class="material-symbols-outlined text-[20px]"
+              >notifications</span
+            ><span
+              class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-danger"
+            ></span>
+          </button>
+          <div class="h-6 w-px bg-surface-sunken mx-1"></div>
+          <div class="flex items-center gap-3 pl-1">
+            <div class="text-right hidden sm:block">
+              <div
+                class="font-body-strong text-body-strong text-text-primary leading-tight"
+              >
+                Budi Santoso
+              </div>
+              <div
+                class="font-caption text-caption text-text-secondary leading-tight"
+              >
+                System Admin #1001
+              </div>
+            </div>
+            <div
+              class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"
+            >
+              <span
+                class="material-symbols-outlined text-on-primary text-[18px]"
+                >person</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <aside
+      class="fixed left-0 top-14 bottom-0 w-60 bg-surface z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)] flex flex-col justify-between py-4"
+    >
+      <div class="flex flex-col">
+        <div class="px-4 mb-3">
+          <span
+            class="font-caption text-caption uppercase tracking-wider text-text-disabled"
+            >Modul Administrasi</span
+          >
+        </div>
+        <nav
+          class="flex flex-col gap-1 px-3"
+          data-active-classes="bg-primary-container text-on-primary font-body-strong"
+        >
+          <a
+            aria-current="page"
+            class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors bg-primary-container text-on-primary font-body-strong"
+            data-path="pengguna"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">group</span
+            ><span>Pengguna</span></a
+          ><a
+            class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors font-body-default text-body-default"
+            data-path="klien"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">apartment</span
+            ><span>Klien</span></a
+          ><a
+            class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors font-body-default text-body-default"
+            data-path="penugasan-intake"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]"
+              >assignment_ind</span
+            ><span>Penugasan Intake</span></a
+          ><a
+            class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors font-body-default text-body-default"
+            data-path="daftar-klien"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">domain</span
+            ><span>Daftar Klien</span></a
+          >
+        </nav>
+      </div>
+      <div class="px-3 flex flex-col gap-1">
+        <div class="p-3 rounded-lg bg-surface-muted mb-2">
+          <div
+            class="flex items-center gap-2 text-text-secondary font-label-firm text-label-firm mb-1"
+          >
+            <span class="material-symbols-outlined text-[16px] text-success"
+              >verified_user</span
+            ><span>Akses Terbatas</span>
+          </div>
+          <p class="font-caption text-caption text-text-secondary leading-snug">
+            Khusus manajemen master data pengguna dan konfigurasi klien.
+          </p>
+        </div>
+        <a
+          class="flex items-center gap-3 px-3 py-2 rounded-lg text-danger hover:bg-danger-subtle hover:text-status-rejected-fg transition-colors font-body-default text-body-default"
+          data-path="keluar"
+          href="#"
+          ><span class="material-symbols-outlined text-[20px]">logout</span
+          ><span>Keluar</span></a
+        >
+      </div>
+    </aside>
+    <div class="pl-60">
+      <main
+        class="w-full min-h-[calc(100vh-56px)] pt-14 px-8 py-6 bg-background"
+      >
+        <div class="flex flex-col w-full pb-12">
+          <!-- QA State Simulator Control Bar -->
+          <aside
+            aria-label="Simulator Kontrol QA"
+            class="w-full bg-surface-muted border-b border-border py-2.5 px-4 mb-6 rounded-lg shadow-sm"
+          >
+            <div
+              class="flex flex-wrap items-center justify-between gap-3 text-caption font-caption text-text-secondary"
+            >
+              <div class="flex items-center gap-2">
+                <span
+                  class="inline-flex items-center px-1.5 py-0.5 rounded bg-primary-container text-on-primary font-label-firm text-[11px] tracking-wider uppercase"
+                  >QA Bar</span
+                >
+                <span class="font-body-strong text-text-primary text-[13px]"
+                  >Simulator State:</span
+                >
+              </div>
+              <div
+                aria-label="State Simulator Buttons"
+                class="flex flex-wrap items-center gap-1.5"
+                role="toolbar"
+              >
+                <button
+                  class="px-2.5 py-1 rounded bg-primary text-on-primary font-body-strong text-caption transition-colors"
+                  id="qa-btn-populated"
+                  onclick="setState('populated')"
+                >
+                  1. Populated
+                </button>
+                <button
+                  class="px-2.5 py-1 rounded bg-surface border border-border text-text-primary hover:bg-surface-sunken font-body-default text-caption transition-colors"
+                  id="qa-btn-skeleton"
+                  onclick="setState('skeleton')"
+                >
+                  2. Skeleton
+                </button>
+                <button
+                  class="px-2.5 py-1 rounded bg-surface border border-border text-text-primary hover:bg-surface-sunken font-body-default text-caption transition-colors"
+                  id="qa-btn-empty"
+                  onclick="setState('empty')"
+                >
+                  3. Empty
+                </button>
+                <button
+                  class="px-2.5 py-1 rounded bg-surface border border-border text-text-primary hover:bg-surface-sunken font-body-default text-caption transition-colors"
+                  id="qa-btn-add"
+                  onclick="openModal('modal-add')"
+                >
+                  4. Modal Tambah
+                </button>
+                <button
+                  class="px-2.5 py-1 rounded bg-surface border border-border text-text-primary hover:bg-surface-sunken font-body-default text-caption transition-colors"
+                  id="qa-btn-edit"
+                  onclick="openModal('modal-edit')"
+                >
+                  5. Modal Edit
+                </button>
+                <button
+                  class="px-2.5 py-1 rounded bg-surface border border-border text-text-primary hover:bg-surface-sunken font-body-default text-caption transition-colors"
+                  id="qa-btn-deactivate"
+                  onclick="openModal('modal-deactivate')"
+                >
+                  6. Nonaktifkan
+                </button>
+                <button
+                  class="px-2.5 py-1 rounded bg-surface border border-border text-text-primary hover:bg-surface-sunken font-body-default text-caption transition-colors"
+                  id="qa-btn-validation"
+                  onclick="toggleValidationDemo()"
+                >
+                  7. Inline Error
+                </button>
+                <button
+                  class="px-2.5 py-1 rounded bg-surface border border-border text-text-primary hover:bg-surface-sunken font-body-default text-caption transition-colors"
+                  id="qa-btn-concurrency"
+                  onclick="toggleConcurrencyBanner()"
+                >
+                  8. Concurrency Banner
+                </button>
+              </div>
+            </div>
+          </aside>
+          <!-- Breadcrumb -->
+          <nav
+            aria-label="Breadcrumb"
+            class="flex items-center gap-2 mb-3 text-caption font-caption text-text-secondary"
+          >
+            <span
+              class="hover:text-text-primary transition-colors cursor-pointer"
+              >Konsol System Admin</span
+            >
+            <span
+              class="material-symbols-outlined text-[14px] text-text-disabled"
+              >chevron_right</span
+            >
+            <span aria-current="page" class="font-body-strong text-text-primary"
+              >Pengguna</span
+            >
+          </nav>
+          <!-- Concurrency Conflict Error Alert Banner -->
+          <section
+            aria-live="assertive"
+            class="hidden mb-6 rounded-lg bg-danger-subtle border-l-4 border-danger p-4 shadow-sm"
+            id="concurrency-banner"
+            role="alert"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex items-start gap-3">
+                <span
+                  class="material-symbols-outlined text-danger text-[24px] mt-0.5 flex-shrink-0"
+                  >error</span
+                >
+                <div>
+                  <h2
+                    class="font-body-strong text-body-strong text-status-rejected-fg leading-tight mb-1"
+                  >
+                    Gagal Memperbarui Status Pengguna (Optimistic Concurrency
+                    Conflict)
+                  </h2>
+                  <p
+                    class="font-body-default text-body-default text-status-rejected-fg leading-relaxed"
+                  >
+                    Data pengguna di server telah diubah oleh sesi administrator
+                    lain beberapa saat yang lalu. Perubahan Anda tidak disimpan
+                    untuk mencegah penimpaan data usang.
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 flex-shrink-0">
+                <button
+                  class="px-3 py-1.5 bg-surface border border-primary text-primary hover:bg-primary-subtle text-caption font-body-strong rounded transition-colors flex items-center gap-1.5"
+                  onclick="reloadTableData()"
+                >
+                  <span class="material-symbols-outlined text-[16px]"
+                    >refresh</span
+                  >
+                  <span>Muat Ulang Data</span>
+                </button>
+                <button
+                  aria-label="Tutup Banner"
+                  class="p-1 rounded text-status-rejected-fg hover:bg-status-exception-bg transition-colors"
+                  onclick="toggleConcurrencyBanner(false)"
+                >
+                  <span class="material-symbols-outlined text-[20px]"
+                    >close</span
+                  >
+                </button>
+              </div>
+            </div>
+          </section>
+          <!-- Header Area with Integrated Stats -->
+          <div
+            class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-6"
+          >
+            <div class="flex items-start gap-3 max-w-2xl">
+              <div
+                class="w-12 h-12 rounded-lg bg-primary-subtle flex items-center justify-center flex-shrink-0"
+              >
+                <span class="material-symbols-outlined text-primary text-[24px]"
+                  >manage_accounts</span
+                >
+              </div>
+              <div>
+                <h1
+                  class="font-headline-lg text-headline-lg text-text-primary tracking-tight"
+                >
+                  Manajemen Pengguna
+                </h1>
+                <p
+                  class="font-body-default text-body-default text-text-secondary mt-1"
+                >
+                  Kelola akun pengguna internal AMIGA Robot Admin, perizinan
+                  peran tunggal, dan kontrol status akses aktif/nonaktif.
+                </p>
+              </div>
+            </div>
+            <!-- Mini Stat Counter Summary -->
+            <div
+              class="grid grid-cols-3 gap-3 p-1.5 bg-surface rounded-lg border border-border shadow-sm flex-shrink-0"
+            >
+              <div class="px-4 py-2 border-r border-surface-sunken">
+                <span
+                  class="block font-caption text-caption text-text-secondary"
+                  >Total Pengguna</span
+                >
+                <span class="font-amount-lg text-amount-lg text-text-primary"
+                  >24</span
+                >
+              </div>
+              <div class="px-4 py-2 border-r border-surface-sunken">
+                <span class="block font-caption text-caption text-success"
+                  >Aktif</span
+                >
+                <span class="font-amount-lg text-amount-lg text-success"
+                  >22</span
+                >
+              </div>
+              <div class="px-4 py-2">
+                <span class="block font-caption text-caption text-text-disabled"
+                  >Nonaktif</span
+                >
+                <span class="font-amount-lg text-amount-lg text-text-secondary"
+                  >2</span
+                >
+              </div>
+            </div>
+          </div>
+          <!-- Filter and Action Toolbar -->
+          <div
+            class="bg-surface p-4 rounded-lg border border-border shadow-sm mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4"
+          >
+            <div class="flex flex-wrap items-center gap-3 flex-1">
+              <!-- Search Input -->
+              <div class="relative min-w-[260px] flex-1 md:max-w-xs">
+                <span
+                  class="material-symbols-outlined text-text-secondary text-[20px] absolute left-3 top-2.5 pointer-events-none"
+                  >search</span
+                >
+                <input
+                  class="w-full h-10 pl-9 pr-3 rounded bg-surface border border-border-strong text-body-default font-body-default text-text-primary placeholder:text-text-disabled focus:outline-none focus:ring-2 focus:ring-focus-ring"
+                  id="user-search-input"
+                  onkeyup="filterUsers()"
+                  placeholder="Cari nama atau email pengguna..."
+                  type="text"
+                />
+              </div>
+              <!-- Filter Dropdown: Peran -->
+              <div class="w-48">
+                <label class="sr-only" for="filter-role">Filter Peran</label>
+                <select
+                  class="w-full h-10 px-3 rounded bg-surface border border-border-strong text-body-default font-body-default text-text-primary focus:outline-none focus:ring-2 focus:ring-focus-ring"
+                  id="filter-role"
+                  onchange="filterUsers()"
+                >
+                  <option value="">Semua Peran</option>
+                  <option value="INTAKE">INTAKE</option>
+                  <option value="FINANCE_REVIEWER">FINANCE_REVIEWER</option>
+                  <option value="SERVICE_LEAD">SERVICE_LEAD</option>
+                  <option value="SYSTEM_ADMIN">SYSTEM_ADMIN</option>
+                </select>
+              </div>
+              <!-- Filter Dropdown: Status -->
+              <div class="w-36">
+                <label class="sr-only" for="filter-status">Filter Status</label>
+                <select
+                  class="w-full h-10 px-3 rounded bg-surface border border-border-strong text-body-default font-body-default text-text-primary focus:outline-none focus:ring-2 focus:ring-focus-ring"
+                  id="filter-status"
+                  onchange="filterUsers()"
+                >
+                  <option value="">Semua Status</option>
+                  <option value="Aktif">Aktif</option>
+                  <option value="Nonaktif">Nonaktif</option>
+                </select>
+              </div>
+              <!-- Reset Filter Button -->
+              <button
+                class="h-10 px-3 text-text-secondary hover:text-text-primary hover:bg-surface-muted rounded font-body-default text-caption transition-colors flex items-center gap-1"
+                onclick="resetFilters()"
+              >
+                <span class="material-symbols-outlined text-[18px]"
+                  >restart_alt</span
+                >
+                <span>Reset</span>
+              </button>
+            </div>
+            <!-- Primary Action: Tambah Pengguna -->
+            <button
+              class="h-10 px-4 bg-primary hover:bg-primary-hover active:bg-primary-active text-on-primary rounded font-body-strong text-body-strong transition-colors flex items-center justify-center gap-2 flex-shrink-0 shadow-sm"
+              onclick="openModal('modal-add')"
+            >
+              <span class="material-symbols-outlined text-[20px]"
+                >person_add</span
+              >
+              <span>Tambah Pengguna</span>
+            </button>
+          </div>
+          <!-- Table Container (Elevation SM, Border CBD5E1) -->
+          <div
+            class="bg-surface rounded-lg border border-border shadow-sm overflow-hidden flex flex-col"
+            id="view-populated"
+          >
+            <!-- Desktop Table View -->
+            <div class="overflow-x-auto hidden md:block">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="h-10 bg-surface-muted border-b border-border">
+                    <th
+                      class="px-4 py-2 font-table-header text-table-header uppercase text-text-secondary tracking-wider"
+                      scope="col"
+                    >
+                      NAMA &amp; IDENTITAS
+                    </th>
+                    <th
+                      class="px-4 py-2 font-table-header text-table-header uppercase text-text-secondary tracking-wider"
+                      scope="col"
+                    >
+                      EMAIL PENGGUNA
+                    </th>
+                    <th
+                      class="px-4 py-2 font-table-header text-table-header uppercase text-text-secondary tracking-wider"
+                      scope="col"
+                    >
+                      PERAN
+                    </th>
+                    <th
+                      class="px-4 py-2 font-table-header text-table-header uppercase text-text-secondary tracking-wider"
+                      scope="col"
+                    >
+                      STATUS AKSES
+                    </th>
+                    <th
+                      class="px-4 py-2 font-table-header text-table-header uppercase text-text-secondary tracking-wider"
+                      scope="col"
+                    >
+                      PENUGASAN KLIEN RINGKAS
+                    </th>
+                    <th
+                      class="px-4 py-2 font-table-header text-table-header uppercase text-text-secondary tracking-wider text-right"
+                      scope="col"
+                    >
+                      AKSI
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  class="divide-y divide-surface-sunken"
+                  id="user-table-tbody"
+                >
+                  <!-- Row 1: Siti Rahmawati (INTAKE) -->
+                  <tr
+                    class="h-12 hover:bg-primary-subtle/30 transition-colors group user-data-row"
+                    data-role="INTAKE"
+                    data-status="Aktif"
+                  >
+                    <td class="px-4 py-2">
+                      <div class="flex items-center gap-3">
+                        <div
+                          class="w-8 h-8 rounded-full bg-primary-subtle text-primary font-body-strong text-caption flex items-center justify-center flex-shrink-0"
+                        >
+                          SR
+                        </div>
+                        <div>
+                          <div
+                            class="font-body-strong text-body-strong text-text-primary leading-tight"
+                          >
+                            Siti Rahmawati
+                          </div>
+                          <div
+                            class="font-code-mono text-code-mono text-text-disabled leading-none mt-0.5"
+                          >
+                            USR-10842
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <div
+                        class="flex items-center gap-1.5 group-hover:text-primary"
+                      >
+                        <span
+                          class="font-body-default text-body-default text-text-secondary group-hover:text-text-primary"
+                          >siti.rahmawati@amiga.internal</span
+                        >
+                        <button
+                          class="text-text-disabled hover:text-text-primary p-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                          onclick="
+                            copyToClipboard('siti.rahmawati@amiga.internal')
+                          "
+                          title="Salin Email"
+                        >
+                          <span class="material-symbols-outlined text-[16px]"
+                            >content_copy</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="inline-flex items-center px-2 py-0.5 rounded bg-primary-subtle text-primary font-label-firm text-label-firm"
+                      >
+                        <span class="material-symbols-outlined text-[16px] mr-1"
+                          >badge</span
+                        >INTAKE
+                      </span>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="inline-flex items-center px-2 py-0.5 rounded bg-success-subtle border border-status-reviewed-border text-success font-label-firm text-label-firm"
+                      >
+                        <span class="material-symbols-outlined text-[16px] mr-1"
+                          >check_circle</span
+                        >Aktif
+                      </span>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="font-body-default text-body-default text-text-secondary"
+                        >Klien A, Klien B</span
+                      >
+                    </td>
+                    <td class="px-4 py-2 text-right">
+                      <div class="flex items-center justify-end gap-1">
+                        <button
+                          class="p-1.5 rounded hover:bg-surface-muted text-text-secondary hover:text-text-primary transition-colors"
+                          onclick="
+                            openModal(
+                              'modal-edit',
+                              'Siti Rahmawati',
+                              'siti.rahmawati@amiga.internal',
+                              'INTAKE',
+                            )
+                          "
+                          title="Edit Profil Pengguna"
+                        >
+                          <span class="material-symbols-outlined text-[20px]"
+                            >edit</span
+                          >
+                        </button>
+                        <button
+                          class="p-1.5 rounded hover:bg-danger-subtle text-text-secondary hover:text-danger transition-colors"
+                          onclick="
+                            openModal(
+                              'modal-deactivate',
+                              'Siti Rahmawati',
+                              'USR-10842',
+                            )
+                          "
+                          title="Nonaktifkan Akses"
+                        >
+                          <span class="material-symbols-outlined text-[20px]"
+                            >person_off</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- Row 2: Dian Wulandari (FINANCE_REVIEWER) -->
+                  <tr
+                    class="h-12 hover:bg-primary-subtle/30 transition-colors group user-data-row"
+                    data-role="FINANCE_REVIEWER"
+                    data-status="Aktif"
+                  >
+                    <td class="px-4 py-2">
+                      <div class="flex items-center gap-3">
+                        <div
+                          class="w-8 h-8 rounded-full bg-accent-subtle text-secondary font-body-strong text-caption flex items-center justify-center flex-shrink-0"
+                        >
+                          DW
+                        </div>
+                        <div>
+                          <div
+                            class="font-body-strong text-body-strong text-text-primary leading-tight"
+                          >
+                            Dian Wulandari
+                          </div>
+                          <div
+                            class="font-code-mono text-code-mono text-text-disabled leading-none mt-0.5"
+                          >
+                            USR-10843
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <div
+                        class="flex items-center gap-1.5 group-hover:text-primary"
+                      >
+                        <span
+                          class="font-body-default text-body-default text-text-secondary group-hover:text-text-primary"
+                          >dian.wulandari@amiga.internal</span
+                        >
+                        <button
+                          class="text-text-disabled hover:text-text-primary p-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                          onclick="
+                            copyToClipboard('dian.wulandari@amiga.internal')
+                          "
+                          title="Salin Email"
+                        >
+                          <span class="material-symbols-outlined text-[16px]"
+                            >content_copy</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="inline-flex items-center px-2 py-0.5 rounded bg-accent-subtle text-secondary font-label-firm text-label-firm"
+                      >
+                        <span class="material-symbols-outlined text-[16px] mr-1"
+                          >rate_review</span
+                        >FINANCE_REVIEWER
+                      </span>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="inline-flex items-center px-2 py-0.5 rounded bg-success-subtle border border-status-reviewed-border text-success font-label-firm text-label-firm"
+                      >
+                        <span class="material-symbols-outlined text-[16px] mr-1"
+                          >check_circle</span
+                        >Aktif
+                      </span>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="font-body-default text-body-default text-text-secondary"
+                        >Klien A</span
+                      >
+                    </td>
+                    <td class="px-4 py-2 text-right">
+                      <div class="flex items-center justify-end gap-1">
+                        <button
+                          class="p-1.5 rounded hover:bg-surface-muted text-text-secondary hover:text-text-primary transition-colors"
+                          onclick="
+                            openModal(
+                              'modal-edit',
+                              'Dian Wulandari',
+                              'dian.wulandari@amiga.internal',
+                              'FINANCE_REVIEWER',
+                            )
+                          "
+                          title="Edit Profil Pengguna"
+                        >
+                          <span class="material-symbols-outlined text-[20px]"
+                            >edit</span
+                          >
+                        </button>
+                        <button
+                          class="p-1.5 rounded hover:bg-danger-subtle text-text-secondary hover:text-danger transition-colors"
+                          onclick="
+                            openModal(
+                              'modal-deactivate',
+                              'Dian Wulandari',
+                              'USR-10843',
+                            )
+                          "
+                          title="Nonaktifkan Akses"
+                        >
+                          <span class="material-symbols-outlined text-[20px]"
+                            >person_off</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- Row 3: Agus Riyadi (FINANCE_REVIEWER) -->
+                  <tr
+                    class="h-12 hover:bg-primary-subtle/30 transition-colors group user-data-row"
+                    data-role="FINANCE_REVIEWER"
+                    data-status="Aktif"
+                  >
+                    <td class="px-4 py-2">
+                      <div class="flex items-center gap-3">
+                        <div
+                          class="w-8 h-8 rounded-full bg-accent-subtle text-secondary font-body-strong text-caption flex items-center justify-center flex-shrink-0"
+                        >
+                          AR
+                        </div>
+                        <div>
+                          <div
+                            class="font-body-strong text-body-strong text-text-primary leading-tight"
+                          >
+                            Agus Riyadi
+                          </div>
+                          <div
+                            class="font-code-mono text-code-mono text-text-disabled leading-none mt-0.5"
+                          >
+                            USR-10844
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <div
+                        class="flex items-center gap-1.5 group-hover:text-primary"
+                      >
+                        <span
+                          class="font-body-default text-body-default text-text-secondary group-hover:text-text-primary"
+                          >agus.riyadi@amiga.internal</span
+                        >
+                        <button
+                          class="text-text-disabled hover:text-text-primary p-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                          onclick="
+                            copyToClipboard('agus.riyadi@amiga.internal')
+                          "
+                          title="Salin Email"
+                        >
+                          <span class="material-symbols-outlined text-[16px]"
+                            >content_copy</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="inline-flex items-center px-2 py-0.5 rounded bg-accent-subtle text-secondary font-label-firm text-label-firm"
+                      >
+                        <span class="material-symbols-outlined text-[16px] mr-1"
+                          >rate_review</span
+                        >FINANCE_REVIEWER
+                      </span>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="inline-flex items-center px-2 py-0.5 rounded bg-success-subtle border border-status-reviewed-border text-success font-label-firm text-label-firm"
+                      >
+                        <span class="material-symbols-outlined text-[16px] mr-1"
+                          >check_circle</span
+                        >Aktif
+                      </span>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="font-body-default text-body-default text-text-secondary"
+                        >Klien A</span
+                      >
+                    </td>
+                    <td class="px-4 py-2 text-right">
+                      <div class="flex items-center justify-end gap-1">
+                        <button
+                          class="p-1.5 rounded hover:bg-surface-muted text-text-secondary hover:text-text-primary transition-colors"
+                          onclick="
+                            openModal(
+                              'modal-edit',
+                              'Agus Riyadi',
+                              'agus.riyadi@amiga.internal',
+                              'FINANCE_REVIEWER',
+                            )
+                          "
+                          title="Edit Profil Pengguna"
+                        >
+                          <span class="material-symbols-outlined text-[20px]"
+                            >edit</span
+                          >
+                        </button>
+                        <button
+                          class="p-1.5 rounded hover:bg-danger-subtle text-text-secondary hover:text-danger transition-colors"
+                          onclick="
+                            openModal(
+                              'modal-deactivate',
+                              'Agus Riyadi',
+                              'USR-10844',
+                            )
+                          "
+                          title="Nonaktifkan Akses"
+                        >
+                          <span class="material-symbols-outlined text-[20px]"
+                            >person_off</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- Row 4: Hendra Setiawan (FINANCE_REVIEWER) -->
+                  <tr
+                    class="h-12 hover:bg-primary-subtle/30 transition-colors group user-data-row"
+                    data-role="FINANCE_REVIEWER"
+                    data-status="Aktif"
+                  >
+                    <td class="px-4 py-2">
+                      <div class="flex items-center gap-3">
+                        <div
+                          class="w-8 h-8 rounded-full bg-accent-subtle text-secondary font-body-strong text-caption flex items-center justify-center flex-shrink-0"
+                        >
+                          HS
+                        </div>
+                        <div>
+                          <div
+                            class="font-body-strong text-body-strong text-text-primary leading-tight"
+                          >
+                            Hendra Setiawan
+                          </div>
+                          <div
+                            class="font-code-mono text-code-mono text-text-disabled leading-none mt-0.5"
+                          >
+                            USR-10845
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <div
+                        class="flex items-center gap-1.5 group-hover:text-primary"
+                      >
+                        <span
+                          class="font-body-default text-body-default text-text-secondary group-hover:text-text-primary"
+                          >hendra.setiawan@amiga.internal</span
+                        >
+                        <button
+                          class="text-text-disabled hover:text-text-primary p-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                          onclick="
+                            copyToClipboard('hendra.setiawan@amiga.internal')
+                          "
+                          title="Salin Email"
+                        >
+                          <span class="material-symbols-outlined text-[16px]"
+                            >content_copy</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="inline-flex items-center px-2 py-0.5 rounded bg-accent-subtle text-secondary font-label-firm text-label-firm"
+                      >
+                        <span class="material-symbols-outlined text-[16px] mr-1"
+                          >rate_review</span
+                        >FINANCE_REVIEWER
+                      </span>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="inline-flex items-center px-2 py-0.5 rounded bg-success-subtle border border-status-reviewed-border text-success font-label-firm text-label-firm"
+                      >
+                        <span class="material-symbols-outlined text-[16px] mr-1"
+                          >check_circle</span
+                        >Aktif
+                      </span>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="font-body-default text-body-default text-text-secondary"
+                        >Klien B</span
+                      >
+                    </td>
+                    <td class="px-4 py-2 text-right">
+                      <div class="flex items-center justify-end gap-1">
+                        <button
+                          class="p-1.5 rounded hover:bg-surface-muted text-text-secondary hover:text-text-primary transition-colors"
+                          onclick="
+                            openModal(
+                              'modal-edit',
+                              'Hendra Setiawan',
+                              'hendra.setiawan@amiga.internal',
+                              'FINANCE_REVIEWER',
+                            )
+                          "
+                          title="Edit Profil Pengguna"
+                        >
+                          <span class="material-symbols-outlined text-[20px]"
+                            >edit</span
+                          >
+                        </button>
+                        <button
+                          class="p-1.5 rounded hover:bg-danger-subtle text-text-secondary hover:text-danger transition-colors"
+                          onclick="
+                            openModal(
+                              'modal-deactivate',
+                              'Hendra Setiawan',
+                              'USR-10845',
+                            )
+                          "
+                          title="Nonaktifkan Akses"
+                        >
+                          <span class="material-symbols-outlined text-[20px]"
+                            >person_off</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- Row 5: Bambang Wicaksono (SERVICE_LEAD) -->
+                  <tr
+                    class="h-12 hover:bg-primary-subtle/30 transition-colors group user-data-row"
+                    data-role="SERVICE_LEAD"
+                    data-status="Aktif"
+                  >
+                    <td class="px-4 py-2">
+                      <div class="flex items-center gap-3">
+                        <div
+                          class="w-8 h-8 rounded-full bg-status-sent-bg text-status-sent-fg font-body-strong text-caption flex items-center justify-center flex-shrink-0"
+                        >
+                          BW
+                        </div>
+                        <div>
+                          <div
+                            class="font-body-strong text-body-strong text-text-primary leading-tight"
+                          >
+                            Bambang Wicaksono
+                          </div>
+                          <div
+                            class="font-code-mono text-code-mono text-text-disabled leading-none mt-0.5"
+                          >
+                            USR-10820
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <div
+                        class="flex items-center gap-1.5 group-hover:text-primary"
+                      >
+                        <span
+                          class="font-body-default text-body-default text-text-secondary group-hover:text-text-primary"
+                          >bambang.w@amiga.internal</span
+                        >
+                        <button
+                          class="text-text-disabled hover:text-text-primary p-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                          onclick="copyToClipboard('bambang.w@amiga.internal')"
+                          title="Salin Email"
+                        >
+                          <span class="material-symbols-outlined text-[16px]"
+                            >content_copy</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="inline-flex items-center px-2 py-0.5 rounded bg-status-sent-bg text-status-sent-fg font-label-firm text-label-firm"
+                      >
+                        <span class="material-symbols-outlined text-[16px] mr-1"
+                          >supervisor_account</span
+                        >SERVICE_LEAD
+                      </span>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="inline-flex items-center px-2 py-0.5 rounded bg-success-subtle border border-status-reviewed-border text-success font-label-firm text-label-firm"
+                      >
+                        <span class="material-symbols-outlined text-[16px] mr-1"
+                          >check_circle</span
+                        >Aktif
+                      </span>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="font-body-default text-body-default text-text-secondary"
+                        >Pengawas Semua Klien</span
+                      >
+                    </td>
+                    <td class="px-4 py-2 text-right">
+                      <div class="flex items-center justify-end gap-1">
+                        <button
+                          class="p-1.5 rounded hover:bg-surface-muted text-text-secondary hover:text-text-primary transition-colors"
+                          onclick="
+                            openModal(
+                              'modal-edit',
+                              'Bambang Wicaksono',
+                              'bambang.w@amiga.internal',
+                              'SERVICE_LEAD',
+                            )
+                          "
+                          title="Edit Profil Pengguna"
+                        >
+                          <span class="material-symbols-outlined text-[20px]"
+                            >edit</span
+                          >
+                        </button>
+                        <button
+                          class="p-1.5 rounded hover:bg-danger-subtle text-text-secondary hover:text-danger transition-colors"
+                          onclick="
+                            openModal(
+                              'modal-deactivate',
+                              'Bambang Wicaksono',
+                              'USR-10820',
+                            )
+                          "
+                          title="Nonaktifkan Akses"
+                        >
+                          <span class="material-symbols-outlined text-[20px]"
+                            >person_off</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- Row 6: Ratna Sari (INTAKE - Nonaktif) -->
+                  <tr
+                    class="h-12 hover:bg-primary-subtle/30 transition-colors group user-data-row opacity-80"
+                    data-role="INTAKE"
+                    data-status="Nonaktif"
+                  >
+                    <td class="px-4 py-2">
+                      <div class="flex items-center gap-3">
+                        <div
+                          class="w-8 h-8 rounded-full bg-surface-sunken text-text-disabled font-body-strong text-caption flex items-center justify-center flex-shrink-0"
+                        >
+                          RS
+                        </div>
+                        <div>
+                          <div
+                            class="font-body-strong text-body-strong text-text-secondary leading-tight"
+                          >
+                            Ratna Sari
+                          </div>
+                          <div
+                            class="font-code-mono text-code-mono text-text-disabled leading-none mt-0.5"
+                          >
+                            USR-10712
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <div
+                        class="flex items-center gap-1.5 group-hover:text-primary"
+                      >
+                        <span
+                          class="font-body-default text-body-default text-text-disabled line-through"
+                          >ratna.sari@amiga.internal</span
+                        >
+                        <button
+                          class="text-text-disabled hover:text-text-primary p-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                          onclick="copyToClipboard('ratna.sari@amiga.internal')"
+                          title="Salin Email"
+                        >
+                          <span class="material-symbols-outlined text-[16px]"
+                            >content_copy</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="inline-flex items-center px-2 py-0.5 rounded bg-surface-muted text-text-secondary font-label-firm text-label-firm"
+                      >
+                        <span class="material-symbols-outlined text-[16px] mr-1"
+                          >badge</span
+                        >INTAKE
+                      </span>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="inline-flex items-center px-2 py-0.5 rounded bg-surface-muted border border-border text-text-secondary font-label-firm text-label-firm"
+                      >
+                        <span class="material-symbols-outlined text-[16px] mr-1"
+                          >person_off</span
+                        >Nonaktif
+                      </span>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="font-body-default text-body-default text-text-disabled italic"
+                        >Sesi Dinonaktifkan (Eks-Klien C)</span
+                      >
+                    </td>
+                    <td class="px-4 py-2 text-right">
+                      <div class="flex items-center justify-end gap-1">
+                        <button
+                          class="p-1.5 rounded hover:bg-surface-muted text-text-secondary hover:text-text-primary transition-colors"
+                          onclick="
+                            openModal(
+                              'modal-edit',
+                              'Ratna Sari',
+                              'ratna.sari@amiga.internal',
+                              'INTAKE',
+                            )
+                          "
+                          title="Edit Profil Pengguna"
+                        >
+                          <span class="material-symbols-outlined text-[20px]"
+                            >edit</span
+                          >
+                        </button>
+                        <button
+                          class="p-1.5 rounded hover:bg-success-subtle text-text-secondary hover:text-success transition-colors"
+                          onclick="activateUser('Ratna Sari')"
+                          title="Aktifkan Kembali Pengguna"
+                        >
+                          <span class="material-symbols-outlined text-[20px]"
+                            >check</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- Row 7: Budi Santoso (SYSTEM_ADMIN) -->
+                  <tr
+                    class="h-12 hover:bg-primary-subtle/30 transition-colors group user-data-row"
+                    data-role="SYSTEM_ADMIN"
+                    data-status="Aktif"
+                  >
+                    <td class="px-4 py-2">
+                      <div class="flex items-center gap-3">
+                        <div
+                          class="w-8 h-8 rounded-full bg-primary text-on-primary font-body-strong text-caption flex items-center justify-center flex-shrink-0"
+                        >
+                          BS
+                        </div>
+                        <div>
+                          <div class="flex items-center gap-1.5">
+                            <span
+                              class="font-body-strong text-body-strong text-text-primary leading-tight"
+                              >Budi Santoso</span
+                            >
+                            <span
+                              class="px-1.5 py-0.2 rounded bg-primary-subtle text-primary font-label-firm text-[10px]"
+                              >Anda</span
+                            >
+                          </div>
+                          <div
+                            class="font-code-mono text-code-mono text-text-disabled leading-none mt-0.5"
+                          >
+                            USR-1001
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <div
+                        class="flex items-center gap-1.5 group-hover:text-primary"
+                      >
+                        <span
+                          class="font-body-default text-body-default text-text-secondary group-hover:text-text-primary"
+                          >budi.santoso@amiga.internal</span
+                        >
+                        <button
+                          class="text-text-disabled hover:text-text-primary p-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                          onclick="
+                            copyToClipboard('budi.santoso@amiga.internal')
+                          "
+                          title="Salin Email"
+                        >
+                          <span class="material-symbols-outlined text-[16px]"
+                            >content_copy</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="inline-flex items-center px-2 py-0.5 rounded bg-primary-container text-on-primary font-label-firm text-label-firm"
+                      >
+                        <span class="material-symbols-outlined text-[16px] mr-1"
+                          >admin_panel_settings</span
+                        >SYSTEM_ADMIN
+                      </span>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="inline-flex items-center px-2 py-0.5 rounded bg-success-subtle border border-status-reviewed-border text-success font-label-firm text-label-firm"
+                      >
+                        <span class="material-symbols-outlined text-[16px] mr-1"
+                          >check_circle</span
+                        >Aktif
+                      </span>
+                    </td>
+                    <td class="px-4 py-2">
+                      <span
+                        class="font-body-default text-body-default text-text-secondary"
+                        >Akses Konfigurasi Global</span
+                      >
+                    </td>
+                    <td class="px-4 py-2 text-right">
+                      <div class="flex items-center justify-end gap-1">
+                        <button
+                          class="p-1.5 rounded hover:bg-surface-muted text-text-secondary hover:text-text-primary transition-colors"
+                          onclick="
+                            openModal(
+                              'modal-edit',
+                              'Budi Santoso',
+                              'budi.santoso@amiga.internal',
+                              'SYSTEM_ADMIN',
+                            )
+                          "
+                          title="Edit Profil Pengguna"
+                        >
+                          <span class="material-symbols-outlined text-[20px]"
+                            >edit</span
+                          >
+                        </button>
+                        <button
+                          class="p-1.5 rounded text-text-disabled cursor-not-allowed opacity-40"
+                          disabled=""
+                          title="Akun Anda sendiri tidak dapat dinonaktifkan di sini"
+                        >
+                          <span class="material-symbols-outlined text-[20px]"
+                            >block</span
+                          >
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Mobile Stacked Card View (< 768px) -->
+            <div class="md:hidden divide-y divide-border p-2">
+              <!-- Mobile Card 1 -->
+              <div class="p-4 flex flex-col gap-3">
+                <div class="flex items-start justify-between">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-10 h-10 rounded-full bg-primary-subtle text-primary font-body-strong flex items-center justify-center"
+                    >
+                      SR
+                    </div>
+                    <div>
+                      <div
+                        class="font-body-strong text-body-strong text-text-primary"
+                      >
+                        Siti Rahmawati
+                      </div>
+                      <div
+                        class="font-caption text-caption text-text-secondary"
+                      >
+                        siti.rahmawati@amiga.internal
+                      </div>
+                    </div>
+                  </div>
+                  <span
+                    class="inline-flex items-center px-2 py-0.5 rounded bg-success-subtle border border-status-reviewed-border text-success font-label-firm text-label-firm"
+                  >
+                    <span class="material-symbols-outlined text-[14px] mr-1"
+                      >check_circle</span
+                    >Aktif
+                  </span>
+                </div>
+                <div
+                  class="flex flex-wrap items-center justify-between text-caption pt-2 border-t border-surface-sunken"
+                >
+                  <span
+                    class="inline-flex items-center px-2 py-0.5 rounded bg-primary-subtle text-primary font-label-firm text-label-firm"
+                  >
+                    <span class="material-symbols-outlined text-[14px] mr-1"
+                      >badge</span
+                    >INTAKE
+                  </span>
+                  <span class="text-text-secondary">Klien A, Klien B</span>
+                </div>
+                <div class="flex items-center justify-end gap-2 pt-1">
+                  <button
+                    class="h-10 px-3 border border-border rounded font-body-strong text-caption text-text-primary hover:bg-surface-muted transition-colors flex items-center gap-1.5"
+                    onclick="
+                      openModal(
+                        'modal-edit',
+                        'Siti Rahmawati',
+                        'siti.rahmawati@amiga.internal',
+                        'INTAKE',
+                      )
+                    "
+                  >
+                    <span class="material-symbols-outlined text-[18px]"
+                      >edit</span
+                    >
+                    Edit
+                  </button>
+                  <button
+                    class="h-10 px-3 bg-danger-subtle text-status-rejected-fg rounded font-body-strong text-caption hover:bg-status-rejected-border hover:text-on-primary transition-colors flex items-center gap-1.5"
+                    onclick="
+                      openModal(
+                        'modal-deactivate',
+                        'Siti Rahmawati',
+                        'USR-10842',
+                      )
+                    "
+                  >
+                    <span class="material-symbols-outlined text-[18px]"
+                      >person_off</span
+                    >
+                    Nonaktifkan
+                  </button>
+                </div>
+              </div>
+              <!-- Mobile Card 2 -->
+              <div class="p-4 flex flex-col gap-3">
+                <div class="flex items-start justify-between">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-10 h-10 rounded-full bg-accent-subtle text-secondary font-body-strong flex items-center justify-center"
+                    >
+                      DW
+                    </div>
+                    <div>
+                      <div
+                        class="font-body-strong text-body-strong text-text-primary"
+                      >
+                        Dian Wulandari
+                      </div>
+                      <div
+                        class="font-caption text-caption text-text-secondary"
+                      >
+                        dian.wulandari@amiga.internal
+                      </div>
+                    </div>
+                  </div>
+                  <span
+                    class="inline-flex items-center px-2 py-0.5 rounded bg-success-subtle border border-status-reviewed-border text-success font-label-firm text-label-firm"
+                  >
+                    <span class="material-symbols-outlined text-[14px] mr-1"
+                      >check_circle</span
+                    >Aktif
+                  </span>
+                </div>
+                <div
+                  class="flex flex-wrap items-center justify-between text-caption pt-2 border-t border-surface-sunken"
+                >
+                  <span
+                    class="inline-flex items-center px-2 py-0.5 rounded bg-accent-subtle text-secondary font-label-firm text-label-firm"
+                  >
+                    <span class="material-symbols-outlined text-[14px] mr-1"
+                      >rate_review</span
+                    >FINANCE_REVIEWER
+                  </span>
+                  <span class="text-text-secondary">Klien A</span>
+                </div>
+                <div class="flex items-center justify-end gap-2 pt-1">
+                  <button
+                    class="h-10 px-3 border border-border rounded font-body-strong text-caption text-text-primary hover:bg-surface-muted transition-colors flex items-center gap-1.5"
+                    onclick="
+                      openModal(
+                        'modal-edit',
+                        'Dian Wulandari',
+                        'dian.wulandari@amiga.internal',
+                        'FINANCE_REVIEWER',
+                      )
+                    "
+                  >
+                    <span class="material-symbols-outlined text-[18px]"
+                      >edit</span
+                    >
+                    Edit
+                  </button>
+                  <button
+                    class="h-10 px-3 bg-danger-subtle text-status-rejected-fg rounded font-body-strong text-caption hover:bg-status-rejected-border hover:text-on-primary transition-colors flex items-center gap-1.5"
+                    onclick="
+                      openModal(
+                        'modal-deactivate',
+                        'Dian Wulandari',
+                        'USR-10843',
+                      )
+                    "
+                  >
+                    <span class="material-symbols-outlined text-[18px]"
+                      >person_off</span
+                    >
+                    Nonaktifkan
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- Table Pagination Footer -->
+            <div
+              class="h-12 bg-surface px-4 border-t border-border flex items-center justify-between text-caption font-caption text-text-secondary"
+            >
+              <div class="flex items-center gap-2">
+                <span
+                  >Menampilkan
+                  <strong class="font-body-strong text-text-primary"
+                    >1-7</strong
+                  >
+                  dari
+                  <strong class="font-body-strong text-text-primary">24</strong>
+                  pengguna</span
+                >
+              </div>
+              <div class="flex items-center gap-4">
+                <div class="hidden sm:flex items-center gap-2">
+                  <span>Baris:</span>
+                  <select
+                    class="h-7 px-2 bg-surface-muted border border-border rounded text-text-primary font-body-strong"
+                  >
+                    <option>10</option>
+                    <option>25</option>
+                    <option>50</option>
+                  </select>
+                </div>
+                <div class="flex items-center gap-1">
+                  <button
+                    class="p-1 rounded text-text-disabled cursor-not-allowed"
+                    disabled=""
+                  >
+                    <span class="material-symbols-outlined text-[18px]"
+                      >chevron_left</span
+                    >
+                  </button>
+                  <button
+                    class="w-7 h-7 rounded bg-primary text-on-primary font-body-strong flex items-center justify-center"
+                  >
+                    1
+                  </button>
+                  <button
+                    class="w-7 h-7 rounded hover:bg-surface-muted text-text-primary font-body-default flex items-center justify-center"
+                  >
+                    2
+                  </button>
+                  <button
+                    class="w-7 h-7 rounded hover:bg-surface-muted text-text-primary font-body-default flex items-center justify-center"
+                  >
+                    3
+                  </button>
+                  <button
+                    class="p-1 rounded text-text-secondary hover:text-text-primary"
+                  >
+                    <span class="material-symbols-outlined text-[18px]"
+                      >chevron_right</span
+                    >
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Loading Skeleton State Container (Hidden by default) -->
+          <div
+            class="hidden bg-surface rounded-lg border border-border shadow-sm p-4 flex-col gap-3 animate-pulse"
+            id="view-skeleton"
+          >
+            <div class="h-10 bg-surface-muted rounded w-full mb-2"></div>
+            <div class="h-12 bg-surface-muted/60 rounded w-full"></div>
+            <div class="h-12 bg-surface-muted/60 rounded w-full"></div>
+            <div class="h-12 bg-surface-muted/60 rounded w-full"></div>
+            <div class="h-12 bg-surface-muted/60 rounded w-full"></div>
+            <div class="h-12 bg-surface-muted/60 rounded w-full"></div>
+            <div class="h-12 bg-surface-muted/60 rounded w-full"></div>
+            <div class="h-10 bg-surface-muted rounded w-full mt-2"></div>
+          </div>
+          <!-- Empty State Container (Hidden by default) -->
+          <div
+            class="hidden bg-surface rounded-lg border border-border shadow-sm p-12 flex-col items-center justify-center text-center"
+            id="view-empty"
+          >
+            <div
+              class="w-16 h-16 rounded-full bg-primary-subtle flex items-center justify-center mb-4"
+            >
+              <span class="material-symbols-outlined text-primary text-[40px]"
+                >group</span
+              >
+            </div>
+            <h3
+              class="font-headline-md text-headline-md text-text-primary mb-1"
+            >
+              Belum Ada Pengguna
+            </h3>
+            <p
+              class="font-body-default text-body-default text-text-secondary max-w-md mb-6"
+            >
+              Tidak ditemukan data pengguna yang cocok dengan kriteria filter
+              atau pencarian Anda. Silakan bersihkan kata kunci atau tambah
+              pengguna baru.
+            </p>
+            <div class="flex items-center gap-3">
+              <button
+                class="h-10 px-4 bg-surface border border-border text-text-primary hover:bg-surface-muted rounded font-body-strong text-caption transition-colors"
+                onclick="
+                  resetFilters();
+                  setState('populated');
+                "
+              >
+                Reset Filter
+              </button>
+              <button
+                class="h-10 px-4 bg-primary hover:bg-primary-hover text-on-primary rounded font-body-strong text-caption transition-colors flex items-center gap-2"
+                onclick="openModal('modal-add')"
+              >
+                <span class="material-symbols-outlined text-[18px]"
+                  >person_add</span
+                >
+                <span>Tambah Pengguna Baru</span>
+              </button>
+            </div>
+          </div>
+          <!-- Modal 1: Tambah Pengguna Baru (MD - 640px) -->
+          <div
+            aria-labelledby="modal-add-title"
+            aria-modal="true"
+            class="fixed inset-0 z-50 bg-overlay flex items-center justify-center p-4 hidden"
+            id="modal-add"
+            role="dialog"
+          >
+            <div
+              class="bg-surface w-full max-w-xl rounded-xl shadow-xl border border-border overflow-hidden flex flex-col"
+            >
+              <!-- Modal Header -->
+              <div
+                class="px-6 py-4 border-b border-border flex items-center justify-between"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-10 h-10 rounded-lg bg-primary-subtle text-primary flex items-center justify-center flex-shrink-0"
+                  >
+                    <span class="material-symbols-outlined text-[20px]"
+                      >person_add</span
+                    >
+                  </div>
+                  <div>
+                    <h3
+                      class="font-headline-sm text-headline-sm text-text-primary leading-tight"
+                      id="modal-add-title"
+                    >
+                      Tambah Pengguna Baru
+                    </h3>
+                    <p class="font-caption text-caption text-text-secondary">
+                      Akun internal untuk staf operasional AMIGA
+                    </p>
+                  </div>
+                </div>
+                <button
+                  aria-label="Tutup Dialog"
+                  class="p-1 rounded text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+                  onclick="closeModal('modal-add')"
+                >
+                  <span class="material-symbols-outlined text-[20px]"
+                    >close</span
+                  >
+                </button>
+              </div>
+              <!-- Modal Body -->
+              <div class="p-6 space-y-4">
+                <!-- Field 1: Nama Lengkap -->
+                <div>
+                  <label
+                    class="block font-body-strong text-body-strong text-text-primary mb-1"
+                    for="add-user-name"
+                  >
+                    Nama Lengkap <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    class="w-full h-10 px-3 rounded bg-surface border border-border-strong text-body-default text-text-primary focus:outline-none focus:ring-2 focus:ring-focus-ring placeholder:text-text-disabled"
+                    id="add-user-name"
+                    placeholder="cth. Ahmad Fauzi"
+                    type="text"
+                  />
+                </div>
+                <!-- Field 2: Email AMIGA (with inline error test block) -->
+                <div>
+                  <label
+                    class="block font-body-strong text-body-strong text-text-primary mb-1"
+                    for="add-user-email"
+                  >
+                    Email AMIGA Internal <span class="text-danger">*</span>
+                  </label>
+                  <div class="relative">
+                    <input
+                      class="w-full h-10 px-3 rounded bg-surface border border-border-strong text-body-default text-text-primary focus:outline-none focus:ring-2 focus:ring-focus-ring placeholder:text-text-disabled"
+                      id="add-user-email"
+                      placeholder="nama@amiga.internal"
+                      type="email"
+                    />
+                    <span
+                      class="hidden material-symbols-outlined text-danger text-[20px] absolute right-3 top-2.5"
+                      id="email-error-icon"
+                      >error</span
+                    >
+                  </div>
+                  <p
+                    class="hidden mt-1 font-caption text-caption text-danger flex items-center gap-1"
+                    id="email-error-msg"
+                  >
+                    <span
+                      >Email wajib diisi dengan format domain valid
+                      @amiga.internal</span
+                    >
+                  </p>
+                </div>
+                <!-- Field 3: Peran Tunggal Sistem -->
+                <div>
+                  <label
+                    class="block font-body-strong text-body-strong text-text-primary mb-1"
+                    for="add-user-role"
+                  >
+                    Peran Sistem Tunggal <span class="text-danger">*</span>
+                  </label>
+                  <select
+                    class="w-full h-10 px-3 rounded bg-surface border border-border-strong text-body-default text-text-primary focus:outline-none focus:ring-2 focus:ring-focus-ring"
+                    id="add-user-role"
+                  >
+                    <option value="INTAKE">
+                      INTAKE (Operator Penerimaan &amp; Pembuatan Voucher)
+                    </option>
+                    <option value="FINANCE_REVIEWER">
+                      FINANCE_REVIEWER (Pemeriksa &amp; Penyetuju Faktur
+                      Independen)
+                    </option>
+                    <option value="SERVICE_LEAD">
+                      SERVICE_LEAD (Manajer Penugasan Klien &amp; Reviewer)
+                    </option>
+                    <option value="SYSTEM_ADMIN">
+                      SYSTEM_ADMIN (Administrator Konfigurasi &amp; Akun)
+                    </option>
+                  </select>
+                  <p class="font-caption text-caption text-text-secondary mt-1">
+                    Setiap pengguna hanya dapat memegang satu peran aktif dalam
+                    satu waktu.
+                  </p>
+                </div>
+                <!-- Audit Note Box -->
+                <div
+                  class="p-3 bg-surface-muted rounded-lg flex items-start gap-2.5"
+                >
+                  <span
+                    class="material-symbols-outlined text-text-secondary text-[18px] mt-0.5"
+                    >verified_user</span
+                  >
+                  <p
+                    class="font-caption text-caption text-text-secondary leading-snug"
+                  >
+                    Setiap pembuatan akun pengguna baru akan dicatat dalam
+                    <strong class="font-body-strong text-text-primary"
+                      >audit trail permanen sistem</strong
+                    >. Tautan aktivasi kredensial awal akan dikirimkan otomatis
+                    ke alamat email yang ditentukan.
+                  </p>
+                </div>
+              </div>
+              <!-- Modal Footer -->
+              <div
+                class="px-6 py-4 bg-surface-muted border-t border-border flex items-center justify-end gap-3"
+              >
+                <button
+                  class="h-10 px-4 bg-surface border border-border text-text-primary hover:bg-surface-sunken rounded font-body-strong text-caption transition-colors"
+                  onclick="closeModal('modal-add')"
+                >
+                  Batal
+                </button>
+                <button
+                  class="h-10 px-4 bg-primary hover:bg-primary-hover active:bg-primary-active text-on-primary rounded font-body-strong text-caption transition-colors shadow-sm"
+                  onclick="submitAddUser()"
+                >
+                  Simpan Pengguna
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Modal 2: Edit Pengguna & Perubahan Peran (MD - 640px) -->
+          <div
+            aria-labelledby="modal-edit-title"
+            aria-modal="true"
+            class="fixed inset-0 z-50 bg-overlay flex items-center justify-center p-4 hidden"
+            id="modal-edit"
+            role="dialog"
+          >
+            <div
+              class="bg-surface w-full max-w-xl rounded-xl shadow-xl border border-border overflow-hidden flex flex-col"
+            >
+              <!-- Modal Header -->
+              <div
+                class="px-6 py-4 border-b border-border flex items-center justify-between"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-10 h-10 rounded-lg bg-primary-subtle text-primary flex items-center justify-center flex-shrink-0"
+                  >
+                    <span class="material-symbols-outlined text-[20px]"
+                      >edit</span
+                    >
+                  </div>
+                  <div>
+                    <h3
+                      class="font-headline-sm text-headline-sm text-text-primary leading-tight"
+                      id="modal-edit-title"
+                    >
+                      Edit Data Pengguna
+                    </h3>
+                    <p class="font-caption text-caption text-text-secondary">
+                      Pembaruan nama dan peran sistem terdaftar
+                    </p>
+                  </div>
+                </div>
+                <button
+                  aria-label="Tutup Dialog"
+                  class="p-1 rounded text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+                  onclick="closeModal('modal-edit')"
+                >
+                  <span class="material-symbols-outlined text-[20px]"
+                    >close</span
+                  >
+                </button>
+              </div>
+              <!-- Modal Body -->
+              <div class="p-6 space-y-4">
+                <div>
+                  <label
+                    class="block font-body-strong text-body-strong text-text-primary mb-1"
+                    for="edit-user-name"
+                    >Nama Lengkap</label
+                  >
+                  <input
+                    class="w-full h-10 px-3 rounded bg-surface border border-border-strong text-body-default text-text-primary focus:outline-none focus:ring-2 focus:ring-focus-ring"
+                    id="edit-user-name"
+                    type="text"
+                    value="Dian Wulandari"
+                  />
+                </div>
+                <div>
+                  <label
+                    class="block font-body-strong text-body-strong text-text-primary mb-1"
+                    for="edit-user-email"
+                    >Email AMIGA Internal</label
+                  >
+                  <input
+                    class="w-full h-10 px-3 rounded bg-surface-muted border border-border text-text-disabled text-body-default cursor-not-allowed"
+                    disabled=""
+                    id="edit-user-email"
+                    type="email"
+                    value="dian.wulandari@amiga.internal"
+                  />
+                  <span
+                    class="font-caption text-caption text-text-disabled mt-1 block"
+                    >Email adalah identitas permanen dan tidak dapat diubah
+                    langsung.</span
+                  >
+                </div>
+                <div>
+                  <label
+                    class="block font-body-strong text-body-strong text-text-primary mb-1"
+                    for="edit-user-role"
+                    >Peran Pengguna</label
+                  >
+                  <select
+                    class="w-full h-10 px-3 rounded bg-surface border border-border-strong text-body-default text-text-primary focus:outline-none focus:ring-2 focus:ring-focus-ring"
+                    id="edit-user-role"
+                    onchange="checkRoleWarning(this.value)"
+                  >
+                    <option value="INTAKE">
+                      INTAKE (Operator Penerimaan &amp; Pembuatan Voucher)
+                    </option>
+                    <option selected="" value="FINANCE_REVIEWER">
+                      FINANCE_REVIEWER (Pemeriksa &amp; Penyetuju Faktur
+                      Independen)
+                    </option>
+                    <option value="SERVICE_LEAD">
+                      SERVICE_LEAD (Manajer Penugasan Klien &amp; Reviewer)
+                    </option>
+                    <option value="SYSTEM_ADMIN">
+                      SYSTEM_ADMIN (Administrator Konfigurasi &amp; Akun)
+                    </option>
+                  </select>
+                </div>
+                <!-- Role Modification Warning Callout -->
+                <div
+                  class="p-3 bg-warning-subtle border border-status-exception-border rounded-lg flex items-start gap-3"
+                  id="role-warning-callout"
+                >
+                  <span
+                    class="material-symbols-outlined text-warning text-[20px] mt-0.5 flex-shrink-0"
+                    >warning</span
+                  >
+                  <div class="text-caption text-warning leading-snug">
+                    <strong
+                      class="font-body-strong text-text-primary block mb-0.5"
+                      >Perhatian Dampak Penugasan:</strong
+                    >
+                    Mengubah peran dari
+                    <span class="font-code-mono font-body-strong"
+                      >FINANCE_REVIEWER</span
+                    >
+                    ke peran lain akan membatalkan seluruh penugasan klien aktif
+                    yang terkait secara otomatis demi menjaga pemisahan tugas
+                    (segregation of duties).
+                  </div>
+                </div>
+              </div>
+              <!-- Modal Footer -->
+              <div
+                class="px-6 py-4 bg-surface-muted border-t border-border flex items-center justify-end gap-3"
+              >
+                <button
+                  class="h-10 px-4 bg-surface border border-border text-text-primary hover:bg-surface-sunken rounded font-body-strong text-caption transition-colors"
+                  onclick="closeModal('modal-edit')"
+                >
+                  Batal
+                </button>
+                <button
+                  class="h-10 px-4 bg-primary hover:bg-primary-hover active:bg-primary-active text-on-primary rounded font-body-strong text-caption transition-colors shadow-sm"
+                  onclick="submitEditUser()"
+                >
+                  Perbarui Pengguna
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Modal 3: Konfirmasi Nonaktifkan Pengguna (SM - 440px) -->
+          <div
+            aria-labelledby="modal-deactivate-title"
+            aria-modal="true"
+            class="fixed inset-0 z-50 bg-overlay flex items-center justify-center p-4 hidden"
+            id="modal-deactivate"
+            role="dialog"
+          >
+            <div
+              class="bg-surface w-full max-w-md rounded-xl shadow-xl border border-border overflow-hidden flex flex-col"
+            >
+              <div class="p-6">
+                <div class="flex items-center gap-3 mb-4">
+                  <div
+                    class="w-10 h-10 rounded-full bg-danger-subtle text-danger flex items-center justify-center flex-shrink-0"
+                  >
+                    <span class="material-symbols-outlined text-[24px]"
+                      >person_off</span
+                    >
+                  </div>
+                  <h3
+                    class="font-headline-sm text-headline-sm text-text-primary leading-tight"
+                    id="modal-deactivate-title"
+                  >
+                    Nonaktifkan Akses Pengguna?
+                  </h3>
+                </div>
+                <p
+                  class="font-body-default text-body-default text-text-secondary leading-relaxed mb-4"
+                >
+                  Sesi aktif pengguna
+                  <strong
+                    class="font-body-strong text-text-primary"
+                    id="deactivate-target-name"
+                    >Ratna Sari</strong
+                  >
+                  akan langsung dihentikan detik ini juga. Seluruh hak akses,
+                  token otentikasi, dan penugasan operasional akan dicabut.
+                  Tindakan ini dicatat dalam log audit.
+                </p>
+                <div
+                  class="p-3 bg-surface-muted rounded border border-border text-caption text-text-secondary"
+                >
+                  Akun dinonaktifkan tetap tersimpan dalam sistem dan dapat
+                  diaktifkan kembali sewaktu-waktu oleh System Admin.
+                </div>
+              </div>
+              <div
+                class="px-6 py-3 bg-surface-muted border-t border-border flex items-center justify-end gap-3"
+              >
+                <button
+                  class="h-10 px-4 bg-surface border border-border text-text-primary hover:bg-surface-sunken rounded font-body-strong text-caption transition-colors"
+                  onclick="closeModal('modal-deactivate')"
+                >
+                  Batal
+                </button>
+                <button
+                  class="h-10 px-4 bg-danger hover:bg-status-rejected-fg text-on-primary rounded font-body-strong text-caption transition-colors flex items-center gap-1.5 shadow-sm"
+                  onclick="confirmDeactivate()"
+                >
+                  <span class="material-symbols-outlined text-[18px]"
+                    >block</span
+                  >
+                  <span>Nonaktifkan Pengguna</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Toast Notification Feedback -->
+          <div
+            class="fixed bottom-6 right-6 z-50 transform translate-y-16 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 px-4 py-3 rounded-lg bg-text-primary text-on-primary shadow-lg max-w-sm"
+            id="system-toast"
+          >
+            <span
+              class="material-symbols-outlined text-success text-[20px]"
+              id="toast-icon"
+              >check_circle</span
+            >
+            <span class="font-body-default text-caption" id="toast-message"
+              >Operasi berhasil diselesaikan.</span
+            >
+          </div>
+        </div>
+        <script>
+          // State management helper
+          function setState(state) {
+            const pop = document.getElementById('view-populated');
+            const skel = document.getElementById('view-skeleton');
+            const emp = document.getElementById('view-empty');
+
+            pop.classList.add('hidden');
+            skel.classList.add('hidden');
+            emp.classList.add('hidden');
+
+            // Reset button styles
+            ['qa-btn-populated', 'qa-btn-skeleton', 'qa-btn-empty'].forEach(
+              (id) => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                  btn.classList.remove('bg-primary', 'text-on-primary');
+                  btn.classList.add('bg-surface', 'text-text-primary');
+                }
+              },
+            );
+
+            if (state === 'populated') {
+              pop.classList.remove('hidden');
+              const activeBtn = document.getElementById('qa-btn-populated');
+              if (activeBtn) {
+                activeBtn.classList.remove('bg-surface', 'text-text-primary');
+                activeBtn.classList.add('bg-primary', 'text-on-primary');
+              }
+            } else if (state === 'skeleton') {
+              skel.classList.remove('hidden');
+              skel.classList.add('flex');
+              const activeBtn = document.getElementById('qa-btn-skeleton');
+              if (activeBtn) {
+                activeBtn.classList.remove('bg-surface', 'text-text-primary');
+                activeBtn.classList.add('bg-primary', 'text-on-primary');
+              }
+            } else if (state === 'empty') {
+              emp.classList.remove('hidden');
+              emp.classList.add('flex');
+              const activeBtn = document.getElementById('qa-btn-empty');
+              if (activeBtn) {
+                activeBtn.classList.remove('bg-surface', 'text-text-primary');
+                activeBtn.classList.add('bg-primary', 'text-on-primary');
+              }
+            }
+          }
+
+          // Modal helpers
+          function openModal(modalId, name, email, role) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+
+            if (modalId === 'modal-edit' && name) {
+              document.getElementById('edit-user-name').value = name;
+              document.getElementById('edit-user-email').value = email || '';
+              if (role) {
+                document.getElementById('edit-user-role').value = role;
+                checkRoleWarning(role);
+              }
+            }
+
+            if (modalId === 'modal-deactivate' && name) {
+              document.getElementById('deactivate-target-name').innerText =
+                name;
+            }
+
+            modal.classList.remove('hidden');
+          }
+
+          function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.add('hidden');
+          }
+
+          // Warning check in edit modal
+          function checkRoleWarning(roleVal) {
+            const callout = document.getElementById('role-warning-callout');
+            if (!callout) return;
+            if (roleVal !== 'FINANCE_REVIEWER') {
+              callout.classList.remove('hidden');
+            } else {
+              callout.classList.add('hidden');
+            }
+          }
+
+          // Concurrency Banner toggle
+          function toggleConcurrencyBanner(forceState) {
+            const banner = document.getElementById('concurrency-banner');
+            if (typeof forceState === 'boolean') {
+              if (forceState) banner.classList.remove('hidden');
+              else banner.classList.add('hidden');
+            } else {
+              banner.classList.toggle('hidden');
+            }
+          }
+
+          function reloadTableData() {
+            toggleConcurrencyBanner(false);
+            showToast(
+              'Data master pengguna berhasil dimuat ulang dari server.',
+            );
+            setState('populated');
+          }
+
+          // Validation Demo
+          let validationErrorActive = false;
+          function toggleValidationDemo() {
+            openModal('modal-add');
+            const input = document.getElementById('add-user-email');
+            const errIcon = document.getElementById('email-error-icon');
+            const errMsg = document.getElementById('email-error-msg');
+
+            validationErrorActive = !validationErrorActive;
+            if (validationErrorActive) {
+              input.value = 'user.baru@gmail.com';
+              input.classList.add('border-danger');
+              input.classList.remove('border-border-strong');
+              errIcon.classList.remove('hidden');
+              errMsg.classList.remove('hidden');
+            } else {
+              input.value = '';
+              input.classList.remove('border-danger');
+              input.classList.add('border-border-strong');
+              errIcon.classList.add('hidden');
+              errMsg.classList.add('hidden');
+            }
+          }
+
+          function submitAddUser() {
+            const emailInput = document.getElementById('add-user-email');
+            if (!emailInput.value.endsWith('@amiga.internal')) {
+              emailInput.classList.add('border-danger');
+              document
+                .getElementById('email-error-icon')
+                .classList.remove('hidden');
+              document
+                .getElementById('email-error-msg')
+                .classList.remove('hidden');
+              return;
+            }
+            closeModal('modal-add');
+            showToast(
+              'Pengguna baru berhasil dibuat dan dicatat dalam audit trail.',
+            );
+          }
+
+          function submitEditUser() {
+            closeModal('modal-edit');
+            showToast(
+              'Profil pengguna dan perizinan peran berhasil diperbarui.',
+            );
+          }
+
+          function confirmDeactivate() {
+            closeModal('modal-deactivate');
+            showToast('Akses pengguna berhasil dinonaktifkan.');
+          }
+
+          function activateUser(userName) {
+            showToast(
+              'Akses pengguna [' + userName + '] berhasil diaktifkan kembali.',
+            );
+          }
+
+          // Toast feedback
+          function showToast(message) {
+            const toast = document.getElementById('system-toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.innerText = message;
+
+            toast.classList.remove(
+              'opacity-0',
+              'translate-y-16',
+              'pointer-events-none',
+            );
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+              toast.classList.add(
+                'opacity-0',
+                'translate-y-16',
+                'pointer-events-none',
+              );
+              toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 3500);
+          }
+
+          // Copy email to clipboard
+          function copyToClipboard(text) {
+            navigator.clipboard
+              .writeText(text)
+              .then(() => {
+                showToast('Email ' + text + ' disalin ke clipboard');
+              })
+              .catch(() => {
+                showToast('Berhasil disalin.');
+              });
+          }
+
+          // Filter Table Logic
+          function filterUsers() {
+            const searchVal = document
+              .getElementById('user-search-input')
+              .value.toLowerCase();
+            const roleVal = document.getElementById('filter-role').value;
+            const statusVal = document.getElementById('filter-status').value;
+            const rows = document.querySelectorAll('.user-data-row');
+
+            let visibleCount = 0;
+            rows.forEach((row) => {
+              const text = row.innerText.toLowerCase();
+              const role = row.getAttribute('data-role');
+              const status = row.getAttribute('data-status');
+
+              const matchesSearch = text.includes(searchVal);
+              const matchesRole = !roleVal || role === roleVal;
+              const matchesStatus = !statusVal || status === statusVal;
+
+              if (matchesSearch && matchesRole && matchesStatus) {
+                row.style.display = '';
+                visibleCount++;
+              } else {
+                row.style.display = 'none';
+              }
+            });
+
+            if (visibleCount === 0) {
+              setState('empty');
+            } else {
+              const pop = document.getElementById('view-populated');
+              const emp = document.getElementById('view-empty');
+              pop.classList.remove('hidden');
+              emp.classList.add('hidden');
+            }
+          }
+
+          function resetFilters() {
+            document.getElementById('user-search-input').value = '';
+            document.getElementById('filter-role').value = '';
+            document.getElementById('filter-status').value = '';
+            const rows = document.querySelectorAll('.user-data-row');
+            rows.forEach((row) => (row.style.display = ''));
+            setState('populated');
+          }
+
+          // Close modal with ESC
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+              ['modal-add', 'modal-edit', 'modal-deactivate'].forEach((id) =>
+                closeModal(id),
+              );
+            }
+          });
+        </script>
+      </main>
+    </div>
+  </body>
+</html>
