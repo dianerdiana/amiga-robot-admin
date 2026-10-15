@@ -73,9 +73,10 @@ export default function LoginForm() {
     setIsLoading(true);
 
     try {
-      await login(email.trim(), password);
-      // Redirect ke dashboard atau halaman utama setelah berhasil login
-      router.push("/dashboard");
+      const authenticatedUser = await login(email.trim(), password);
+      router.replace(
+        authenticatedUser.role === "SYSTEM_ADMIN" ? "/users" : "/dashboard",
+      );
     } catch (err: unknown) {
       const errorMsg =
         err instanceof Error

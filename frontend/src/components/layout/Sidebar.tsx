@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { ROLE_CONFIGS, RoleConfig, UserRoleType } from "./types";
 
 interface SidebarProps {
@@ -20,6 +21,7 @@ export default function Sidebar({
   onSelectTab,
   onLogout,
 }: SidebarProps) {
+  const router = useRouter();
   const roleConfig: RoleConfig =
     ROLE_CONFIGS[currentRole] || ROLE_CONFIGS.SYSTEM_ADMIN;
 
@@ -69,6 +71,8 @@ export default function Sidebar({
                   type="button"
                   onClick={() => {
                     onSelectTab(item.id);
+                    router.push(item.path);
+                    onClose();
                   }}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs transition-colors text-left ${
                     isActive

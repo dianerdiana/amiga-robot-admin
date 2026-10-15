@@ -14,7 +14,7 @@ interface AuthContextType {
   user: UserProfile | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<UserProfile>;
   logout: () => void;
   refreshUser: () => Promise<UserProfile | null>;
   simulateExpiredTokenRetry: () => Promise<UserProfile>;
@@ -58,13 +58,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     initAuth();
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string): Promise<UserProfile> => {
     setIsLoading(true);
     try {
       await authService.login(email, password);
       const profile = await authService.getCurrentUser();
       setUser(profile);
       saveStoredUser(profile);
+      return profile;
     } finally {
       setIsLoading(false);
     }

@@ -1,11 +1,12 @@
 import uuid
 from datetime import datetime
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from models.user import UserRole
+from schemas.common import InternalEmail
 
 
 class LoginRequest(BaseModel):
-    email: EmailStr
+    email: InternalEmail
     password: str
 
 
