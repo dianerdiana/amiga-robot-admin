@@ -27,7 +27,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const { user, isLoading, logout } = useAuth();
 
-  // Sidebar toggle state (defaults to open on desktop)
+  // Sidebar membuka secara default pada desktop dan menjadi drawer tertutup pada mobile.
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   // Active role for testing / preview (defaults to user.role)
@@ -79,6 +79,17 @@ export default function DashboardLayout({
       router.push("/login");
     }
   }, [isLoading, user, router]);
+
+  useEffect(() => {
+    const desktopBreakpoint = window.matchMedia("(min-width: 1024px)");
+    const syncSidebarWithViewport = (event: MediaQueryList | MediaQueryListEvent) => {
+      setIsSidebarOpen(event.matches);
+    };
+
+    syncSidebarWithViewport(desktopBreakpoint);
+    desktopBreakpoint.addEventListener("change", syncSidebarWithViewport);
+    return () => desktopBreakpoint.removeEventListener("change", syncSidebarWithViewport);
+  }, []);
 
   if (isLoading || !user) {
     return (

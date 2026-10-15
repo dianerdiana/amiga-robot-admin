@@ -54,7 +54,7 @@ export const ROLE_CONFIGS: Record<string, RoleConfig> = {
         id: "klien",
         title: "Klien",
         icon: "apartment",
-        path: "/dashboard?tab=klien",
+        path: "/clients",
         description: "Kelola master data perusahaan klien",
       },
       {

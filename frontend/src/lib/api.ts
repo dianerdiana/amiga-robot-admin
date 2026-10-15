@@ -56,6 +56,32 @@ export interface UpdateUserPayload {
   is_active?: boolean;
 }
 
+export interface ManagedClient {
+  id: string;
+  code: string;
+  name: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateClientPayload {
+  code: string;
+  name: string;
+  is_active?: boolean;
+}
+
+export interface UpdateClientPayload {
+  code?: string;
+  name?: string;
+  is_active?: boolean;
+}
+
+export interface ClientAssignmentList {
+  client_id: string;
+  users: ManagedUser[];
+}
+
 // Konfigurasi Base URL Backend
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
@@ -394,6 +420,46 @@ export const userService = {
   },
 };
 
+export const clientService = {
+  list(skip = 0, limit = 100): Promise<ManagedClient[]> {
+    return apiFetch<ManagedClient[]>(`/api/v1/clients?skip=${skip}&limit=${limit}`);
+  },
+
+  create(payload: CreateClientPayload): Promise<ManagedClient> {
+    return apiFetch<ManagedClient>("/api/v1/clients", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  update(clientId: string, payload: UpdateClientPayload): Promise<ManagedClient> {
+    return apiFetch<ManagedClient>(`/api/v1/clients/${clientId}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  deactivate(clientId: string): Promise<ManagedClient> {
+    return apiFetch<ManagedClient>(`/api/v1/clients/${clientId}`, {
+      method: "DELETE",
+    });
+  },
+
+  listAssignments(clientId: string): Promise<ClientAssignmentList> {
+    return apiFetch<ClientAssignmentList>(`/api/v1/clients/${clientId}/assignments`);
+  },
+
+  assignUser(clientId: string, userId: string): Promise<{ user_id: string; client_id: string }> {
+    return apiFetch(`/api/v1/clients/${clientId}/assignments`, {
+      method: "POST",
+      body: JSON.stringify({ user_id: userId }),
+    });
+  },
+
+  revokeUser(clientId: string, userId: string): Promise<void> {
+    return apiFetch<void>(`/api/v1/clients/${clientId}/assignments/${userId}`, {
+      method: "DELETE",
+    });
 // ==========================================
 // Invoice (UC-1, UC-5, UC-6)
 // ==========================================
