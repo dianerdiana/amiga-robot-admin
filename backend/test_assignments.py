@@ -42,7 +42,10 @@ class AssignmentApiTestCase(unittest.TestCase):
             db.query(UserClient).delete()
             db.query(Client).delete()
             db.query(User).delete()
-            db.add(Client(code="CL-001", name="PT AMIGA"))
+            db.add_all([
+                Client(code="CL-001", name="PT AMIGA"),
+                Client(code="CL-002", name="PT Tanpa Reviewer"),
+            ])
             db.add_all([
                 User(name="Admin", email="admin@amiga.local", password_hash=hash_password("Password123!"), role=UserRole.SYSTEM_ADMIN),
                 User(name="Intake", email="intake@amiga.local", password_hash=hash_password("Password123!"), role=UserRole.INTAKE),
@@ -62,7 +65,7 @@ class AssignmentApiTestCase(unittest.TestCase):
 
     def test_role_scoped_assignment_lifecycle(self):
         with self.Session() as db:
-            client_id = str(db.query(Client).one().id)
+            client_id = str(db.query(Client).filter_by(code="CL-001").one().id)
             intake_id = str(db.query(User).filter_by(email="intake@amiga.local").one().id)
             reviewer_id = str(db.query(User).filter_by(email="reviewer@amiga.local").one().id)
 
@@ -92,6 +95,33 @@ class AssignmentApiTestCase(unittest.TestCase):
 
         unassigned = self.client.delete(f"/api/v1/clients/{client_id}/assignments/{intake_id}", headers=admin_headers)
         self.assertEqual(unassigned.status_code, 204, unassigned.text)
+
+    def test_service_lead_lists_and_assigns_active_reviewers_per_client(self):
+        with self.Session() as db:
+            client_id = str(db.query(Client).filter_by(code="CL-001").one().id)
+            reviewer_id = str(db.query(User).filter_by(email="reviewer@amiga.local").one().id)
+
+        lead_headers = self.auth(self.token_for("lead@amiga.local"))
+        admin_headers = self.auth(self.token_for("admin@amiga.local"))
+
+        assigned = self.client.post(
+            f"/api/v1/clients/{client_id}/reviewers",
+            headers=lead_headers,
+            json={"reviewer_id": reviewer_id},
+        )
+        self.assertEqual(assigned.status_code, 201, assigned.text)
+        self.assertEqual(assigned.json(), {"client_id": client_id, "user_id": reviewer_id})
+
+        response = self.client.get("/api/v1/clients/reviewer-assignments", headers=lead_headers)
+        self.assertEqual(response.status_code, 200, response.text)
+        clients = {item["client_code"]: item for item in response.json()}
+        self.assertEqual(clients["CL-001"]["assignment_status"], "ASSIGNED")
+        self.assertEqual(clients["CL-001"]["active_reviewers"][0]["email"], "reviewer@amiga.local")
+        self.assertEqual(clients["CL-002"]["assignment_status"], "UNASSIGNED")
+        self.assertEqual(clients["CL-002"]["active_reviewers"], [])
+
+        forbidden = self.client.get("/api/v1/clients/reviewer-assignments", headers=admin_headers)
+        self.assertEqual(forbidden.status_code, 403, forbidden.text)
 
 
 if __name__ == "__main__":

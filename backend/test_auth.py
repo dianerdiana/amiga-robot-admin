@@ -30,6 +30,12 @@ def seed_test_users():
                 "password": "Password123!",
                 "role": UserRole.SYSTEM_ADMIN,
             },
+            {
+                "name": "Rina Service Lead",
+                "email": "service.lead@amiga.com",
+                "password": "Password123!",
+                "role": UserRole.SERVICE_LEAD,
+            },
         ]
 
         for u in users_data:

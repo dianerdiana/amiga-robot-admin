@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from models.client import Client
 from models.user import User, UserRole
 from models.user_client import UserClient
+from schemas.assignment import ReviewerAssignmentStatus
 
 
 class AssignmentService:
@@ -47,6 +48,52 @@ class AssignmentService:
             .order_by(User.name, User.id)
             .all()
         )
+
+    @staticmethod
+    def list_client_reviewers(db: Session, skip: int = 0, limit: int = 100) -> list[dict]:
+        clients = (
+            db.query(Client)
+            .order_by(Client.code, Client.id)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+        if not clients:
+            return []
+
+        client_ids = [client.id for client in clients]
+        reviewer_rows = (
+            db.query(UserClient.client_id, User)
+            .join(User, User.id == UserClient.user_id)
+            .filter(
+                UserClient.client_id.in_(client_ids),
+                User.role == UserRole.FINANCE_REVIEWER,
+                User.is_active.is_(True),
+            )
+            .order_by(User.name, User.id)
+            .all()
+        )
+        reviewers_by_client: dict[uuid.UUID, list[User]] = {client_id: [] for client_id in client_ids}
+        for client_id, reviewer in reviewer_rows:
+            reviewers_by_client[client_id].append(reviewer)
+
+        result = []
+        for client in clients:
+            active_reviewers = reviewers_by_client[client.id]
+            result.append(
+                {
+                    "client_id": client.id,
+                    "client_code": client.code,
+                    "client_name": client.name,
+                    "active_reviewers": active_reviewers,
+                    "assignment_status": (
+                        ReviewerAssignmentStatus.ASSIGNED
+                        if active_reviewers
+                        else ReviewerAssignmentStatus.UNASSIGNED
+                    ),
+                }
+            )
+        return result
 
     @staticmethod
     def assign_user(db: Session, client_id: uuid.UUID, user_id: uuid.UUID, actor: User) -> UserClient:

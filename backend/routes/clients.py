@@ -6,7 +6,13 @@ from sqlalchemy.orm import Session
 from database import get_db
 from middlewares.auth_middleware import require_roles
 from models.user import User, UserRole
-from schemas.assignment import ClientAssignmentListResponse, UserClientAssignmentCreate, UserClientAssignmentResponse
+from schemas.assignment import (
+    ClientAssignmentListResponse,
+    ClientReviewerResponse,
+    ReviewerAssignmentCreate,
+    UserClientAssignmentCreate,
+    UserClientAssignmentResponse,
+)
 from schemas.client import ClientCreate, ClientResponse, ClientUpdate
 from services.assignment_service import AssignmentService
 from services.client_service import ClientService
@@ -15,6 +21,7 @@ from services.client_service import ClientService
 router = APIRouter(prefix="/clients", tags=["Client Management"])
 system_admin_only = require_roles(UserRole.SYSTEM_ADMIN)
 assignment_manager_only = require_roles(UserRole.SYSTEM_ADMIN, UserRole.SERVICE_LEAD)
+service_lead_only = require_roles(UserRole.SERVICE_LEAD)
 
 
 @router.get("", response_model=list[ClientResponse])
@@ -25,6 +32,17 @@ def list_clients(
     _: User = Depends(system_admin_only),
 ):
     return ClientService.list_clients(db, skip=skip, limit=limit)
+
+
+@router.get("/reviewer-assignments", response_model=list[ClientReviewerResponse])
+def list_client_reviewers(
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=100, ge=1, le=100),
+    db: Session = Depends(get_db),
+    _: User = Depends(service_lead_only),
+):
+    """Daftar klien beserta reviewer aktif dan status penugasannya."""
+    return AssignmentService.list_client_reviewers(db, skip=skip, limit=limit)
 
 
 @router.get("/{client_id}", response_model=ClientResponse)
@@ -87,6 +105,21 @@ def assign_user_to_client(
     actor: User = Depends(assignment_manager_only),
 ):
     return AssignmentService.assign_user(db, client_id, request.user_id, actor)
+
+
+@router.post(
+    "/{client_id}/reviewers",
+    response_model=UserClientAssignmentResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+def assign_reviewer_to_client(
+    client_id: uuid.UUID,
+    request: ReviewerAssignmentCreate,
+    db: Session = Depends(get_db),
+    actor: User = Depends(service_lead_only),
+):
+    """Tugaskan user FINANCE_REVIEWER aktif kepada klien aktif."""
+    return AssignmentService.assign_user(db, client_id, request.reviewer_id, actor)
 
 
 @router.delete("/{client_id}/assignments/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
