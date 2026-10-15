@@ -1,0 +1,33 @@
+{
+  "readable": true,
+  "vendor_name": "PT Sentosa Armada",
+  "invoice_number": "SA-202602-09",
+  "invoice_date": "2026-02-23",
+  "bank_account": "BRI 0345-01-000123-30-1",
+  "tax_amount": 123750,
+  "discount_amount": 0,
+  "total_amount": 1748750,
+  "items": [
+    {
+      "line_no": 1,
+      "description": "Kertas HVS A4 80gr Rim Natural",
+      "quantity": 10,
+      "unit_price": 55000,
+      "amount": 550000
+    },
+    {
+      "line_no": 2,
+      "description": "Tinta Cartridge Hitam Seri C-902",
+      "quantity": 2,
+      "unit_price": 225000,
+      "amount": 450000
+    },
+    {
+      "line_no": 3,
+      "description": "Klip Dokumen Binder Jumbo Box (isi 12)",
+      "quantity": 5,
+      "unit_price": 25000,
+      "amount": 125000
+    }
+  ]
+}

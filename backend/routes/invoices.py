@@ -1,464 +1,281 @@
-import json
 import uuid
 from datetime import date
 from decimal import Decimal
-from typing import List, Optional
+from enum import Enum
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
+from fastapi import APIRouter, Depends, File, Form, Query, UploadFile, status
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from core.config import settings
 from database import get_db
-from middlewares.auth_middleware import get_current_user, require_roles
-from models.audit_log import AuditLog
-from models.client import Client
+from middlewares.auth_middleware import require_roles
 from models.invoice import Invoice, InvoiceStatus
-from models.invoice_item import InvoiceItem
 from models.user import User, UserRole
-from models.user_client import UserClient
 from schemas.invoice import (
-    AuditLogResponse,
-    InvoiceApproveRequest,
-    InvoiceCorrectRequest,
-    InvoiceRejectRequest,
-    InvoiceResponse,
-    InvoiceItemResponse,
-    FINAL_STATUS_VALUES,
-    REVIEW_STATUS_VALUES,
+    AssignedClient,
+    AuditEntry,
+    FileUrlResponse,
+    InvoiceChannel,
+    InvoiceDetail,
+    InvoicePage,
+    InvoiceUploadResponse,
 )
-
-router = APIRouter(prefix="/invoices", tags=["Invoice Review"])
-
-
-def _to_float(value) -> Optional[float]:
-    if value is None:
-        return None
-    if isinstance(value, Decimal):
-        return float(value)
-    return float(value)
+from services.access import assert_client_access
+from services.audit_service import AuditService
+from services.invoice_service import NO_REVIEWER_ISSUE, InvoiceService
+from services import validation_service as ValidationService
+from services.validation_service import EXCEPTION_MESSAGES
+from workers.extraction_worker import extraction_worker
 
 
-def _assigned_client_ids(db: Session, user: User) -> set[uuid.UUID]:
-    rows = db.query(UserClient.client_id).filter(UserClient.user_id == user.id).all()
-    return {row[0] for row in rows}
+router = APIRouter(prefix="/invoices", tags=["Invoices"])
+me_router = APIRouter(prefix="/me", tags=["Invoices"])
+intake_only = require_roles(UserRole.INTAKE)
+reviewer_only = require_roles(UserRole.FINANCE_REVIEWER)
+invoice_access = require_roles(UserRole.INTAKE, UserRole.FINANCE_REVIEWER)
+
+IssueFilter = Enum("IssueFilter", {code: code for code in [NO_REVIEWER_ISSUE, *EXCEPTION_MESSAGES]}, type=str)
 
 
-def _ensure_review_access(
-    db: Session,
-    invoice_id: uuid.UUID,
-    current_user: User,
-) -> Invoice:
-    invoice = db.query(Invoice).filter(Invoice.id == invoice_id).first()
-    if not invoice:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Invoice tidak ditemukan.",
-        )
+@me_router.get("/clients", response_model=list[AssignedClient])
+def list_my_clients(db: Session = Depends(get_db), user: User = Depends(intake_only)):
+    """Clients assigned to the user, for the upload dropdown and queue filter."""
+    return InvoiceService.list_assigned_clients(db, user)
 
-    role = (
-        current_user.role.value
-        if hasattr(current_user.role, "value")
-        else str(current_user.role)
+
+@router.post("", response_model=InvoiceUploadResponse, status_code=status.HTTP_201_CREATED)
+def upload_invoice(
+    client_id: uuid.UUID = Form(...),
+    channel: InvoiceChannel = Form(...),
+    request_date: date = Form(...),
+    previous_request_id: uuid.UUID | None = Form(default=None),
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    user: User = Depends(intake_only),
+):
+    """Upload one invoice (UC-1). Extraction runs in the background; the response does not wait for the AI."""
+    # Read one byte past the limit so oversized files are detected without reading the whole file.
+    data = file.file.read(settings.UPLOAD_MAX_BYTES + 1)
+    result = InvoiceService.upload_invoice(
+        db,
+        user,
+        client_id=client_id,
+        channel=channel,
+        request_date=request_date,
+        data=data,
+        original_filename=file.filename or "invoice",
+        previous_request_id=previous_request_id,
     )
-
-    # SYSTEM_ADMIN secara bisnis tidak mengakses invoice;
-    # pada implementasi ini reviewer adalah role resmi untuk queue ini.
-    if role != UserRole.FINANCE_REVIEWER.value:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Akses ditolak: Hanya Finance Reviewer yang dapat melakukan review invoice.",
-        )
-
-    allowed_clients = _assigned_client_ids(db, current_user)
-    if invoice.client_id not in allowed_clients:
-        # Gunakan 404 agar tidak bocor informasi ke klien lain.
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Invoice tidak ditemukan.",
-        )
-
-    return invoice
+    extraction_worker.wake()
+    return result
 
 
-def _serialize_invoice(db: Session, invoice: Invoice) -> InvoiceResponse:
-    client = db.query(Client).filter(Client.id == invoice.client_id).first()
-    reviewer = None
-    if invoice.reviewed_by is not None:
-        reviewer = db.query(User).filter(User.id == invoice.reviewed_by).first()
-
-    items = [
-        InvoiceItemResponse(
-            id=str(item.id),
-            invoice_id=str(item.invoice_id),
-            line_no=item.line_no,
-            description=item.description,
-            quantity=_to_float(item.quantity),
-            unit_price=_to_float(item.unit_price),
-            amount=_to_float(item.amount),
-        )
-        for item in sorted(invoice.items, key=lambda x: x.line_no)
-    ]
-
-    status_value = (
-        invoice.status.value
-        if hasattr(invoice.status, "value")
-        else str(invoice.status)
-    )
-    exception_codes = list(invoice.exception_codes or [])
-
-    return InvoiceResponse(
-        id=str(invoice.id),
-        request_id=invoice.request_id,
-        client_id=str(invoice.client_id),
-        client_name=client.name if client else None,
-        uploaded_by=str(invoice.uploaded_by),
-        reviewed_by=str(invoice.reviewed_by) if invoice.reviewed_by else None,
-        reviewed_by_name=reviewer.name if reviewer else None,
-        voucher_id=str(invoice.voucher_id) if invoice.voucher_id else None,
-        previous_request_id=(
-            str(invoice.previous_request_id) if invoice.previous_request_id else None
-        ),
-        request_type=invoice.request_type,
-        channel=invoice.channel,
-        request_date=invoice.request_date,
-        vendor_name=invoice.vendor_name,
-        invoice_number=invoice.invoice_number,
-        invoice_date=invoice.invoice_date,
-        bank_account=invoice.bank_account,
-        tax_amount=_to_float(invoice.tax_amount),
-        discount_amount=_to_float(invoice.discount_amount) or 0.0,
-        total_amount=_to_float(invoice.total_amount),
-        file_key=invoice.file_key,
-        original_filename=invoice.original_filename,
-        mime_type=invoice.mime_type,
-        status=status_value,
-        exception_codes=exception_codes,
-        reject_note=invoice.reject_note,
-        version=invoice.version,
-        created_at=invoice.created_at,
-        updated_at=None,
-        items=items,
+@router.get("", response_model=InvoicePage)
+def list_invoices(
+    client_id: uuid.UUID | None = Query(default=None),
+    status_filter: InvoiceStatus | None = Query(default=None, alias="status"),
+    issue: IssueFilter | None = Query(default=None),
+    date_from: date | None = Query(default=None),
+    date_to: date | None = Query(default=None),
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=20, ge=1, le=100),
+    db: Session = Depends(get_db),
+    user: User = Depends(intake_only),
+):
+    return InvoiceService.list_invoices(
+        db,
+        user,
+        client_id=client_id,
+        status_filter=status_filter,
+        issue=issue.value if issue else None,
+        date_from=date_from,
+        date_to=date_to,
+        skip=skip,
+        limit=limit,
     )
 
 
-def _check_version(invoice: Invoice, expected_version: Optional[int]) -> None:
-    if expected_version is not None and invoice.version != expected_version:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=(
-                f"Konflik versi: data invoice sudah berubah "
-                f"(versi saat ini {invoice.version}, expected {expected_version})."
-            ),
-        )
-
-
-def _add_audit(
-    db: Session,
-    entity_id: uuid.UUID,
-    action: str,
-    user_id: uuid.UUID,
-    field_name: Optional[str] = None,
-    old_value: Optional[str] = None,
-    new_value: Optional[str] = None,
-) -> None:
-    log = AuditLog(
-        entity_type="invoice",
-        entity_id=entity_id,
-        action=action,
-        field_name=field_name,
-        old_value=old_value,
-        new_value=new_value,
-        user_id=user_id,
-    )
-    db.add(log)
-
-
-@router.get("", response_model=List[InvoiceResponse])
+@router.get("/review-queue", response_model=InvoicePage)
 def list_review_queue(
-    status_filter: Optional[List[str]] = Query(
-        default=None,
-        alias="status",
-        description="Filter status invoice (boleh berulang)",
-    ),
-    client_id: Optional[uuid.UUID] = Query(default=None, description="Filter klien ditugaskan"),
-    limit: int = Query(10, ge=1, le=100, description="Jumlah item per halaman"),
-    offset: int = Query(0, ge=0, description="Offset halaman"),
-    response: Response = None,
+    status: list[InvoiceStatus] | None = Query(default=None),
+    offset: int = Query(default=0, ge=0),
+    limit: int = Query(default=10, ge=1, le=100),
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.FINANCE_REVIEWER)),
+    user: User = Depends(reviewer_only),
 ):
-    allowed_clients = _assigned_client_ids(db, current_user)
-    if not allowed_clients:
-        return []
-
-    query = db.query(Invoice).filter(Invoice.client_id.in_(allowed_clients))
-
-    if client_id is not None:
-        if client_id not in allowed_clients:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Akses ke klien ini tidak diizinkan.",
-            )
-        query = query.filter(Invoice.client_id == client_id)
-
-    if status_filter:
-        query = query.filter(Invoice.status.in_(status_filter))
-    else:
-        query = query.filter(Invoice.status.in_(REVIEW_STATUS_VALUES))
-
-    total = query.count()
-
-    invoices = (
-        query.order_by(Invoice.created_at.desc())
-        .offset(offset)
-        .limit(limit)
-        .all()
+    requested_statuses = status or list(DRAFT_STATUSES)
+    return InvoiceService.list_review_queue(
+        db,
+        user,
+        statuses=requested_statuses,
+        skip=offset,
+        limit=limit,
     )
 
-    result = []
-    for invoice in invoices:
-        invoice.items  # ensure relationship loaded
-        result.append(_serialize_invoice(db, invoice))
 
-    if response is not None:
-        response.headers["X-Total-Count"] = str(total)
-
-    return result
+@router.get("/{invoice_id}", response_model=InvoiceDetail)
+def get_invoice(invoice_id: uuid.UUID, db: Session = Depends(get_db), user: User = Depends(invoice_access)):
+    return InvoiceService.get_detail(db, user, invoice_id)
 
 
-@router.get("/{invoice_id}", response_model=InvoiceResponse)
-def get_invoice_detail(
-    invoice_id: uuid.UUID,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.FINANCE_REVIEWER)),
-):
-    invoice = _ensure_review_access(db, invoice_id, current_user)
-    invoice.items  # ensure relationship loaded
-    return _serialize_invoice(db, invoice)
+@router.get("/{invoice_id}/file-url", response_model=FileUrlResponse)
+def get_invoice_file_url(invoice_id: uuid.UUID, db: Session = Depends(get_db), user: User = Depends(invoice_access)):
+    return InvoiceService.get_file_url(db, user, invoice_id)
 
 
-@router.post("/{invoice_id}/approve", response_model=InvoiceResponse)
-def approve_invoice(
-    invoice_id: uuid.UUID,
-    payload: InvoiceApproveRequest,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.FINANCE_REVIEWER)),
-):
-    invoice = _ensure_review_access(db, invoice_id, current_user)
+@router.get("/{invoice_id}/history", response_model=list[AuditEntry])
+def get_invoice_history(invoice_id: uuid.UUID, db: Session = Depends(get_db), user: User = Depends(intake_only)):
+    return InvoiceService.get_history(db, user, invoice_id)
 
-    current_status = (
-        invoice.status.value if hasattr(invoice.status, "value") else str(invoice.status)
-    )
-    if current_status in FINAL_STATUS_VALUES:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=f"Invoice dengan status {current_status} tidak bisa disetujui ulang.",
-        )
 
-    # Segregation of Duties: approver != uploader
-    if invoice.uploaded_by == current_user.id:
+class ReviewCorrectRequest(BaseModel):
+    vendor_name: str | None = None
+    invoice_number: str | None = None
+    invoice_date: date | None = None
+    bank_account: str | None = None
+    tax_amount: Decimal | None = None
+    discount_amount: Decimal | None = None
+    total_amount: Decimal | None = None
+    expected_version: int | None = None
+
+
+class ReviewApproveRequest(BaseModel):
+    note: str | None = None
+    expected_version: int | None = None
+
+
+class ReviewRejectRequest(BaseModel):
+    reject_note: str
+    expected_version: int | None = None
+
+
+DRAFT_STATUSES = (InvoiceStatus.READY_FOR_REVIEW, InvoiceStatus.EXCEPTION, InvoiceStatus.POSSIBLE_DUPLICATE)
+
+
+def _ensure_reviewable(invoice: Invoice, user: User) -> None:
+    if invoice.uploaded_by == user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Akses ditolak: Approver tidak boleh sama dengan pengunggah invoice (SoD).",
+            detail="Approver tidak boleh sama dengan uploader (SoD).",
+        )
+    if invoice.status not in DRAFT_STATUSES:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Invoice sudah difinalkan dan tidak dapat diubah.",
         )
 
-    _check_version(invoice, payload.expected_version)
 
-    old_status = current_status
-    invoice.reviewed_by = current_user.id
+DRAFT_STATUSES = (InvoiceStatus.READY_FOR_REVIEW, InvoiceStatus.EXCEPTION, InvoiceStatus.POSSIBLE_DUPLICATE)
+
+
+@router.get("/{invoice_id}/review-detail", response_model=InvoiceDetail)
+def get_review_invoice_detail(invoice_id: uuid.UUID, db: Session = Depends(get_db), user: User = Depends(reviewer_only)):
+    assert_client_access(db, user, db.get(Invoice, invoice_id).client_id)
+    detail = InvoiceService.get_detail(db, user, invoice_id)
+    return detail
+
+
+@router.post("/{invoice_id}/correct", response_model=InvoiceDetail)
+def correct_review_invoice(
+    invoice_id: uuid.UUID,
+    payload: ReviewCorrectRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(reviewer_only),
+):
+    invoice = db.get(Invoice, invoice_id)
+    if not invoice:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invoice tidak ditemukan.")
+    _ensure_reviewable(invoice, user)
+    assert_client_access(db, user, invoice.client_id)
+
+    if payload.expected_version is not None and invoice.version != payload.expected_version:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Versi invoice sudah berubah. Muat ulang lalu ulangi.")
+
+    if payload.vendor_name is not None:
+        AuditService.log(db, entity_type="invoice", entity_id=invoice.id, action="FIELD_CORRECTION", user_id=user.id, field_name="vendor_name", old_value=invoice.vendor_name, new_value=payload.vendor_name)
+        invoice.vendor_name = payload.vendor_name
+    if payload.invoice_number is not None:
+        AuditService.log(db, entity_type="invoice", entity_id=invoice.id, action="FIELD_CORRECTION", user_id=user.id, field_name="invoice_number", old_value=invoice.invoice_number, new_value=payload.invoice_number)
+        invoice.invoice_number = payload.invoice_number
+    if payload.invoice_date is not None:
+        AuditService.log(db, entity_type="invoice", entity_id=invoice.id, action="FIELD_CORRECTION", user_id=user.id, field_name="invoice_date", old_value=invoice.invoice_date, new_value=payload.invoice_date)
+        invoice.invoice_date = payload.invoice_date
+    if payload.bank_account is not None:
+        AuditService.log(db, entity_type="invoice", entity_id=invoice.id, action="FIELD_CORRECTION", user_id=user.id, field_name="bank_account", old_value=invoice.bank_account, new_value=payload.bank_account)
+        invoice.bank_account = payload.bank_account
+    if payload.tax_amount is not None:
+        AuditService.log(db, entity_type="invoice", entity_id=invoice.id, action="FIELD_CORRECTION", user_id=user.id, field_name="tax_amount", old_value=invoice.tax_amount, new_value=payload.tax_amount)
+        invoice.tax_amount = payload.tax_amount
+    if payload.discount_amount is not None:
+        AuditService.log(db, entity_type="invoice", entity_id=invoice.id, action="FIELD_CORRECTION", user_id=user.id, field_name="discount_amount", old_value=invoice.discount_amount, new_value=payload.discount_amount)
+        invoice.discount_amount = payload.discount_amount
+    if payload.total_amount is not None:
+        AuditService.log(db, entity_type="invoice", entity_id=invoice.id, action="FIELD_CORRECTION", user_id=user.id, field_name="total_amount", old_value=invoice.total_amount, new_value=payload.total_amount)
+        invoice.total_amount = payload.total_amount
+
+    codes = ValidationService.run_validation(db, invoice, user.id)
+    db.commit()
+    db.flush()
+    return InvoiceService.get_detail(db, user, invoice_id)
+
+
+@router.post("/{invoice_id}/approve", response_model=InvoiceDetail)
+def approve_review_invoice(
+    invoice_id: uuid.UUID,
+    payload: ReviewApproveRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(reviewer_only),
+):
+    invoice = db.get(Invoice, invoice_id)
+    if not invoice:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invoice tidak ditemukan.")
+    _ensure_reviewable(invoice, user)
+    assert_client_access(db, user, invoice.client_id)
+
+    if payload.expected_version is not None and invoice.version != payload.expected_version:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Versi invoice sudah berubah. Muat ulang lalu ulangi.")
+
+    old_status = invoice.status
     invoice.status = InvoiceStatus.AMIGA_REVIEWED
-    invoice.version += 1
-
-    _add_audit(
-        db,
-        entity_id=invoice.id,
-        action="APPROVE_INVOICE",
-        user_id=current_user.id,
-        old_value=old_status,
-        new_value=InvoiceStatus.AMIGA_REVIEWED.value,
-    )
-    if payload.note:
-        _add_audit(
-            db,
-            entity_id=invoice.id,
-            action="REVIEW_NOTE",
-            user_id=current_user.id,
-            new_value=payload.note,
-        )
-
+    invoice.reviewed_by = user.id
+    invoice.reject_note = None
+    invoice.version = (invoice.version or 1) + 1
+    AuditService.log(db, entity_type="invoice", entity_id=invoice.id, action="APPROVED", user_id=user.id, field_name="status", old_value=old_status, new_value=invoice.status)
     db.commit()
-    db.refresh(invoice)
-    invoice.items  # ensure relationship loaded
-    return _serialize_invoice(db, invoice)
+    return InvoiceService.get_detail(db, user, invoice_id)
 
 
-@router.post("/{invoice_id}/reject", response_model=InvoiceResponse)
-def reject_invoice(
+@router.post("/{invoice_id}/reject", response_model=InvoiceDetail)
+def reject_review_invoice(
     invoice_id: uuid.UUID,
-    payload:InvoiceRejectRequest,
+    payload: ReviewRejectRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.FINANCE_REVIEWER)),
+    user: User = Depends(reviewer_only),
 ):
-    invoice = _ensure_review_access(db, invoice_id, current_user)
+    reject_note = payload.reject_note.strip()
+    if not reject_note:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Catatan penolakan wajib diisi.")
+    invoice = db.get(Invoice, invoice_id)
+    if not invoice:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invoice tidak ditemukan.")
+    _ensure_reviewable(invoice, user)
+    assert_client_access(db, user, invoice.client_id)
 
-    current_status = (
-        invoice.status.value if hasattr(invoice.status, "value") else str(invoice.status)
-    )
-    if current_status in FINAL_STATUS_VALUES:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=f"Invoice dengan status {current_status} tidak bisa ditolak ulang.",
-        )
+    if payload.expected_version is not None and invoice.version != payload.expected_version:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Versi invoice sudah berubah. Muat ulang lalu ulangi.")
 
-    if invoice.uploaded_by == current_user.id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Akses ditolak: Reviewer tidak boleh sama dengan pengunggah invoice (SoD).",
-        )
-
-    _check_version(invoice, payload.expected_version)
-
-    invoice.reviewed_by = current_user.id
+    old_status = invoice.status
     invoice.status = InvoiceStatus.REJECTED
-    invoice.reject_note = payload.reject_note
-    invoice.version += 1
-
-    _add_audit(
-        db,
-        entity_id=invoice.id,
-        action="REJECT_INVOICE",
-        user_id=current_user.id,
-        old_value=current_status,
-        new_value=InvoiceStatus.REJECTED.value,
-    )
-    _add_audit(
-        db,
-        entity_id=invoice.id,
-        action="REJECT_NOTE",
-        user_id=current_user.id,
-        new_value=payload.reject_note,
-    )
-
+    invoice.reviewed_by = user.id
+    invoice.reject_note = reject_note
+    invoice.version = (invoice.version or 1) + 1
+    AuditService.log(db, entity_type="invoice", entity_id=invoice.id, action="REJECTED", user_id=user.id, field_name="status", old_value=old_status, new_value=invoice.status)
+    AuditService.log(db, entity_type="invoice", entity_id=invoice.id, action="REJECT_NOTE", user_id=user.id, field_name="reject_note", old_value=None, new_value=payload.reject_note.strip())
     db.commit()
-    db.refresh(invoice)
-    invoice.items  # ensure relationship loaded
-    return _serialize_invoice(db, invoice)
+    return InvoiceService.get_detail(db, user, invoice_id)
 
 
-@router.post("/{invoice_id}/correct", response_model=InvoiceResponse)
-def correct_invoice(
-    invoice_id: uuid.UUID,
-    payload: InvoiceCorrectRequest,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.FINANCE_REVIEWER)),
-):
-    invoice = _ensure_review_access(db, invoice_id, current_user)
-
-    current_status = (
-        invoice.status.value if hasattr(invoice.status, "value") else str(invoice.status)
-    )
-    if current_status in FINAL_STATUS_VALUES:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=f"Invoice dengan status {current_status} tidak bisa dikoreksi.",
-        )
-
-    if invoice.uploaded_by == current_user.id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Akses ditolak: Korrektor tidak boleh sama dengan pengunggah invoice (SoD).",
-        )
-
-    _check_version(invoice, payload.expected_version)
-
-    changes = {}
-    field_map = {
-        "vendor_name": ("vendor_name", invoice.vendor_name),
-        "invoice_number": ("invoice_number", invoice.invoice_number),
-        "invoice_date": ("invoice_date", invoice.invoice_date),
-        "bank_account": ("bank_account", invoice.bank_account),
-        "tax_amount": ("tax_amount", invoice.tax_amount),
-        "discount_amount": ("discount_amount", invoice.discount_amount),
-        "total_amount": ("total_amount", invoice.total_amount),
-    }
-
-    for field, value in (
-        ("vendor_name", payload.vendor_name),
-        ("invoice_number", payload.invoice_number),
-        ("invoice_date", payload.invoice_date),
-        ("bank_account", payload.bank_account),
-        ("tax_amount", payload.tax_amount),
-        ("discount_amount", payload.discount_amount),
-        ("total_amount", payload.total_amount),
-    ):
-        if value is None:
-            continue
-
-        old_value = getattr(invoice, field)
-        if old_value != value:
-            setattr(invoice, field, value)
-            changes[field] = {"old": old_value, "new": value}
-
-    if not changes:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Tidak ada field yang berubah.",
-        )
-
-    invoice.version += 1
-
-    _add_audit(
-        db,
-        entity_id=invoice.id,
-        action="CORRECT_INVOICE",
-        user_id=current_user.id,
-        field_name=None,
-        old_value=json.dumps(
-            {k: str(v["old"]) for k, v in changes.items()}, ensure_ascii=False
-        ),
-        new_value=json.dumps(
-            {k: str(v["new"]) for k, v in changes.items()}, ensure_ascii=False
-        ),
-    )
-
-    db.commit()
-    db.refresh(invoice)
-    invoice.items  # ensure relationship loaded
-    return _serialize_invoice(db, invoice)
-
-
-@router.get("/{invoice_id}/audit", response_model=List[AuditLogResponse])
-def get_invoice_audit(
-    invoice_id: uuid.UUID,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.FINANCE_REVIEWER)),
-):
-    invoice = _ensure_review_access(db, invoice_id, current_user)
-
-    logs = (
-        db.query(AuditLog)
-        .filter(
-            AuditLog.entity_type == "invoice",
-            AuditLog.entity_id == invoice.id,
-        )
-        .order_by(AuditLog.created_at.asc())
-        .all()
-    )
-
-    result: List[AuditLogResponse] = []
-    for log in logs:
-        user = db.query(User).filter(User.id == log.user_id).first()
-        result.append(
-            AuditLogResponse(
-                id=str(log.id),
-                entity_type=log.entity_type,
-                entity_id=str(log.entity_id),
-                action=log.action,
-                field_name=log.field_name,
-                old_value=log.old_value,
-                new_value=log.new_value,
-                user_id=str(log.user_id),
-                user_name=user.name if user else None,
-                created_at=log.created_at,
-            )
-        )
-    return result
+@router.get("/{invoice_id}/audit", response_model=list[AuditEntry])
+def get_review_invoice_audit(invoice_id: uuid.UUID, db: Session = Depends(get_db), user: User = Depends(reviewer_only)):
+    return InvoiceService.get_history(db, user, invoice_id)

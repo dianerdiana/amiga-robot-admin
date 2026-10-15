@@ -58,12 +58,17 @@ export default function ReviewerHistoryPage() {
   }
 
   useEffect(() => {
-    setPage(1);
-  }, [statusFilter]);
+    if (user?.role === "FINANCE_REVIEWER") {
+      setPage(1);
+      void load(1);
+    }
+  }, [user, statusFilter]);
 
-  useEffect(() => {
-    if (user?.role === "FINANCE_REVIEWER") void load(page);
-  }, [user, statusFilter, page]);
+  async function handleChangePage(nextPage: number) {
+    if (isFetching || nextPage < 1 || nextPage > totalPages || nextPage === page) return;
+    await load(nextPage);
+    setPage(nextPage);
+  }
 
   useEffect(() => {
     if (user?.role === "FINANCE_REVIEWER") void loadStatusCounts();
@@ -115,8 +120,6 @@ export default function ReviewerHistoryPage() {
             </div>
           </div>
 
-          {error && <div className="p-3 rounded bg-[#FEE2E2] border border-[#B91C1C] text-[#991B1B] text-xs">{error}</div>}
-
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <label className="text-xs text-[#475569] font-medium">Status:</label>
@@ -138,6 +141,8 @@ export default function ReviewerHistoryPage() {
               {isFetching ? "Memuat..." : "Muat Ulang"}
             </button>
           </div>
+
+          {error && <div className="p-3 rounded bg-[#FEE2E2] border border-[#B91C1C] text-[#991B1B] text-xs">{error}</div>}
 
           <div className="bg-white border border-[#CBD5E1] rounded-lg shadow-xs overflow-hidden">
             <table className="w-full text-xs text-left border-collapse">
@@ -183,7 +188,7 @@ export default function ReviewerHistoryPage() {
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                onClick={() => void handleChangePage(Math.max(1, page - 1))}
                 disabled={page <= 1 || isFetching}
                 className="px-3 py-1.5 rounded border border-[#CBD5E1] bg-white hover:bg-[#F1F5F9] disabled:opacity-50"
               >
@@ -194,7 +199,7 @@ export default function ReviewerHistoryPage() {
               </span>
               <button
                 type="button"
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                onClick={() => void handleChangePage(Math.min(totalPages, page + 1))}
                 disabled={page >= totalPages || isFetching}
                 className="px-3 py-1.5 rounded border border-[#CBD5E1] bg-white hover:bg-[#F1F5F9] disabled:opacity-50"
               >

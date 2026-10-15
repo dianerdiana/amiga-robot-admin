@@ -47,14 +47,14 @@ export const ROLE_CONFIGS: Record<string, RoleConfig> = {
         id: "pengguna",
         title: "Pengguna",
         icon: "group",
-        path: "/dashboard",
+        path: "/users",
         description: "Manajemen akun staf, peran tunggal, dan status aktif",
       },
       {
         id: "klien",
         title: "Klien",
         icon: "apartment",
-        path: "/dashboard?tab=klien",
+        path: "/clients",
         description: "Kelola master data perusahaan klien",
       },
       {
@@ -87,18 +87,16 @@ export const ROLE_CONFIGS: Record<string, RoleConfig> = {
     menuItems: [
       {
         id: "invoices",
-        title: "Antrean Invoice",
+        title: "Antrean",
         icon: "receipt_long",
-        path: "/dashboard",
-        badge: "8 Baru",
-        badgeColor: "bg-[#DBEAFE] text-[#1E40AF]",
+        path: "/invoices",
         description: "Daftar dokumen invoice dan status ekstraksi AI",
       },
       {
         id: "upload",
-        title: "Unggah Invoice",
-        icon: "cloud_upload",
-        path: "/dashboard?tab=upload",
+        title: "Upload Invoice",
+        icon: "upload_file",
+        path: "/invoices/upload",
         description: "Form upload invoice PDF/JPG/PNG ke private S3",
       },
       {

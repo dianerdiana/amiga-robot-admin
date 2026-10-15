@@ -1,0 +1,2064 @@
+<!doctype html>
+
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="web_dashboard" name="shell-type" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'surface-container-lowest': '#ffffff',
+              'surface-container': '#eeedf4',
+              'status-vouchered-fg': '#3730A3',
+              'tertiary-fixed-dim': '#ffb691',
+              'on-surface': '#1a1b21',
+              'on-tertiary-container': '#f39461',
+              'on-accent': '#FFFFFF',
+              'status-ready-bg': '#CCFBF1',
+              background: '#F8FAFC',
+              'on-error-container': '#93000a',
+              'surface-container-high': '#e9e7ef',
+              'status-vouchered-bg': '#E0E7FF',
+              'on-secondary': '#ffffff',
+              'tertiary-fixed': '#ffdbcb',
+              'surface-dim': '#dad9e1',
+              'surface-variant': '#e3e1e9',
+              'on-secondary-fixed-variant': '#00504a',
+              'on-secondary-fixed': '#00201d',
+              'secondary-fixed-dim': '#80d5cb',
+              primary: '#00236f',
+              'outline-variant': '#c5c5d3',
+              'text-secondary': '#475569',
+              'on-primary': '#FFFFFF',
+              'diff-old-fg': '#991B1B',
+              'surface-container-highest': '#e3e1e9',
+              'inverse-primary': '#b6c4ff',
+              'surface-tint': '#4059aa',
+              'surface-sunken': '#E2E8F0',
+              'status-exception-bg': '#FEF3C7',
+              'status-queued-fg': '#334155',
+              'status-processing-border': '#93C5FD',
+              'status-duplicate-border': '#7F1D1D',
+              'status-rejected-border': '#991B1B',
+              secondary: '#006a63',
+              'status-ready-fg': '#115E59',
+              danger: '#B91C1C',
+              'status-duplicate-fg': '#FFFFFF',
+              'status-rejected-fg': '#991B1B',
+              'primary-active': '#172B6B',
+              'status-reviewed-bg': '#DCFCE7',
+              info: '#1E40AF',
+              'on-primary-container': '#90a8ff',
+              surface: '#FFFFFF',
+              'info-subtle': '#DBEAFE',
+              'status-rejected-bg': '#FFFFFF',
+              'on-background': '#1a1b21',
+              error: '#ba1a1a',
+              'primary-fixed-dim': '#b6c4ff',
+              'tertiary-container': '#6e2c00',
+              'primary-hover': '#1B3380',
+              'on-tertiary-fixed': '#341100',
+              'on-primary-fixed': '#00164e',
+              'success-subtle': '#DCFCE7',
+              'on-tertiary': '#ffffff',
+              outline: '#757682',
+              tertiary: '#4b1c00',
+              'error-container': '#ffdad6',
+              'focus-ring': '#2563EB',
+              'text-link': '#1E40AF',
+              'danger-subtle': '#FEE2E2',
+              'diff-new-bg': '#DCFCE7',
+              'status-reviewed-border': '#86EFAC',
+              'secondary-fixed': '#9cf2e8',
+              'text-disabled': '#94A3B8',
+              overlay: 'rgba(15, 23, 42, 0.55)',
+              'status-exception-fg': '#92400E',
+              'status-processing-fg': '#1E40AF',
+              'status-queued-bg': '#F1F5F9',
+              'primary-container': '#1e3a8a',
+              'surface-container-low': '#f4f3fa',
+              'surface-bright': '#faf8ff',
+              'status-vouchered-border': '#A5B4FC',
+              'status-reviewed-fg': '#166534',
+              'accent-hover': '#0D625B',
+              'border-strong': '#94A3B8',
+              'surface-muted': '#F1F5F9',
+              'primary-subtle': '#E0E7FF',
+              success: '#166534',
+              'status-processing-bg': '#DBEAFE',
+              'on-surface-variant': '#444651',
+              'status-ready-border': '#5EEAD4',
+              'warning-subtle': '#FEF3C7',
+              warning: '#92400E',
+              'status-sent-bg': '#EDE9FE',
+              'status-duplicate-bg': '#B91C1C',
+              'on-error': '#ffffff',
+              'inverse-on-surface': '#f1f0f7',
+              border: '#CBD5E1',
+              'status-sent-border': '#C4B5FD',
+              'secondary-container': '#99efe5',
+              'diff-old-bg': '#FEE2E2',
+              'on-secondary-container': '#006f67',
+              'status-queued-border': '#CBD5E1',
+              'accent-subtle': '#CCFBF1',
+              'status-exception-border': '#FCD34D',
+              'primary-fixed': '#dce1ff',
+              'status-sent-fg': '#5B21B6',
+              'diff-new-fg': '#166534',
+              'text-primary': '#0F172A',
+              'on-primary-fixed-variant': '#264191',
+              'on-tertiary-fixed-variant': '#773205',
+              'inverse-surface': '#2f3036',
+            },
+            borderRadius: {
+              DEFAULT: '0.25rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              full: '9999px',
+            },
+            spacing: {
+              12: '48px',
+              1: '4px',
+              margin: '1.5rem',
+              10: '40px',
+              0: '0px',
+              3: '12px',
+              'space-xl': '2rem',
+              'space-md': '1rem',
+              'space-sm': '0.5rem',
+              'space-lg': '1.5rem',
+              5: '20px',
+              'margin-mobile': '0.75rem',
+              'space-xs': '0.25rem',
+              2: '8px',
+              gutter: '1.5rem',
+              'gutter-mobile': '0.75rem',
+              'base-unit': '4px',
+              8: '32px',
+              'margin-tablet': '1rem',
+              'gutter-tablet': '1rem',
+              'gutter-laptop': '1rem',
+              16: '64px',
+              4: '16px',
+              6: '24px',
+            },
+            fontFamily: {
+              'headline-lg': ['Inter'],
+              'label-firm': ['Inter'],
+              display: ['Inter'],
+              'headline-sm': ['Inter'],
+              'body-strong': ['Inter'],
+              'body-default': ['Inter'],
+              caption: ['Inter'],
+              'amount-default': ['JetBrains Mono'],
+              'headline-md': ['Inter'],
+              'amount-lg': ['JetBrains Mono'],
+              'table-header': ['Inter'],
+              'code-mono': ['JetBrains Mono'],
+            },
+            fontSize: {
+              'headline-lg': [
+                '24px',
+                { lineHeight: '32px', fontWeight: '700' },
+              ],
+              'label-firm': [
+                '12px',
+                {
+                  lineHeight: '16px',
+                  letterSpacing: '0.02em',
+                  fontWeight: '600',
+                },
+              ],
+              display: [
+                '28px',
+                {
+                  lineHeight: '36px',
+                  letterSpacing: '-0.01em',
+                  fontWeight: '700',
+                },
+              ],
+              'headline-sm': [
+                '16px',
+                { lineHeight: '24px', fontWeight: '600' },
+              ],
+              'body-strong': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '600' },
+              ],
+              'body-default': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '400' },
+              ],
+              caption: ['12px', { lineHeight: '16px', fontWeight: '400' }],
+              'amount-default': [
+                '14px',
+                { lineHeight: '20px', fontWeight: '600' },
+              ],
+              'headline-md': [
+                '20px',
+                { lineHeight: '28px', fontWeight: '600' },
+              ],
+              'amount-lg': ['24px', { lineHeight: '32px', fontWeight: '700' }],
+              'table-header': [
+                '12px',
+                {
+                  lineHeight: '16px',
+                  letterSpacing: '0.04em',
+                  fontWeight: '600',
+                },
+              ],
+              'code-mono': ['13px', { lineHeight: '20px', fontWeight: '500' }],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-background font-body-default text-on-surface antialiased">
+    <aside
+      class="fixed left-0 top-0 h-full w-64 bg-surface border-r border-border z-40 flex flex-col justify-between"
+    >
+      <div class="flex flex-col">
+        <div
+          class="h-16 px-6 flex items-center gap-3 border-b border-border bg-surface"
+        >
+          <div
+            class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary font-headline-sm font-bold text-headline-sm"
+          >
+            A
+          </div>
+          <div class="flex flex-col">
+            <span
+              class="font-headline-sm text-headline-sm text-text-primary leading-tight tracking-tight"
+              >AMIGA</span
+            ><span
+              class="font-caption text-caption text-text-secondary tracking-wide uppercase"
+              >Robot Admin</span
+            >
+          </div>
+        </div>
+        <div class="px-4 py-4">
+          <div
+            class="px-3 pb-2 text-[11px] font-label-firm text-text-disabled uppercase tracking-wider"
+          >
+            Manajemen Kerja
+          </div>
+          <nav
+            class="flex flex-col gap-1"
+            data-active-classes="bg-primary-subtle text-primary border-l-4 border-primary font-body-strong"
+          >
+            <a
+              aria-current="page"
+              class="flex items-center gap-3 px-3 py-2.5 rounded-r transition-colors bg-primary-subtle text-primary border-l-4 border-primary font-body-strong"
+              data-path="penugasan-reviewer"
+              href="#"
+              ><span class="material-symbols-outlined text-[20px] shrink-0"
+                >assignment_ind</span
+              ><span>Penugasan Reviewer</span></a
+            >
+          </nav>
+        </div>
+      </div>
+      <div class="p-4 border-t border-border bg-surface-container-low">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="w-2 h-2 rounded-full bg-secondary shrink-0"></span
+          ><span
+            class="font-label-firm text-label-firm text-text-primary font-semibold"
+            >Status Sistem Aktif</span
+          >
+        </div>
+        <p class="font-caption text-caption text-text-secondary leading-snug">
+          Konsol Manajemen Penugasan - AMIGA v2.4
+        </p>
+      </div>
+    </aside>
+    <div class="pl-64">
+      <header
+        class="fixed top-0 left-64 right-0 h-16 bg-surface border-b border-border z-30 flex items-center justify-between px-8"
+      >
+        <div class="flex items-center gap-3">
+          <span class="font-headline-sm text-headline-sm text-text-primary"
+            >Konsol Service Lead</span
+          ><span
+            class="inline-flex items-center px-2 py-0.5 rounded text-label-firm font-label-firm bg-accent-subtle text-status-ready-fg border border-status-ready-border uppercase tracking-wider"
+            >SERVICE LEAD</span
+          >
+        </div>
+        <div class="flex items-center gap-4">
+          <button
+            aria-label="Notifikasi"
+            class="relative p-2 text-text-secondary hover:text-text-primary hover:bg-surface-muted rounded transition-colors"
+            type="button"
+          >
+            <span class="material-symbols-outlined text-[22px]"
+              >notifications</span
+            ><span
+              class="absolute top-1.5 right-1.5 w-2 h-2 bg-danger rounded-full ring-2 ring-surface"
+            ></span>
+          </button>
+          <div class="h-6 w-px bg-border"></div>
+          <div class="flex items-center gap-3 pl-1">
+            <div class="flex flex-col text-right">
+              <span
+                class="font-body-strong text-body-strong text-text-primary leading-tight"
+                >Bambang Wicaksono</span
+              ><span
+                class="font-caption text-caption text-text-secondary leading-tight"
+                >Service Lead #4402</span
+              >
+            </div>
+            <div
+              class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"
+            >
+              <span
+                class="material-symbols-outlined text-on-primary text-[18px]"
+                >person</span
+              >
+            </div>
+          </div>
+        </div>
+      </header>
+      <main class="w-full pt-16 bg-background min-h-screen px-8 py-6">
+        <div class="flex flex-col w-full">
+          <!-- Top QA Simulation Toolbar -->
+          <div
+            class="w-full bg-surface border border-border rounded-lg shadow-sm p-3 mb-6"
+          >
+            <div
+              class="flex flex-col md:flex-row md:items-center justify-between gap-3"
+            >
+              <div class="flex items-center gap-2 shrink-0">
+                <span
+                  class="inline-flex items-center justify-center w-6 h-6 rounded bg-primary-subtle text-primary"
+                >
+                  <span class="material-symbols-outlined text-[16px]"
+                    >tune</span
+                  >
+                </span>
+                <span
+                  class="font-label-firm text-label-firm text-text-primary uppercase tracking-wider"
+                  >Simulasi Skenario QA</span
+                >
+              </div>
+              <div class="flex flex-wrap items-center gap-1.5" id="qa-toolbar">
+                <button
+                  class="qa-btn px-2.5 py-1 rounded font-caption text-caption border border-primary bg-primary text-on-primary font-semibold transition-colors"
+                  id="btn-qa-default"
+                  onclick="setScenario('default')"
+                  type="button"
+                >
+                  1. Populated (Default)
+                </button>
+                <button
+                  class="qa-btn px-2.5 py-1 rounded font-caption text-caption border border-border bg-surface text-text-secondary hover:bg-surface-muted transition-colors"
+                  id="btn-qa-skeleton"
+                  onclick="setScenario('skeleton')"
+                  type="button"
+                >
+                  2. Loading Skeleton
+                </button>
+                <button
+                  class="qa-btn px-2.5 py-1 rounded font-caption text-caption border border-border bg-surface text-text-secondary hover:bg-surface-muted transition-colors"
+                  id="btn-qa-empty"
+                  onclick="setScenario('empty')"
+                  type="button"
+                >
+                  3. Data Kosong (Empty)
+                </button>
+                <button
+                  class="qa-btn px-2.5 py-1 rounded font-caption text-caption border border-border bg-surface text-text-secondary hover:bg-surface-muted transition-colors"
+                  id="btn-qa-modal"
+                  onclick="openAssignModal(false)"
+                  type="button"
+                >
+                  4. Modal Penugasan
+                </button>
+                <button
+                  class="qa-btn px-2.5 py-1 rounded font-caption text-caption border border-border bg-surface text-text-secondary hover:bg-surface-muted transition-colors"
+                  id="btn-qa-revoke"
+                  onclick="openRevokeModal()"
+                  type="button"
+                >
+                  5. Konfirmasi Cabut
+                </button>
+                <button
+                  class="qa-btn px-2.5 py-1 rounded font-caption text-caption border border-border bg-surface text-text-secondary hover:bg-surface-muted transition-colors"
+                  id="btn-qa-error"
+                  onclick="toggleErrorBanner(true)"
+                  type="button"
+                >
+                  6. Transaksi Gagal (Banner)
+                </button>
+                <button
+                  class="qa-btn px-2.5 py-1 rounded font-caption text-caption border border-border bg-surface text-text-secondary hover:bg-surface-muted transition-colors"
+                  id="btn-qa-val-error"
+                  onclick="openAssignModal(true)"
+                  type="button"
+                >
+                  7. Validasi Kandidat Gagal
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Persistent Global Error Banner (Controlled via QA/Sim) -->
+          <div
+            class="hidden mb-6 rounded-lg bg-danger-subtle border border-status-rejected-border p-4 flex items-start justify-between gap-3 shadow-sm"
+            id="global-error-banner"
+            role="alert"
+          >
+            <div class="flex items-start gap-3">
+              <span
+                class="material-symbols-outlined text-[20px] text-danger shrink-0 mt-0.5"
+                >error</span
+              >
+              <div class="flex flex-col">
+                <span class="font-body-strong text-body-strong text-diff-old-fg"
+                  >Gagal Menyimpan Transaksi Assignment</span
+                >
+                <p
+                  class="font-body-default text-body-default text-text-secondary mt-0.5 leading-snug"
+                >
+                  Gagal menyimpan perubahan penugasan ke server. Silakan periksa
+                  koneksi data konsol atau coba lagi beberapa saat lagi.
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <button
+                class="px-3 py-1.5 rounded bg-surface border border-border text-text-primary hover:bg-surface-muted font-label-firm text-label-firm transition-colors flex items-center gap-1.5"
+                onclick="triggerRetry()"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[16px]">sync</span>
+                <span>Coba Lagi</span>
+              </button>
+              <button
+                aria-label="Tutup banner"
+                class="p-1 rounded text-text-secondary hover:text-text-primary hover:bg-danger-subtle/80"
+                onclick="toggleErrorBanner(false)"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[18px]">close</span>
+              </button>
+            </div>
+          </div>
+          <!-- Header Title & Description Section -->
+          <div class="flex flex-col gap-4 mb-6">
+            <div
+              class="flex flex-col lg:flex-row lg:items-center justify-between gap-4"
+            >
+              <div class="flex items-start gap-3.5">
+                <div
+                  class="w-12 h-12 rounded-lg bg-primary-subtle text-primary flex items-center justify-center shrink-0 border border-status-vouchered-border"
+                >
+                  <span class="material-symbols-outlined text-[26px]"
+                    >assignment_ind</span
+                  >
+                </div>
+                <div class="flex flex-col">
+                  <div class="flex items-center gap-3">
+                    <h1
+                      class="font-display text-display text-text-primary tracking-tight"
+                    >
+                      Penugasan Reviewer
+                    </h1>
+                    <span
+                      class="inline-flex items-center px-2 py-0.5 rounded text-label-firm font-label-firm bg-surface-muted text-text-secondary border border-border"
+                    >
+                      Entitas Klien Aktif
+                    </span>
+                  </div>
+                  <p
+                    class="font-body-default text-body-default text-text-secondary mt-1 max-w-3xl leading-relaxed"
+                  >
+                    Kelola penugasan Finance Reviewer independen untuk setiap
+                    entitas klien. Perubahan alur penugasan tercatat otomatis
+                    pada jejak audit sistem.
+                  </p>
+                </div>
+              </div>
+              <!-- Quick Action / Metric Badge -->
+              <div class="flex items-center gap-2 self-start lg:self-center">
+                <div
+                  class="flex items-center gap-2 px-3 py-2 bg-surface border border-border rounded-lg shadow-sm"
+                >
+                  <span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+                  <span
+                    class="font-label-firm text-label-firm text-text-primary"
+                    id="assigned-counter-badge"
+                    >2 Klien Aktif Ditugaskan</span
+                  >
+                  <span class="text-border">|</span>
+                  <span
+                    class="font-caption text-caption text-warning flex items-center gap-1 font-semibold"
+                    id="unassigned-counter-badge"
+                  >
+                    <span class="material-symbols-outlined text-[14px]"
+                      >person_off</span
+                    >
+                    1 Belum Ada
+                  </span>
+                </div>
+              </div>
+            </div>
+            <!-- Search & Filter Bar -->
+            <div
+              class="w-full bg-surface border border-border rounded-lg shadow-sm p-3 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3"
+            >
+              <div class="relative flex-1">
+                <span
+                  class="material-symbols-outlined text-[20px] text-text-disabled absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                  >search</span
+                >
+                <input
+                  class="w-full h-10 pl-10 pr-4 bg-surface border border-border-strong rounded font-body-default text-body-default text-text-primary placeholder:text-text-disabled focus:outline-none focus:ring-2 focus:ring-focus-ring"
+                  id="filter-search"
+                  oninput="handleSearch(this.value)"
+                  placeholder="Cari nama klien atau kode (cth. CL-RT-0082)..."
+                  type="text"
+                />
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <button
+                  class="h-10 px-3.5 rounded border border-border bg-surface hover:bg-surface-muted text-text-secondary font-label-firm text-label-firm flex items-center gap-2 transition-colors"
+                  id="filter-unassigned-toggle"
+                  onclick="toggleUnassignedFilter()"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[18px]"
+                    >person_off</span
+                  >
+                  <span>Belum Ada Reviewer</span>
+                </button>
+                <button
+                  class="h-10 px-3 rounded border border-border bg-surface hover:bg-surface-muted text-text-secondary font-label-firm text-label-firm flex items-center gap-1 transition-colors"
+                  onclick="resetFilters()"
+                  title="Muat ulang filter"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[18px]"
+                    >refresh</span
+                  >
+                  <span class="hidden sm:inline">Reset</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Main Content Card Container -->
+          <div
+            class="w-full bg-surface border border-border rounded-lg shadow-sm overflow-hidden flex flex-col"
+          >
+            <!-- Populated View Table (Desktop & Tablets) -->
+            <div class="w-full" id="view-populated">
+              <div class="overflow-x-auto w-full">
+                <table class="w-full text-left border-collapse min-w-[860px]">
+                  <thead>
+                    <tr class="h-10 bg-surface-muted border-b border-border">
+                      <th
+                        class="px-5 font-table-header text-table-header text-text-secondary uppercase w-36"
+                        scope="col"
+                      >
+                        KODE KLIEN
+                      </th>
+                      <th
+                        class="px-5 font-table-header text-table-header text-text-secondary uppercase"
+                        scope="col"
+                      >
+                        NAMA KLIEN
+                      </th>
+                      <th
+                        class="px-5 font-table-header text-table-header text-text-secondary uppercase"
+                        scope="col"
+                      >
+                        REVIEWER DITUGASKAN
+                      </th>
+                      <th
+                        class="px-5 font-table-header text-table-header text-text-secondary uppercase w-40 text-center"
+                        scope="col"
+                      >
+                        JUMLAH REVIEWER
+                      </th>
+                      <th
+                        class="px-5 font-table-header text-table-header text-text-secondary uppercase w-48 text-center"
+                        scope="col"
+                      >
+                        STATUS PENUGASAN
+                      </th>
+                      <th
+                        class="px-5 font-table-header text-table-header text-text-secondary uppercase w-36 text-right"
+                        scope="col"
+                      >
+                        AKSI
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-border">
+                    <!-- Row 1: Retail Mandiri -->
+                    <tr
+                      class="h-16 hover:bg-primary-subtle/30 transition-colors client-row"
+                      data-assigned="true"
+                      data-code="CL-RT-0082"
+                      data-name="Klien A - Retail Mandiri"
+                    >
+                      <td class="px-5">
+                        <span
+                          class="font-code-mono text-code-mono font-bold text-text-link"
+                          >CL-RT-0082</span
+                        >
+                      </td>
+                      <td class="px-5">
+                        <div class="flex flex-col">
+                          <span
+                            class="font-body-strong text-body-strong text-text-primary leading-tight"
+                            >Klien A - Retail Mandiri</span
+                          >
+                          <span
+                            class="font-caption text-caption text-text-secondary mt-0.5"
+                            >Entitas Perdagangan Ritel • 42 Invoice Aktif</span
+                          >
+                        </div>
+                      </td>
+                      <td class="px-5">
+                        <div class="flex items-center gap-3">
+                          <div class="flex -space-x-2">
+                            <div class="relative group cursor-pointer">
+                              <span
+                                class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary-subtle border-2 border-surface font-label-firm text-label-firm text-primary font-bold shadow-xs"
+                                >DW</span
+                              >
+                              <div
+                                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex flex-col items-center z-20 pointer-events-none"
+                              >
+                                <span
+                                  class="px-2 py-1 rounded bg-on-surface text-surface text-[11px] whitespace-nowrap shadow-md"
+                                  >Dian Wulandari (#102)</span
+                                >
+                                <div
+                                  class="w-1.5 h-1.5 bg-on-surface rotate-45 -mt-0.5"
+                                ></div>
+                              </div>
+                            </div>
+                            <div class="relative group cursor-pointer">
+                              <span
+                                class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-accent-subtle border-2 border-surface font-label-firm text-label-firm text-status-ready-fg font-bold shadow-xs"
+                                >AR</span
+                              >
+                              <div
+                                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex flex-col items-center z-20 pointer-events-none"
+                              >
+                                <span
+                                  class="px-2 py-1 rounded bg-on-surface text-surface text-[11px] whitespace-nowrap shadow-md"
+                                  >Agus Riyadi (#108)</span
+                                >
+                                <div
+                                  class="w-1.5 h-1.5 bg-on-surface rotate-45 -mt-0.5"
+                                ></div>
+                              </div>
+                            </div>
+                          </div>
+                          <span
+                            class="font-body-default text-body-default text-text-primary truncate max-w-[220px]"
+                          >
+                            Dian Wulandari, Agus Riyadi
+                          </span>
+                        </div>
+                      </td>
+                      <td class="px-5 text-center">
+                        <span
+                          class="font-amount-default text-amount-default font-semibold text-text-primary tabular-nums"
+                          >2 Reviewer</span
+                        >
+                      </td>
+                      <td class="px-5 text-center">
+                        <span
+                          class="inline-flex items-center gap-1 px-2.5 py-1 rounded font-label-firm text-label-firm bg-status-reviewed-bg text-status-reviewed-fg border border-status-reviewed-border"
+                        >
+                          <span class="material-symbols-outlined text-[16px]"
+                            >check_circle</span
+                          >
+                          <span>Reviewer Aktif</span>
+                        </span>
+                      </td>
+                      <td class="px-5 text-right">
+                        <button
+                          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded border border-primary text-primary hover:bg-primary-subtle text-body-strong font-body-strong transition-colors"
+                          onclick="
+                            openAssignModal(
+                              false,
+                              'CL-RT-0082',
+                              'Klien A - Retail Mandiri',
+                              2,
+                            )
+                          "
+                          title="Ubah reviewer"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]"
+                            >group_add</span
+                          >
+                          <span>Atur</span>
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Row 2: Sentosa Logistik -->
+                    <tr
+                      class="h-16 hover:bg-primary-subtle/30 transition-colors client-row"
+                      data-assigned="true"
+                      data-code="CL-LG-0019"
+                      data-name="Klien B - Sentosa Logistik"
+                    >
+                      <td class="px-5">
+                        <span
+                          class="font-code-mono text-code-mono font-bold text-text-link"
+                          >CL-LG-0019</span
+                        >
+                      </td>
+                      <td class="px-5">
+                        <div class="flex flex-col">
+                          <span
+                            class="font-body-strong text-body-strong text-text-primary leading-tight"
+                            >Klien B - Sentosa Logistik</span
+                          >
+                          <span
+                            class="font-caption text-caption text-text-secondary mt-0.5"
+                            >Entitas Distribusi &amp; Kargo • 18 Invoice
+                            Aktif</span
+                          >
+                        </div>
+                      </td>
+                      <td class="px-5">
+                        <div class="flex items-center gap-3">
+                          <div class="flex">
+                            <div class="relative group cursor-pointer">
+                              <span
+                                class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary-subtle border-2 border-surface font-label-firm text-label-firm text-primary font-bold shadow-xs"
+                                >HS</span
+                              >
+                              <div
+                                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex flex-col items-center z-20 pointer-events-none"
+                              >
+                                <span
+                                  class="px-2 py-1 rounded bg-on-surface text-surface text-[11px] whitespace-nowrap shadow-md"
+                                  >Hendra Setiawan (#114)</span
+                                >
+                                <div
+                                  class="w-1.5 h-1.5 bg-on-surface rotate-45 -mt-0.5"
+                                ></div>
+                              </div>
+                            </div>
+                          </div>
+                          <span
+                            class="font-body-default text-body-default text-text-primary"
+                          >
+                            Hendra Setiawan
+                          </span>
+                        </div>
+                      </td>
+                      <td class="px-5 text-center">
+                        <span
+                          class="font-amount-default text-amount-default font-semibold text-text-primary tabular-nums"
+                          >1 Reviewer</span
+                        >
+                      </td>
+                      <td class="px-5 text-center">
+                        <span
+                          class="inline-flex items-center gap-1 px-2.5 py-1 rounded font-label-firm text-label-firm bg-status-reviewed-bg text-status-reviewed-fg border border-status-reviewed-border"
+                        >
+                          <span class="material-symbols-outlined text-[16px]"
+                            >check_circle</span
+                          >
+                          <span>Reviewer Aktif</span>
+                        </span>
+                      </td>
+                      <td class="px-5 text-right">
+                        <button
+                          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded border border-primary text-primary hover:bg-primary-subtle text-body-strong font-body-strong transition-colors"
+                          onclick="
+                            openAssignModal(
+                              false,
+                              'CL-LG-0019',
+                              'Klien B - Sentosa Logistik',
+                              1,
+                            )
+                          "
+                          title="Ubah reviewer"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]"
+                            >group_add</span
+                          >
+                          <span>Atur</span>
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Row 3: Mega Manufaktur (Unassigned) -->
+                    <tr
+                      class="h-16 hover:bg-primary-subtle/30 transition-colors bg-warning-subtle/10 client-row"
+                      data-assigned="false"
+                      data-code="CL-MF-0054"
+                      data-name="Klien C - Mega Manufaktur"
+                    >
+                      <td class="px-5">
+                        <span
+                          class="font-code-mono text-code-mono font-bold text-text-link"
+                          >CL-MF-0054</span
+                        >
+                      </td>
+                      <td class="px-5">
+                        <div class="flex flex-col">
+                          <span
+                            class="font-body-strong text-body-strong text-text-primary leading-tight"
+                            >Klien C - Mega Manufaktur</span
+                          >
+                          <span
+                            class="font-caption text-caption text-text-secondary mt-0.5"
+                            >Entitas Industri Komponen • 0 Penugasan</span
+                          >
+                        </div>
+                      </td>
+                      <td class="px-5">
+                        <div
+                          class="flex items-center gap-2 text-text-disabled italic"
+                        >
+                          <span class="material-symbols-outlined text-[18px]"
+                            >indeterminate_check_box</span
+                          >
+                          <span class="font-body-default text-body-default"
+                            >Belum ada penugasan</span
+                          >
+                        </div>
+                      </td>
+                      <td class="px-5 text-center">
+                        <span
+                          class="font-amount-default text-amount-default text-text-disabled tabular-nums"
+                          >0 Reviewer</span
+                        >
+                      </td>
+                      <td class="px-5 text-center">
+                        <span
+                          class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded font-label-firm text-label-firm bg-warning-subtle text-warning border border-status-exception-border"
+                        >
+                          <span class="material-symbols-outlined text-[16px]"
+                            >person_off</span
+                          >
+                          <span>Belum ada reviewer</span>
+                        </span>
+                      </td>
+                      <td class="px-5 text-right">
+                        <button
+                          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-primary text-on-primary hover:bg-primary-hover text-body-strong font-body-strong transition-colors shadow-xs"
+                          onclick="
+                            openAssignModal(
+                              false,
+                              'CL-MF-0054',
+                              'Klien C - Mega Manufaktur',
+                              0,
+                            )
+                          "
+                          title="Tugaskan reviewer sekarang"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]"
+                            >group_add</span
+                          >
+                          <span>Atur</span>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- Responsive Card View for Mobile (<768px) -->
+            <div
+              class="hidden flex-col divide-y divide-border"
+              id="view-mobile-cards"
+            >
+              <!-- Mobile Card 1 -->
+              <div
+                class="p-4 flex flex-col gap-3 client-card-mobile"
+                data-assigned="true"
+                data-code="CL-RT-0082"
+                data-name="Klien A - Retail Mandiri"
+              >
+                <div class="flex items-center justify-between">
+                  <span
+                    class="font-code-mono text-code-mono font-bold text-text-link"
+                    >CL-RT-0082</span
+                  >
+                  <span
+                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded font-label-firm text-[11px] bg-status-reviewed-bg text-status-reviewed-fg border border-status-reviewed-border"
+                  >
+                    <span class="material-symbols-outlined text-[14px]"
+                      >check_circle</span
+                    >
+                    <span>Reviewer Aktif</span>
+                  </span>
+                </div>
+                <div>
+                  <h2
+                    class="font-body-strong text-body-strong text-text-primary"
+                  >
+                    Klien A - Retail Mandiri
+                  </h2>
+                  <p class="font-caption text-caption text-text-secondary">
+                    Entitas Perdagangan Ritel • 42 Invoice Aktif
+                  </p>
+                </div>
+                <div
+                  class="p-2.5 rounded bg-surface-muted flex items-center justify-between"
+                >
+                  <div class="flex items-center gap-2">
+                    <div class="flex -space-x-1.5">
+                      <span
+                        class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary-subtle text-[11px] text-primary font-bold"
+                        >DW</span
+                      >
+                      <span
+                        class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-accent-subtle text-[11px] text-status-ready-fg font-bold"
+                        >AR</span
+                      >
+                    </div>
+                    <span
+                      class="font-body-default text-[13px] text-text-primary"
+                      >Dian W., Agus R.</span
+                    >
+                  </div>
+                  <span
+                    class="font-caption text-caption font-semibold text-text-secondary"
+                    >2 Ditugaskan</span
+                  >
+                </div>
+                <button
+                  class="w-full h-11 rounded border border-primary text-primary hover:bg-primary-subtle font-body-strong flex items-center justify-center gap-2"
+                  onclick="
+                    openAssignModal(
+                      false,
+                      'CL-RT-0082',
+                      'Klien A - Retail Mandiri',
+                      2,
+                    )
+                  "
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[20px]"
+                    >group_add</span
+                  >
+                  <span>Atur Reviewer</span>
+                </button>
+              </div>
+              <!-- Mobile Card 2 -->
+              <div
+                class="p-4 flex flex-col gap-3 client-card-mobile"
+                data-assigned="true"
+                data-code="CL-LG-0019"
+                data-name="Klien B - Sentosa Logistik"
+              >
+                <div class="flex items-center justify-between">
+                  <span
+                    class="font-code-mono text-code-mono font-bold text-text-link"
+                    >CL-LG-0019</span
+                  >
+                  <span
+                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded font-label-firm text-[11px] bg-status-reviewed-bg text-status-reviewed-fg border border-status-reviewed-border"
+                  >
+                    <span class="material-symbols-outlined text-[14px]"
+                      >check_circle</span
+                    >
+                    <span>Reviewer Aktif</span>
+                  </span>
+                </div>
+                <div>
+                  <h2
+                    class="font-body-strong text-body-strong text-text-primary"
+                  >
+                    Klien B - Sentosa Logistik
+                  </h2>
+                  <p class="font-caption text-caption text-text-secondary">
+                    Entitas Distribusi &amp; Kargo • 18 Invoice Aktif
+                  </p>
+                </div>
+                <div
+                  class="p-2.5 rounded bg-surface-muted flex items-center justify-between"
+                >
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary-subtle text-[11px] text-primary font-bold"
+                      >HS</span
+                    >
+                    <span
+                      class="font-body-default text-[13px] text-text-primary"
+                      >Hendra Setiawan</span
+                    >
+                  </div>
+                  <span
+                    class="font-caption text-caption font-semibold text-text-secondary"
+                    >1 Ditugaskan</span
+                  >
+                </div>
+                <button
+                  class="w-full h-11 rounded border border-primary text-primary hover:bg-primary-subtle font-body-strong flex items-center justify-center gap-2"
+                  onclick="
+                    openAssignModal(
+                      false,
+                      'CL-LG-0019',
+                      'Klien B - Sentosa Logistik',
+                      1,
+                    )
+                  "
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[20px]"
+                    >group_add</span
+                  >
+                  <span>Atur Reviewer</span>
+                </button>
+              </div>
+              <!-- Mobile Card 3 -->
+              <div
+                class="p-4 flex flex-col gap-3 bg-warning-subtle/10 client-card-mobile"
+                data-assigned="false"
+                data-code="CL-MF-0054"
+                data-name="Klien C - Mega Manufaktur"
+              >
+                <div class="flex items-center justify-between">
+                  <span
+                    class="font-code-mono text-code-mono font-bold text-text-link"
+                    >CL-MF-0054</span
+                  >
+                  <span
+                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded font-label-firm text-[11px] bg-warning-subtle text-warning border border-status-exception-border"
+                  >
+                    <span class="material-symbols-outlined text-[14px]"
+                      >person_off</span
+                    >
+                    <span>Belum Ada Reviewer</span>
+                  </span>
+                </div>
+                <div>
+                  <h2
+                    class="font-body-strong text-body-strong text-text-primary"
+                  >
+                    Klien C - Mega Manufaktur
+                  </h2>
+                  <p class="font-caption text-caption text-text-secondary">
+                    Entitas Industri Komponen • 0 Penugasan
+                  </p>
+                </div>
+                <div
+                  class="p-2.5 rounded bg-warning-subtle/30 text-warning font-caption text-caption flex items-center gap-2"
+                >
+                  <span class="material-symbols-outlined text-[16px]"
+                    >warning</span
+                  >
+                  <span
+                    >Dokumen klien ini tertahan hingga reviewer
+                    ditugaskan.</span
+                  >
+                </div>
+                <button
+                  class="w-full h-11 rounded bg-primary text-on-primary hover:bg-primary-hover font-body-strong flex items-center justify-center gap-2"
+                  onclick="
+                    openAssignModal(
+                      false,
+                      'CL-MF-0054',
+                      'Klien C - Mega Manufaktur',
+                      0,
+                    )
+                  "
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[20px]"
+                    >group_add</span
+                  >
+                  <span>Atur Reviewer Sekarang</span>
+                </button>
+              </div>
+            </div>
+            <!-- Skeleton Loading State (Scenario 2) -->
+            <div
+              class="hidden p-6 flex flex-col gap-4 animate-pulse"
+              id="view-skeleton"
+            >
+              <div class="h-8 bg-surface-container rounded w-1/4"></div>
+              <div class="space-y-3">
+                <div class="h-14 bg-surface-container rounded w-full"></div>
+                <div class="h-14 bg-surface-container rounded w-full"></div>
+                <div class="h-14 bg-surface-container rounded w-full"></div>
+              </div>
+            </div>
+            <!-- Empty State (Scenario 3) -->
+            <div
+              class="hidden py-16 px-6 flex flex-col items-center justify-center text-center"
+              id="view-empty"
+            >
+              <div
+                class="w-16 h-16 rounded-full bg-surface-muted flex items-center justify-center text-text-disabled mb-4 border border-border"
+              >
+                <span class="material-symbols-outlined text-[32px]"
+                  >folder_off</span
+                >
+              </div>
+              <h2 class="font-headline-sm text-headline-sm text-text-primary">
+                Tidak Ada Klien Ditemukan
+              </h2>
+              <p
+                class="font-body-default text-body-default text-text-secondary max-w-md mt-1 mb-5"
+              >
+                Tidak ada data klien yang cocok dengan parameter filter atau
+                pencarian Anda. Silakan bersihkan kata kunci.
+              </p>
+              <button
+                class="h-10 px-4 rounded bg-primary text-on-primary font-body-strong text-body-strong hover:bg-primary-hover transition-colors inline-flex items-center gap-2"
+                onclick="resetFilters()"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[18px]"
+                  >refresh</span
+                >
+                <span>Bersihkan Filter</span>
+              </button>
+            </div>
+            <!-- Card Footer / Status Audit Bar -->
+            <div
+              class="h-12 bg-surface-container-low border-t border-border px-5 flex items-center justify-between text-caption text-text-secondary"
+            >
+              <div class="flex items-center gap-2">
+                <span
+                  class="material-symbols-outlined text-[16px] text-text-disabled"
+                  >verified_user</span
+                >
+                <span
+                  >Audit Otomatis: Setiap penugasan reviewer direkam dengan
+                  timestamp ISO 8601 dan User ID Service Lead.</span
+                >
+              </div>
+              <div
+                class="hidden sm:flex items-center gap-1 font-code-mono text-[11px] text-text-disabled"
+              >
+                <span>KONSOL-SVC-LEAD</span>
+                <span>•</span>
+                <span>SYNC-READY</span>
+              </div>
+            </div>
+          </div>
+          <!-- ASSIGNMENT MODAL (MD: 640px) -->
+          <div
+            aria-labelledby="modal-assign-title"
+            aria-modal="true"
+            class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-6"
+            id="modal-assignment"
+            role="dialog"
+          >
+            <!-- Backdrop Overlay -->
+            <div
+              class="fixed inset-0 bg-overlay transition-opacity"
+              onclick="closeAssignModal()"
+            ></div>
+            <!-- Modal Card -->
+            <div
+              class="relative w-full max-w-[640px] bg-surface rounded-xl shadow-lg border border-border flex flex-col max-h-[90vh] overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-150"
+            >
+              <!-- Header -->
+              <div
+                class="px-6 py-5 border-b border-border bg-surface flex items-start justify-between gap-4"
+              >
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-10 h-10 rounded-lg bg-primary-subtle text-primary flex items-center justify-center shrink-0 border border-status-vouchered-border"
+                  >
+                    <span class="material-symbols-outlined text-[22px]"
+                      >assignment_ind</span
+                    >
+                  </div>
+                  <div class="flex flex-col">
+                    <h2
+                      class="font-headline-sm text-headline-sm text-text-primary leading-tight"
+                      id="modal-assign-title"
+                    >
+                      Atur Reviewer —
+                      <span id="modal-client-name"
+                        >Klien A - Retail Mandiri</span
+                      >
+                    </h2>
+                    <div class="flex items-center gap-2 mt-1">
+                      <span
+                        class="font-code-mono text-code-mono text-text-link font-semibold"
+                        id="modal-client-code"
+                        >CL-RT-0082</span
+                      >
+                      <span class="text-text-disabled">•</span>
+                      <span
+                        class="font-caption text-caption text-text-secondary"
+                        >Peran: FINANCE_REVIEWER</span
+                      >
+                    </div>
+                  </div>
+                </div>
+                <button
+                  aria-label="Tutup jendela modal"
+                  class="p-1.5 rounded text-text-secondary hover:text-danger hover:bg-danger-subtle transition-colors"
+                  onclick="closeAssignModal()"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[20px]"
+                    >close</span
+                  >
+                </button>
+              </div>
+              <!-- Modal Body (Scrollable) -->
+              <div class="p-6 overflow-y-auto space-y-5">
+                <!-- Inline Candidate Validation Error Simulation Banner -->
+                <div
+                  class="hidden rounded-lg bg-danger-subtle border border-status-rejected-border p-3.5 flex items-start justify-between gap-3"
+                  id="modal-validation-error-box"
+                >
+                  <div class="flex items-start gap-2.5">
+                    <span
+                      class="material-symbols-outlined text-[20px] text-danger shrink-0 mt-0.5"
+                      >error</span
+                    >
+                    <div class="flex flex-col">
+                      <span
+                        class="font-body-strong text-body-strong text-diff-old-fg"
+                        >Validasi Kandidat Reviewer Gagal</span
+                      >
+                      <p
+                        class="font-caption text-caption text-text-secondary mt-0.5"
+                      >
+                        User <strong>Fajar Nugraha (#125)</strong> tidak lagi
+                        aktif atau status perannya telah diperbarui di Master
+                        Direktori. Muat ulang kandidat untuk melanjutkan.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    class="px-2.5 py-1 rounded bg-surface border border-border text-text-primary font-label-firm text-label-firm hover:bg-surface-muted shrink-0 flex items-center gap-1"
+                    onclick="refreshCandidates()"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-[14px]"
+                      >refresh</span
+                    >
+                    <span>Muat Ulang</span>
+                  </button>
+                </div>
+                <!-- Section: Current Reviewers Selected -->
+                <div class="flex flex-col gap-2">
+                  <div class="flex items-center justify-between">
+                    <span
+                      class="font-label-firm text-label-firm text-text-primary uppercase tracking-wide"
+                    >
+                      Reviewer Terpilih (<span id="selected-count-label"
+                        >2</span
+                      >
+                      Ditugaskan)
+                    </span>
+                    <button
+                      class="font-caption text-caption text-danger hover:underline font-semibold flex items-center gap-1"
+                      onclick="requestRevokeAll()"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[14px]"
+                        >remove_done</span
+                      >
+                      <span>Cabut Semua</span>
+                    </button>
+                  </div>
+                  <!-- Dynamic Active Reviewer Chips -->
+                  <div
+                    class="flex flex-wrap gap-2 min-h-[36px] p-2 bg-surface-muted rounded-lg border border-border"
+                    id="selected-chips-container"
+                  >
+                    <!-- Chip 1 -->
+                    <div
+                      class="inline-flex items-center gap-1.5 pl-1.5 pr-2 py-1 rounded bg-surface border border-border text-text-primary text-caption font-medium shadow-2xs"
+                      id="chip-dw"
+                    >
+                      <span
+                        class="w-5 h-5 rounded-full bg-primary-subtle text-primary text-[10px] font-bold flex items-center justify-center"
+                        >DW</span
+                      >
+                      <span>Dian Wulandari (#102)</span>
+                      <button
+                        class="text-text-disabled hover:text-danger ml-0.5"
+                        onclick="toggleReviewer('chk-102', false)"
+                        title="Hapus Dian Wulandari"
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-[14px]"
+                          >cancel</span
+                        >
+                      </button>
+                    </div>
+                    <!-- Chip 2 -->
+                    <div
+                      class="inline-flex items-center gap-1.5 pl-1.5 pr-2 py-1 rounded bg-surface border border-border text-text-primary text-caption font-medium shadow-2xs"
+                      id="chip-ar"
+                    >
+                      <span
+                        class="w-5 h-5 rounded-full bg-accent-subtle text-status-ready-fg text-[10px] font-bold flex items-center justify-center"
+                        >AR</span
+                      >
+                      <span>Agus Riyadi (#108)</span>
+                      <button
+                        class="text-text-disabled hover:text-danger ml-0.5"
+                        onclick="toggleReviewer('chk-108', false)"
+                        title="Hapus Agus Riyadi"
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-[14px]"
+                          >cancel</span
+                        >
+                      </button>
+                    </div>
+                    <!-- Chip HS (Initially hidden for Retail Mandiri) -->
+                    <div
+                      class="hidden inline-flex items-center gap-1.5 pl-1.5 pr-2 py-1 rounded bg-surface border border-border text-text-primary text-caption font-medium shadow-2xs"
+                      id="chip-hs"
+                    >
+                      <span
+                        class="w-5 h-5 rounded-full bg-primary-subtle text-primary text-[10px] font-bold flex items-center justify-center"
+                        >HS</span
+                      >
+                      <span>Hendra Setiawan (#114)</span>
+                      <button
+                        class="text-text-disabled hover:text-danger ml-0.5"
+                        onclick="toggleReviewer('chk-114', false)"
+                        title="Hapus Hendra Setiawan"
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-[14px]"
+                          >cancel</span
+                        >
+                      </button>
+                    </div>
+                    <!-- Chip RK -->
+                    <div
+                      class="hidden inline-flex items-center gap-1.5 pl-1.5 pr-2 py-1 rounded bg-surface border border-border text-text-primary text-caption font-medium shadow-2xs"
+                      id="chip-rk"
+                    >
+                      <span
+                        class="w-5 h-5 rounded-full bg-surface-dim text-text-primary text-[10px] font-bold flex items-center justify-center"
+                        >RK</span
+                      >
+                      <span>Ratna Kusuma (#120)</span>
+                      <button
+                        class="text-text-disabled hover:text-danger ml-0.5"
+                        onclick="toggleReviewer('chk-120', false)"
+                        title="Hapus Ratna Kusuma"
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-[14px]"
+                          >cancel</span
+                        >
+                      </button>
+                    </div>
+                    <!-- Chip FN -->
+                    <div
+                      class="hidden inline-flex items-center gap-1.5 pl-1.5 pr-2 py-1 rounded bg-surface border border-border text-text-primary text-caption font-medium shadow-2xs"
+                      id="chip-fn"
+                    >
+                      <span
+                        class="w-5 h-5 rounded-full bg-surface-dim text-text-primary text-[10px] font-bold flex items-center justify-center"
+                        >FN</span
+                      >
+                      <span>Fajar Nugraha (#125)</span>
+                      <button
+                        class="text-text-disabled hover:text-danger ml-0.5"
+                        onclick="toggleReviewer('chk-125', false)"
+                        title="Hapus Fajar Nugraha"
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-[14px]"
+                          >cancel</span
+                        >
+                      </button>
+                    </div>
+                    <!-- Zero State Indicator inside container -->
+                    <span
+                      class="hidden font-caption text-caption text-text-disabled italic self-center px-1"
+                      id="chips-empty-hint"
+                    >
+                      Belum ada reviewer yang dipilih. Klien akan bertatus
+                      "Belum ada reviewer".
+                    </span>
+                  </div>
+                </div>
+                <!-- Section: Selectable Candidate Reviewers List -->
+                <div class="flex flex-col gap-2">
+                  <label
+                    class="font-label-firm text-label-firm text-text-primary uppercase tracking-wide"
+                  >
+                    Pilih dari Daftar Reviewer Keuangan Aktif
+                  </label>
+                  <div
+                    class="border border-border rounded-lg overflow-hidden divide-y divide-border"
+                  >
+                    <!-- Candidate Item 1 -->
+                    <label
+                      class="flex items-center justify-between p-3.5 hover:bg-surface-muted cursor-pointer transition-colors has-[:checked]:bg-primary-subtle/25"
+                    >
+                      <div class="flex items-center gap-3">
+                        <input
+                          checked=""
+                          class="w-4 h-4 rounded border-border-strong text-primary focus:ring-focus-ring"
+                          id="chk-102"
+                          onchange="handleCheckboxChange('chk-102', 'chip-dw')"
+                          type="checkbox"
+                        />
+                        <span
+                          class="w-8 h-8 rounded-full bg-primary-subtle text-primary font-bold text-caption flex items-center justify-center"
+                          >DW</span
+                        >
+                        <div class="flex flex-col">
+                          <span
+                            class="font-body-strong text-body-strong text-text-primary leading-tight"
+                            >Dian Wulandari</span
+                          >
+                          <span
+                            class="font-caption text-caption text-text-secondary"
+                            >Finance Reviewer • Staff ID #102</span
+                          >
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span
+                          class="font-caption text-caption text-text-secondary"
+                          >Menangani 1 klien</span
+                        >
+                        <span
+                          class="px-2 py-0.5 rounded text-[11px] font-label-firm bg-success-subtle text-success"
+                          >Beban Rendah</span
+                        >
+                      </div>
+                    </label>
+                    <!-- Candidate Item 2 -->
+                    <label
+                      class="flex items-center justify-between p-3.5 hover:bg-surface-muted cursor-pointer transition-colors has-[:checked]:bg-primary-subtle/25"
+                    >
+                      <div class="flex items-center gap-3">
+                        <input
+                          checked=""
+                          class="w-4 h-4 rounded border-border-strong text-primary focus:ring-focus-ring"
+                          id="chk-108"
+                          onchange="handleCheckboxChange('chk-108', 'chip-ar')"
+                          type="checkbox"
+                        />
+                        <span
+                          class="w-8 h-8 rounded-full bg-accent-subtle text-status-ready-fg font-bold text-caption flex items-center justify-center"
+                          >AR</span
+                        >
+                        <div class="flex flex-col">
+                          <span
+                            class="font-body-strong text-body-strong text-text-primary leading-tight"
+                            >Agus Riyadi</span
+                          >
+                          <span
+                            class="font-caption text-caption text-text-secondary"
+                            >Finance Reviewer • Staff ID #108</span
+                          >
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span
+                          class="font-caption text-caption text-text-secondary"
+                          >Menangani 1 klien</span
+                        >
+                        <span
+                          class="px-2 py-0.5 rounded text-[11px] font-label-firm bg-success-subtle text-success"
+                          >Beban Rendah</span
+                        >
+                      </div>
+                    </label>
+                    <!-- Candidate Item 3 -->
+                    <label
+                      class="flex items-center justify-between p-3.5 hover:bg-surface-muted cursor-pointer transition-colors has-[:checked]:bg-primary-subtle/25"
+                    >
+                      <div class="flex items-center gap-3">
+                        <input
+                          class="w-4 h-4 rounded border-border-strong text-primary focus:ring-focus-ring"
+                          id="chk-114"
+                          onchange="handleCheckboxChange('chk-114', 'chip-hs')"
+                          type="checkbox"
+                        />
+                        <span
+                          class="w-8 h-8 rounded-full bg-primary-subtle text-primary font-bold text-caption flex items-center justify-center"
+                          >HS</span
+                        >
+                        <div class="flex flex-col">
+                          <span
+                            class="font-body-strong text-body-strong text-text-primary leading-tight"
+                            >Hendra Setiawan</span
+                          >
+                          <span
+                            class="font-caption text-caption text-text-secondary"
+                            >Finance Reviewer • Staff ID #114</span
+                          >
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span
+                          class="font-caption text-caption text-text-secondary"
+                          >Menangani 1 klien (Klien B)</span
+                        >
+                        <span
+                          class="px-2 py-0.5 rounded text-[11px] font-label-firm bg-success-subtle text-success"
+                          >Beban Rendah</span
+                        >
+                      </div>
+                    </label>
+                    <!-- Candidate Item 4 -->
+                    <label
+                      class="flex items-center justify-between p-3.5 hover:bg-surface-muted cursor-pointer transition-colors has-[:checked]:bg-primary-subtle/25"
+                    >
+                      <div class="flex items-center gap-3">
+                        <input
+                          class="w-4 h-4 rounded border-border-strong text-primary focus:ring-focus-ring"
+                          id="chk-120"
+                          onchange="handleCheckboxChange('chk-120', 'chip-rk')"
+                          type="checkbox"
+                        />
+                        <span
+                          class="w-8 h-8 rounded-full bg-surface-dim text-text-primary font-bold text-caption flex items-center justify-center"
+                          >RK</span
+                        >
+                        <div class="flex flex-col">
+                          <span
+                            class="font-body-strong text-body-strong text-text-primary leading-tight"
+                            >Ratna Kusuma</span
+                          >
+                          <span
+                            class="font-caption text-caption text-text-secondary"
+                            >Finance Reviewer • Staff ID #120</span
+                          >
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span
+                          class="px-2 py-0.5 rounded text-[11px] font-label-firm bg-info-subtle text-info"
+                          >Siap Ditugaskan (0 Klien)</span
+                        >
+                      </div>
+                    </label>
+                    <!-- Candidate Item 5 -->
+                    <label
+                      class="flex items-center justify-between p-3.5 hover:bg-surface-muted cursor-pointer transition-colors has-[:checked]:bg-primary-subtle/25"
+                    >
+                      <div class="flex items-center gap-3">
+                        <input
+                          class="w-4 h-4 rounded border-border-strong text-primary focus:ring-focus-ring"
+                          id="chk-125"
+                          onchange="handleCheckboxChange('chk-125', 'chip-fn')"
+                          type="checkbox"
+                        />
+                        <span
+                          class="w-8 h-8 rounded-full bg-surface-dim text-text-primary font-bold text-caption flex items-center justify-center"
+                          >FN</span
+                        >
+                        <div class="flex flex-col">
+                          <span
+                            class="font-body-strong text-body-strong text-text-primary leading-tight"
+                            >Fajar Nugraha</span
+                          >
+                          <span
+                            class="font-caption text-caption text-text-secondary"
+                            >Finance Reviewer • Staff ID #125</span
+                          >
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span
+                          class="px-2 py-0.5 rounded text-[11px] font-label-firm bg-info-subtle text-info"
+                          >Siap Ditugaskan (0 Klien)</span
+                        >
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!-- Modal Footer -->
+              <div
+                class="px-6 py-4 border-t border-border bg-surface-container-low flex items-center justify-between"
+              >
+                <span
+                  class="font-caption text-caption text-text-secondary flex items-center gap-1"
+                >
+                  <span class="material-symbols-outlined text-[16px]"
+                    >lock_reset</span
+                  >
+                  <span>Perubahan berlaku instan ke hak akses</span>
+                </span>
+                <div class="flex items-center gap-2">
+                  <button
+                    class="h-10 px-4 rounded border border-border bg-surface text-text-primary hover:bg-surface-muted font-body-strong text-body-strong transition-colors"
+                    onclick="closeAssignModal()"
+                    type="button"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    class="h-10 px-4 rounded bg-primary text-on-primary hover:bg-primary-hover font-body-strong text-body-strong inline-flex items-center gap-1.5 transition-colors shadow-xs"
+                    onclick="saveAssignment()"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-[18px]"
+                      >group_add</span
+                    >
+                    <span>Simpan Assignment</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- REVOCATION CONFIRMATION MODAL (SM: 440px) -->
+          <div
+            aria-labelledby="modal-revoke-title"
+            aria-modal="true"
+            class="fixed inset-0 z-50 hidden flex items-center justify-center p-4"
+            id="modal-revocation"
+            role="dialog"
+          >
+            <div
+              class="fixed inset-0 bg-overlay transition-opacity"
+              onclick="closeRevokeModal()"
+            ></div>
+            <div
+              class="relative w-full max-w-[440px] bg-surface rounded-xl shadow-lg border border-border flex flex-col overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-150"
+            >
+              <div class="p-6">
+                <div
+                  class="w-12 h-12 rounded-full bg-danger-subtle text-danger flex items-center justify-center mb-4 border border-status-rejected-border"
+                >
+                  <span class="material-symbols-outlined text-[24px]"
+                    >person_remove</span
+                  >
+                </div>
+                <h2
+                  class="font-headline-sm text-headline-sm text-text-primary"
+                  id="modal-revoke-title"
+                >
+                  Cabut Seluruh Reviewer Klien?
+                </h2>
+                <div
+                  class="mt-2 text-text-secondary font-body-default text-body-default leading-relaxed space-y-2"
+                >
+                  <p>
+                    Perhatian:
+                    <strong class="text-text-primary"
+                      >Klien A - Retail Mandiri</strong
+                    >
+                    akan ditandai dengan status
+                    <span class="text-warning font-semibold"
+                      >"Belum ada reviewer"</span
+                    >.
+                  </p>
+                  <p
+                    class="text-caption text-caption bg-surface-muted p-2.5 rounded border border-border"
+                  >
+                    Dokumen invoice yang saat ini berada dalam antrean tetap
+                    tersimpan aman. Jika reviewer sedang membuka dokumen, sesi
+                    peninjauan mereka akan dibatalkan dengan pemberitahuan:
+                    <em class="text-text-primary"
+                      >"Penugasan Anda untuk klien ini telah dicabut. Perubahan
+                      tidak disimpan."</em
+                    >
+                  </p>
+                </div>
+              </div>
+              <div
+                class="px-6 py-3.5 border-t border-border bg-surface-container-low flex items-center justify-end gap-2"
+              >
+                <button
+                  class="h-10 px-4 rounded border border-border bg-surface text-text-primary hover:bg-surface-muted font-body-strong text-body-strong transition-colors"
+                  onclick="closeRevokeModal()"
+                  type="button"
+                >
+                  Batal
+                </button>
+                <button
+                  class="h-10 px-4 rounded bg-danger text-on-primary hover:bg-status-rejected-fg font-body-strong text-body-strong inline-flex items-center gap-1.5 transition-colors shadow-xs"
+                  onclick="executeRevocation()"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[18px]"
+                    >person_remove</span
+                  >
+                  <span>Cabut Reviewer</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Toast Notification (Fixed bottom-right) -->
+          <div
+            class="fixed bottom-6 right-6 z-50 hidden transition-all duration-300 transform translate-y-2"
+            id="toast-success"
+          >
+            <div
+              class="px-4 py-3 rounded-lg bg-success text-on-primary shadow-lg flex items-center gap-3"
+            >
+              <span class="material-symbols-outlined text-[20px]"
+                >check_circle</span
+              >
+              <span class="font-body-strong text-body-strong"
+                >Perubahan penugasan reviewer berhasil disimpan</span
+              >
+              <button
+                aria-label="Tutup notifikasi"
+                class="p-1 hover:bg-success/80 rounded"
+                onclick="hideToast()"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[16px]">close</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Inline Interactive QA Controller Script -->
+        <script>
+          let activeFilterUnassigned = false;
+
+          function setScenario(scenario) {
+            // Reset QA buttons style
+            document.querySelectorAll('.qa-btn').forEach((btn) => {
+              btn.className =
+                'qa-btn px-2.5 py-1 rounded font-caption text-caption border border-border bg-surface text-text-secondary hover:bg-surface-muted transition-colors';
+            });
+
+            const pop = document.getElementById('view-populated');
+            const mob = document.getElementById('view-mobile-cards');
+            const skl = document.getElementById('view-skeleton');
+            const emp = document.getElementById('view-empty');
+
+            pop.classList.add('hidden');
+            mob.classList.add('hidden');
+            skl.classList.add('hidden');
+            emp.classList.add('hidden');
+
+            if (scenario === 'default') {
+              document.getElementById('btn-qa-default').className =
+                'qa-btn px-2.5 py-1 rounded font-caption text-caption border border-primary bg-primary text-on-primary font-semibold transition-colors';
+              pop.classList.remove('hidden');
+              if (window.innerWidth < 768) mob.classList.remove('hidden');
+              toggleErrorBanner(false);
+            } else if (scenario === 'skeleton') {
+              document.getElementById('btn-qa-skeleton').className =
+                'qa-btn px-2.5 py-1 rounded font-caption text-caption border border-primary bg-primary text-on-primary font-semibold transition-colors';
+              skl.classList.remove('hidden');
+            } else if (scenario === 'empty') {
+              document.getElementById('btn-qa-empty').className =
+                'qa-btn px-2.5 py-1 rounded font-caption text-caption border border-primary bg-primary text-on-primary font-semibold transition-colors';
+              emp.classList.remove('hidden');
+            }
+          }
+
+          function handleSearch(query) {
+            const term = query.toLowerCase().trim();
+            const rows = document.querySelectorAll('.client-row');
+            const cards = document.querySelectorAll('.client-card-mobile');
+            let visibleCount = 0;
+
+            rows.forEach((r) => {
+              const code = r.getAttribute('data-code').toLowerCase();
+              const name = r.getAttribute('data-name').toLowerCase();
+              const match = code.includes(term) || name.includes(term);
+              r.style.display = match ? '' : 'none';
+              if (match) visibleCount++;
+            });
+
+            cards.forEach((c) => {
+              const code = c.getAttribute('data-code').toLowerCase();
+              const name = c.getAttribute('data-name').toLowerCase();
+              const match = code.includes(term) || name.includes(term);
+              c.style.display = match ? 'flex' : 'none';
+            });
+
+            const pop = document.getElementById('view-populated');
+            const emp = document.getElementById('view-empty');
+            if (visibleCount === 0) {
+              pop.classList.add('hidden');
+              emp.classList.remove('hidden');
+            } else {
+              pop.classList.remove('hidden');
+              emp.classList.add('hidden');
+            }
+          }
+
+          function toggleUnassignedFilter() {
+            activeFilterUnassigned = !activeFilterUnassigned;
+            const btn = document.getElementById('filter-unassigned-toggle');
+            const rows = document.querySelectorAll('.client-row');
+            const cards = document.querySelectorAll('.client-card-mobile');
+
+            if (activeFilterUnassigned) {
+              btn.classList.add(
+                'bg-warning-subtle',
+                'text-warning',
+                'border-status-exception-border',
+              );
+              btn.classList.remove('bg-surface', 'text-text-secondary');
+            } else {
+              btn.classList.remove(
+                'bg-warning-subtle',
+                'text-warning',
+                'border-status-exception-border',
+              );
+              btn.classList.add('bg-surface', 'text-text-secondary');
+            }
+
+            rows.forEach((r) => {
+              const isAssigned = r.getAttribute('data-assigned') === 'true';
+              if (activeFilterUnassigned && isAssigned) {
+                r.style.display = 'none';
+              } else {
+                r.style.display = '';
+              }
+            });
+
+            cards.forEach((c) => {
+              const isAssigned = c.getAttribute('data-assigned') === 'true';
+              if (activeFilterUnassigned && isAssigned) {
+                c.style.display = 'none';
+              } else {
+                c.style.display = 'flex';
+              }
+            });
+          }
+
+          function resetFilters() {
+            document.getElementById('filter-search').value = '';
+            activeFilterUnassigned = false;
+            const btn = document.getElementById('filter-unassigned-toggle');
+            btn.classList.remove(
+              'bg-warning-subtle',
+              'text-warning',
+              'border-status-exception-border',
+            );
+            btn.classList.add('bg-surface', 'text-text-secondary');
+            setScenario('default');
+            handleSearch('');
+          }
+
+          function openAssignModal(
+            showValidationError = false,
+            code = 'CL-RT-0082',
+            name = 'Klien A - Retail Mandiri',
+            count = 2,
+          ) {
+            document.getElementById('modal-client-code').innerText = code;
+            document.getElementById('modal-client-name').innerText = name;
+            const errBox = document.getElementById(
+              'modal-validation-error-box',
+            );
+
+            if (showValidationError) {
+              errBox.classList.remove('hidden');
+              const fnChk = document.getElementById('chk-125');
+              if (fnChk) fnChk.checked = true;
+              handleCheckboxChange('chk-125', 'chip-fn');
+            } else {
+              errBox.classList.add('hidden');
+            }
+
+            document
+              .getElementById('modal-assignment')
+              .classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+          }
+
+          function closeAssignModal() {
+            document.getElementById('modal-assignment').classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+          }
+
+          function handleCheckboxChange(chkId, chipId) {
+            const chk = document.getElementById(chkId);
+            const chip = document.getElementById(chipId);
+            if (!chk || !chip) return;
+
+            if (chk.checked) {
+              chip.classList.remove('hidden');
+            } else {
+              chip.classList.add('hidden');
+            }
+            updateSelectedCount();
+          }
+
+          function toggleReviewer(chkId, state) {
+            const chk = document.getElementById(chkId);
+            if (chk) {
+              chk.checked = state;
+              chk.dispatchEvent(new Event('change'));
+            }
+          }
+
+          function updateSelectedCount() {
+            const checked = document.querySelectorAll(
+              '#modal-assignment input[type="checkbox"]:checked',
+            ).length;
+            document.getElementById('selected-count-label').innerText = checked;
+            const emptyHint = document.getElementById('chips-empty-hint');
+            if (checked === 0) {
+              emptyHint.classList.remove('hidden');
+            } else {
+              emptyHint.classList.add('hidden');
+            }
+          }
+
+          function requestRevokeAll() {
+            openRevokeModal();
+          }
+
+          function openRevokeModal() {
+            document
+              .getElementById('modal-revocation')
+              .classList.remove('hidden');
+          }
+
+          function closeRevokeModal() {
+            document.getElementById('modal-revocation').classList.add('hidden');
+          }
+
+          function executeRevocation() {
+            // Uncheck all candidate checkboxes
+            document
+              .querySelectorAll('#modal-assignment input[type="checkbox"]')
+              .forEach((c) => {
+                c.checked = false;
+              });
+            // Hide all chips
+            ['chip-dw', 'chip-ar', 'chip-hs', 'chip-rk', 'chip-fn'].forEach(
+              (id) => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+              },
+            );
+            updateSelectedCount();
+            closeRevokeModal();
+            saveAssignment();
+          }
+
+          function saveAssignment() {
+            closeAssignModal();
+            showToast();
+          }
+
+          function showToast() {
+            const t = document.getElementById('toast-success');
+            t.classList.remove('hidden');
+            setTimeout(() => {
+              t.classList.remove('translate-y-2');
+            }, 10);
+            setTimeout(() => {
+              hideToast();
+            }, 4000);
+          }
+
+          function hideToast() {
+            const t = document.getElementById('toast-success');
+            t.classList.add('translate-y-2');
+            setTimeout(() => {
+              t.classList.add('hidden');
+            }, 250);
+          }
+
+          function toggleErrorBanner(show) {
+            const b = document.getElementById('global-error-banner');
+            if (show) {
+              b.classList.remove('hidden');
+            } else {
+              b.classList.add('hidden');
+            }
+          }
+
+          function triggerRetry() {
+            toggleErrorBanner(false);
+            showToast();
+          }
+
+          function refreshCandidates() {
+            const errBox = document.getElementById(
+              'modal-validation-error-box',
+            );
+            errBox.classList.add('hidden');
+            const chk = document.getElementById('chk-125');
+            if (chk) {
+              chk.checked = false;
+              handleCheckboxChange('chk-125', 'chip-fn');
+            }
+          }
+
+          // Handle escape key
+          document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+              closeAssignModal();
+              closeRevokeModal();
+            }
+          });
+
+          // Responsive switch observer
+          window.addEventListener('resize', function () {
+            const mob = document.getElementById('view-mobile-cards');
+            const pop = document.getElementById('view-populated');
+            const skl = document.getElementById('view-skeleton');
+            const emp = document.getElementById('view-empty');
+
+            if (
+              !skl.classList.contains('hidden') ||
+              !emp.classList.contains('hidden')
+            )
+              return;
+
+            if (window.innerWidth < 768) {
+              mob.classList.remove('hidden');
+              pop.classList.add('hidden');
+            } else {
+              mob.classList.add('hidden');
+              pop.classList.remove('hidden');
+            }
+          });
+        </script>
+      </main>
+    </div>
+  </body>
+</html>

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import LoginForm from "@/components/LoginForm";
+import { homeForRole } from "@/lib/navigation";
 
 export default function HomePage() {
   const router = useRouter();
@@ -11,7 +12,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!isLoading && user) {
-      router.push("/dashboard");
+      router.replace(homeForRole(user.role));
     }
   }, [user, isLoading, router]);
 

@@ -14,6 +14,7 @@ import {
   rejectReviewInvoice,
   correctReviewInvoice,
 } from "@/lib/reviews";
+import { InvoiceFileUrl, invoiceService } from "@/lib/api";
 
 export function ReviewerDetailContent() {
   const router = useRouter();
@@ -33,6 +34,9 @@ export function ReviewerDetailContent() {
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
+  const [fileUrl, setFileUrl] = useState<InvoiceFileUrl | null>(null);
+  const [fileLoading, setFileLoading] = useState(false);
+  const [fileError, setFileError] = useState<string | null>(null);
 
   const [vendorName, setVendorName] = useState("");
   const [invoiceNumber, setInvoiceNumber] = useState("");
@@ -69,6 +73,29 @@ export function ReviewerDetailContent() {
     if (user) void load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, id]);
+
+  useEffect(() => {
+    if (!invoice?.id) return;
+    let cancelled = false;
+    setFileUrl(null);
+    setFileError(null);
+    setFileLoading(true);
+    invoiceService
+      .fileUrl(invoice.id)
+      .then((result) => {
+        if (!cancelled) setFileUrl(result);
+      })
+      .catch((error) => {
+        if (!cancelled) setFileError(error instanceof Error ? error.message : "Berkas asli tidak dapat dimuat.");
+      })
+      .finally(() => {
+        if (!cancelled) setFileLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [invoice?.id]);
 
   async function handleCorrect() {
     if (!invoice) return;
@@ -213,14 +240,60 @@ export function ReviewerDetailContent() {
 
           {invoice && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-white rounded-lg border border-[#CBD5E1] shadow-xs p-4 flex flex-col items-center justify-center min-h-[320px]">
-                <span className="material-symbols-outlined text-[#94A3B8] text-[64px] mb-2">picture_as_pdf</span>
-                <p className="text-sm font-semibold text-[#0F172A]">Pratinjau Dokumen Asli</p>
-                <p className="text-[11px] text-[#94A3B8] text-center mt-1">Presigned URL S3 (placeholder)</p>
-                <span className="mt-3 px-3 py-1 bg-[#F8FAFC] border border-[#CBD5E1] rounded font-mono text-[11px] text-[#1E3A8A]">
-                  {invoice.original_filename}
-                </span>
-                <code className="mt-2 text-[10px] text-[#64748B] break-all max-w-full">{invoice.file_key}</code>
+              <div className="bg-white rounded-lg border border-[#CBD5E1] shadow-xs p-3 flex flex-col min-h-[320px] overflow-hidden">
+                <div className="mb-2 flex items-center justify-between gap-2">
+                  <p className="text-sm font-semibold text-[#0F172A]">Pratinjau Dokumen Asli</p>
+                  {fileUrl?.url && (
+                    <a
+                      href={fileUrl.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xs font-semibold text-[#1E3A8A] hover:underline"
+                    >
+                      Buka di tab baru
+                    </a>
+                  )}
+                </div>
+                {fileLoading ? (
+                  <div className="flex flex-1 flex-col items-center justify-center gap-2">
+                    <div className="h-7 w-7 animate-spin rounded-full border-3 border-[#24215E] border-t-transparent" />
+                    <p className="text-xs text-[#475569]">Memuat berkas asli...</p>
+                  </div>
+                ) : fileError ? (
+                  <div className="flex flex-1 flex-col items-center justify-center gap-2 text-center">
+                    <span className="material-symbols-outlined text-[34px] text-[#B91C1C]">error</span>
+                    <p className="text-sm font-semibold text-[#B91C1C]">Berkas asli tidak dapat ditampilkan</p>
+                    <p className="text-xs text-[#475569] max-w-xs break-all">{fileError}</p>
+                    <code className="mt-1 text-[10px] text-[#64748B] break-all max-w-full">{invoice.file_key}</code>
+                  </div>
+                ) : fileUrl?.mime_type.startsWith("image/") ? (
+                  <div className="flex flex-1 min-h-0 items-center justify-center bg-[#F8FAFC] p-2">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- presigned S3 URL, not served through the Next image optimizer */}
+                    <img
+                      src={fileUrl.url}
+                      alt={`Berkas asli ${fileUrl.original_filename}`}
+                      className="h-auto w-auto max-h-[300px] max-w-full object-contain rounded bg-white shadow-sm"
+                    />
+                  </div>
+                ) : fileUrl ? (
+                  <iframe
+                    src={fileUrl.url}
+                    title={`Berkas asli ${fileUrl.original_filename}`}
+                    className="h-[320px] w-full flex-1 rounded border-0 bg-white"
+                  />
+                ) : (
+                  <div className="flex flex-1 flex-col items-center justify-center gap-2 text-center">
+                    <span className="material-symbols-outlined text-[#94A3B8] text-[56px]">picture_as_pdf</span>
+                    <p className="text-sm font-semibold text-[#0F172A]">Pratinjau Dokumen Asli</p>
+                    <p className="text-xs text-[#475569] max-w-xs">URL berkas asli belum tersedia.</p>
+                  </div>
+                )}
+                <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-center">
+                  <span className="px-3 py-1 bg-[#F8FAFC] border border-[#CBD5E1] rounded font-mono text-[11px] text-[#1E3A8A]">
+                    {invoice.original_filename}
+                  </span>
+                  <code className="text-[10px] text-[#64748B] break-all max-w-full">{invoice.file_key}</code>
+                </div>
               </div>
 
               <div className="bg-white rounded-lg border border-[#CBD5E1] shadow-xs p-4 space-y-3">

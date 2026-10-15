@@ -116,15 +116,17 @@ export default function ReviewerQueuePage() {
   }
 
   useEffect(() => {
-    setPage(1);
-  }, [statusFilter]);
-
-  useEffect(() => {
     if (user?.role === "FINANCE_REVIEWER") {
-      void loadQueue(page);
+      setPage(1);
+      void loadQueue(1);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, statusFilter, page]);
+  }, [user, statusFilter]);
+
+  async function handleChangePage(nextPage: number) {
+    if (isFetching || nextPage < 1 || nextPage > totalPages || nextPage === page) return;
+    await loadQueue(nextPage);
+    setPage(nextPage);
+  }
 
   useEffect(() => {
     if (user?.role === "FINANCE_REVIEWER") {
@@ -287,7 +289,7 @@ export default function ReviewerQueuePage() {
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                onClick={() => void handleChangePage(Math.max(1, page - 1))}
                 disabled={page <= 1 || isFetching}
                 className="px-3 py-1.5 rounded border border-[#CBD5E1] bg-white hover:bg-[#F1F5F9] disabled:opacity-50"
               >
@@ -298,7 +300,7 @@ export default function ReviewerQueuePage() {
               </span>
               <button
                 type="button"
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                onClick={() => void handleChangePage(Math.min(totalPages, page + 1))}
                 disabled={page >= totalPages || isFetching}
                 className="px-3 py-1.5 rounded border border-[#CBD5E1] bg-white hover:bg-[#F1F5F9] disabled:opacity-50"
               >

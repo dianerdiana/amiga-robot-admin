@@ -1,28 +1,35 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import UserManagementView from "@/components/dashboard/UserManagementView";
 import IntakeView from "@/components/dashboard/IntakeView";
 import ReviewerView from "@/components/dashboard/ReviewerView";
 import ServiceLeadView from "@/components/dashboard/ServiceLeadView";
-import TokenTestCard from "@/components/dashboard/TokenTestCard";
-import { UserRoleType } from "@/components/layout/types";
 
-export default function DashboardPage() {
+// Intake tabs that now have dedicated routes; voucher tabs are still served by the dashboard.
+const INTAKE_ROUTES: Record<string, string> = {
+  invoices: "/invoices",
+  upload: "/invoices/upload",
+};
+
+function DashboardContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<string>("pengguna");
+  const tabParam = searchParams.get("tab");
+  const [activeTab, setActiveTab] = useState<string>(tabParam ?? "pengguna");
 
-  React.useEffect(() => {
-    if (user?.role === "FINANCE_REVIEWER") {
-      router.replace("/dashboard/reviewer");
+  useEffect(() => {
+    if (user?.role === "SYSTEM_ADMIN") router.replace("/users");
+    if (user?.role === "INTAKE" && (!tabParam || tabParam in INTAKE_ROUTES)) {
+      router.replace(INTAKE_ROUTES[tabParam ?? "invoices"]);
     }
-  }, [user?.role, router]);
+    if (user?.role === "FINANCE_REVIEWER") router.replace("/dashboard/reviewer");
+  }, [router, tabParam, user?.role]);
 
-  if (user?.role === "FINANCE_REVIEWER") {
+  if (user?.role === "SYSTEM_ADMIN" || user?.role === "INTAKE" || user?.role === "FINANCE_REVIEWER") {
     return null;
   }
 
@@ -34,11 +41,6 @@ export default function DashboardPage() {
         return (
           <div className="w-full max-w-[1366px] mx-auto">
             {/* Dynamic Content based on Active Role */}
-            {currentRole === "SYSTEM_ADMIN" && <UserManagementView />}
-            {currentRole === "INTAKE" && <IntakeView activeTab={currentTab} />}
-            {currentRole === "FINANCE_REVIEWER" && (
-              <ReviewerView activeTab={currentTab} />
-            )}
             {currentRole === "SERVICE_LEAD" && (
               <ServiceLeadView activeTab={currentTab} />
             )}
@@ -46,5 +48,13 @@ export default function DashboardPage() {
         );
       }}
     />
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={null}>
+      <DashboardContent />
+    </Suspense>
   );
 }

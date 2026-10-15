@@ -1,9 +1,9 @@
 import uuid
 from enum import Enum
 
-from sqlalchemy import CheckConstraint, Column, Date, DateTime, Enum as SQLEnum, ForeignKey, Index, Integer, Numeric, String, Text, func, text
+from sqlalchemy import BigInteger, CheckConstraint, Column, Date, DateTime, Enum as SQLEnum, ForeignKey, Index, Integer, Numeric, String, Text, func, text
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB, UUID
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import ARRAY, UUID
 
 from database import Base
 
@@ -42,7 +42,9 @@ class Invoice(Base):
             "reviewed_by IS NULL OR reviewed_by <> uploaded_by",
             name="ck_invoices_reviewer_not_uploader",
         ),
+        CheckConstraint("extraction_attempts >= 0", name="ck_invoices_extraction_attempts_nonnegative"),
         Index("ix_invoices_duplicate_detection", "client_id", "vendor_name", "invoice_number"),
+        Index("ix_invoices_queued", "created_at", postgresql_where=text("status = 'QUEUED'")),
     )
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, server_default=func.gen_random_uuid())
@@ -69,12 +71,23 @@ class Invoice(Base):
     exception_codes = Column(ARRAY(String(100)), server_default=text("'{}'::varchar[]"), nullable=False)
     reject_note = Column(Text, nullable=True)
     version = Column(Integer, server_default=text("1"), nullable=False)
+    file_size = Column(BigInteger, nullable=True)
+    extraction_result = Column(JSONB, nullable=True)
+    extraction_error = Column(Text, nullable=True)
+    extraction_attempts = Column(Integer, server_default=text("0"), nullable=False)
+    extraction_started_at = Column(DateTime(timezone=True), nullable=True)
+    extracted_at = Column(DateTime(timezone=True), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
 
-    # Relasi ORM ke item invoice (tidak memerlukan migrasi SQL, hanya Python-side)
     items = relationship(
         "InvoiceItem",
-        backref="invoice",
+        back_populates="invoice",
+        order_by="InvoiceItem.line_no",
         cascade="all, delete-orphan",
         lazy="selectin",
     )
+    client = relationship("Client")
+    uploader = relationship("User", foreign_keys=[uploaded_by])
+    reviewer = relationship("User", foreign_keys=[reviewed_by])
+    previous_request = relationship("Invoice", remote_side=[id])
