@@ -574,6 +574,11 @@ export interface InvoiceDetail extends InvoiceSummary {
   } | null;
   version: number;
   can_edit: boolean;
+  /** Finance Reviewer decision flags; always false for Intake and for the uploader (SoD). */
+  can_approve: boolean;
+  can_reject: boolean;
+  /** POSSIBLE_DUPLICATE approval needs a justification note. */
+  approve_requires_note: boolean;
   last_correction: { by: UserRef; at: string; reason: string } | null;
 }
 
@@ -582,6 +587,18 @@ export interface InvoiceItemInput {
   quantity: string | null;
   unit_price: string | null;
   amount: string | null;
+}
+
+/** Body of POST /api/v1/invoices/{id}/approve; `note` is required for POSSIBLE_DUPLICATE. */
+export interface InvoiceApprovalPayload {
+  version: number;
+  note?: string | null;
+}
+
+/** Body of POST /api/v1/invoices/{id}/reject; `note` is required (10-500 characters). */
+export interface InvoiceRejectionPayload {
+  version: number;
+  note: string;
 }
 
 /** Body of PUT /api/v1/invoices/{id}; the backend validates every field. */
@@ -711,10 +728,26 @@ export const invoiceService = {
     return apiFetch<InvoiceFileUrl>(`/api/v1/invoices/${invoiceId}/file-url`);
   },
 
-  /** Intake correction; throws ApiError with status 409 (conflict) or 422 (detail per field). */
+  /** Intake or Finance Reviewer correction; throws ApiError with status 409 (conflict) or 422 (detail per field). */
   correct(invoiceId: string, payload: InvoiceCorrectionPayload): Promise<InvoiceDetail> {
     return apiFetch<InvoiceDetail>(`/api/v1/invoices/${invoiceId}`, {
       method: "PUT",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /** Finance Reviewer approval; throws ApiError 403 (SoD/assignment), 409 (conflict/not ready), or 422 (note). */
+  approve(invoiceId: string, payload: InvoiceApprovalPayload): Promise<InvoiceDetail> {
+    return apiFetch<InvoiceDetail>(`/api/v1/invoices/${invoiceId}/approve`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /** Finance Reviewer rejection (final); throws ApiError 403, 409, or 422 like approve. */
+  reject(invoiceId: string, payload: InvoiceRejectionPayload): Promise<InvoiceDetail> {
+    return apiFetch<InvoiceDetail>(`/api/v1/invoices/${invoiceId}/reject`, {
+      method: "POST",
       body: JSON.stringify(payload),
     });
   },

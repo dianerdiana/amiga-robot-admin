@@ -123,6 +123,10 @@ class InvoiceDetail(InvoiceSummary):
     previous_request: PreviousRequestRef | None
     version: int
     can_edit: bool
+    # Finance Reviewer decision flags (UC-8); always false for Intake and for the uploader (SoD).
+    can_approve: bool
+    can_reject: bool
+    approve_requires_note: bool
     last_correction: "CorrectionNote | None"
 
 
@@ -302,6 +306,42 @@ class InvoiceCorrection(BaseModel):
         if isinstance(value, list) and len(value) > MAX_CORRECTION_ITEMS:
             raise _invalid(f"Maksimal {MAX_CORRECTION_ITEMS} baris barang.")
         return value
+
+
+def _decision_note(value: object, label: str, *, required: bool) -> str | None:
+    """Reviewer note: whitespace collapsed, 10 to 500 characters; empty is allowed only when optional."""
+    text = " ".join(str(value or "").split())
+    if not text and not required:
+        return None
+    if len(text) < REASON_MIN_LENGTH:
+        raise _invalid(f"{label} wajib diisi (min. {REASON_MIN_LENGTH} karakter).")
+    if len(text) > REASON_MAX_LENGTH:
+        raise _invalid(f"{label} maksimal {REASON_MAX_LENGTH} karakter.")
+    return text
+
+
+APPROVAL_NOTE_LABEL = "Catatan justifikasi"
+
+
+class InvoiceApproval(BaseModel):
+    version: int = Field(ge=1)
+    # Optional here; the service requires it when approving a POSSIBLE_DUPLICATE.
+    note: str | None = None
+
+    @field_validator("note", mode="before")
+    @classmethod
+    def _note(cls, value: object) -> str | None:
+        return _decision_note(value, APPROVAL_NOTE_LABEL, required=False)
+
+
+class InvoiceRejection(BaseModel):
+    version: int = Field(ge=1)
+    note: str = Field(default="", validate_default=True)
+
+    @field_validator("note", mode="before")
+    @classmethod
+    def _note(cls, value: object) -> str:
+        return _decision_note(value, "Catatan penolakan", required=True)
 
 
 InvoiceDetail.model_rebuild()

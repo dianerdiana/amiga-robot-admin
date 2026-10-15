@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import IntakeView from "@/components/dashboard/IntakeView";
-import ReviewerView from "@/components/dashboard/ReviewerView";
 import ServiceLeadView from "@/components/dashboard/ServiceLeadView";
 
 // Intake tabs that now have dedicated routes; voucher tabs are still served by the dashboard.
@@ -23,6 +22,8 @@ function DashboardContent() {
 
   useEffect(() => {
     if (user?.role === "SYSTEM_ADMIN") router.replace("/users");
+    // The reviewer queue and split-screen live under /reviews.
+    if (user?.role === "FINANCE_REVIEWER") router.replace("/reviews");
     if (user?.role === "INTAKE" && (!tabParam || tabParam in INTAKE_ROUTES)) {
       router.replace(INTAKE_ROUTES[tabParam ?? "invoices"]);
     }
@@ -38,9 +39,6 @@ function DashboardContent() {
             {/* Dynamic Content based on Active Role */}
             {currentRole === "SYSTEM_ADMIN" && null}
             {currentRole === "INTAKE" && <IntakeView activeTab={currentTab} />}
-            {currentRole === "FINANCE_REVIEWER" && (
-              <ReviewerView activeTab={currentTab} />
-            )}
             {currentRole === "SERVICE_LEAD" && (
               <ServiceLeadView activeTab={currentTab} />
             )}

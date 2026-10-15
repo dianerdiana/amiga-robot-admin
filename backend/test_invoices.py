@@ -701,6 +701,138 @@ class InvoiceCorrectionTestCase(InvoiceTestBase):
         self.assertEqual(response.json()["last_correction"]["by"]["name"], "Intake.C")
         self.assertIn(("CORRECTION_NOTE", "intake.c@amiga.local"), [(r.action, r.email) for r in self.audit_rows(detail["id"])])
 
+    def test_reviewer_reads_and_corrects_assigned_clients_only(self):
+        detail = self.extracted("demo-missing-bank.pdf")
+        listed = self.client.get("/api/v1/invoices", headers=self.auth(self.reviewer))
+        self.assertEqual(listed.status_code, 200, listed.text)
+        self.assertEqual([i["id"] for i in listed.json()["items"]], [detail["id"]])
+
+        seen = self.detail(detail["id"], user=self.reviewer)
+        self.assertTrue(seen["can_edit"])
+        self.assertTrue(seen["can_reject"])
+        self.assertFalse(seen["can_approve"])  # EXCEPTION is not approvable
+        self.assertFalse(detail["can_approve"] or detail["can_reject"])  # Intake never decides
+        for path in ("file-url", "history", "extraction"):
+            response = self.client.get(f"/api/v1/invoices/{detail['id']}/{path}", headers=self.auth(self.reviewer))
+            self.assertEqual(response.status_code, 200, f"{path}: {response.text}")
+
+        fixed = self.correct(detail["id"], self.payload(seen, bank_account="BNI 0091-882-771"), user=self.reviewer)
+        self.assertEqual(fixed.status_code, 200, fixed.text)
+        self.assertEqual(fixed.json()["status"], "READY_FOR_REVIEW")
+        self.assertTrue(fixed.json()["can_approve"])
+        self.assertEqual(fixed.json()["last_correction"]["by"]["id"], str(self.reviewer.id))
+
+        other = self.extracted("demo-normal.pdf", user=self.intake_b, client=self.client_b)
+        self.assertEqual(self.client.get(f"/api/v1/invoices/{other['id']}", headers=self.auth(self.reviewer)).status_code, 403)
+
+    # ------------------------------------------------------------------
+    # Reviewer decision (UC-8)
+    # ------------------------------------------------------------------
+    def decide(self, invoice_id, action, body, user=None):
+        return self.client.post(
+            f"/api/v1/invoices/{invoice_id}/{action}", headers=self.auth(user or self.reviewer), json=body
+        )
+
+    def test_approve_ready_invoice(self):
+        detail = self.extracted("demo-normal.pdf")
+        response = self.decide(detail["id"], "approve", {"version": detail["version"]})
+        self.assertEqual(response.status_code, 200, response.text)
+        approved = response.json()
+        self.assertEqual(approved["status"], "AMIGA_REVIEWED")
+        self.assertEqual(approved["version"], detail["version"] + 1)
+        self.assertFalse(approved["can_edit"] or approved["can_approve"] or approved["can_reject"])
+
+        # Intake sees the decision (UC-6), with the time taken from the audit trail.
+        seen = self.detail(detail["id"])
+        self.assertEqual(seen["decision"]["reviewer"]["id"], str(self.reviewer.id))
+        self.assertIsNotNone(seen["decision"]["decided_at"])
+        self.assertIn(("APPROVED", "status", "READY_FOR_REVIEW", "AMIGA_REVIEWED"),
+                      [(r.action, r.field_name, r.old_value, r.new_value) for r in self.audit_rows(detail["id"])])
+
+        # No edits or second decision after approval.
+        self.assertEqual(self.correct(detail["id"], self.payload(seen, vendor_name="X"), user=self.reviewer).status_code, 409)
+        again = self.decide(detail["id"], "approve", {"version": seen["version"]})
+        self.assertEqual(again.status_code, 409)
+        self.assertEqual(again.json()["detail"], "Dokumen belum siap disetujui.")
+
+    def test_exception_cannot_be_approved(self):
+        detail = self.extracted("demo-missing-bank.pdf")
+        response = self.decide(detail["id"], "approve", {"version": detail["version"]})
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(self.detail(detail["id"])["status"], "EXCEPTION")
+
+    def test_possible_duplicate_approval_requires_note(self):
+        self.extracted("demo-duplicate-a.pdf")
+        dup = self.extracted("demo-duplicate-b.pdf")
+        self.assertTrue(self.detail(dup["id"], user=self.reviewer)["approve_requires_note"])
+
+        missing = self.decide(dup["id"], "approve", {"version": dup["version"]})
+        self.assertEqual(missing.status_code, 422)
+        self.assertEqual(missing.json()["detail"][0]["loc"], ["body", "note"])
+        short = self.decide(dup["id"], "approve", {"version": dup["version"], "note": "ok"})
+        self.assertEqual(short.status_code, 422)
+        self.assertEqual(self.detail(dup["id"])["version"], dup["version"])
+
+        note = "Invoice berbeda periode, dikonfirmasi vendor via email."
+        approved = self.decide(dup["id"], "approve", {"version": dup["version"], "note": note})
+        self.assertEqual(approved.status_code, 200, approved.text)
+        self.assertEqual(approved.json()["status"], "AMIGA_REVIEWED")
+        rows = [(r.action, r.new_value) for r in self.audit_rows(dup["id"])]
+        self.assertIn(("APPROVAL_NOTE", note), rows)
+
+    def test_reject_requires_note_from_every_editable_status(self):
+        self.extracted("demo-duplicate-a.pdf")
+        for filename, status in (
+            ("demo-normal.pdf", "READY_FOR_REVIEW"),
+            ("demo-missing-bank.pdf", "EXCEPTION"),
+            ("demo-duplicate-b.pdf", "POSSIBLE_DUPLICATE"),
+        ):
+            with self.subTest(status=status):
+                detail = self.extracted(filename)
+                self.assertEqual(detail["status"], status)
+                empty = self.decide(detail["id"], "reject", {"version": detail["version"]})
+                self.assertEqual(empty.status_code, 422)
+                self.assertEqual(empty.json()["detail"][0]["msg"], "Catatan penolakan wajib diisi (min. 10 karakter).")
+
+                note = "Rekening tidak sesuai dengan surat vendor."
+                rejected = self.decide(detail["id"], "reject", {"version": detail["version"], "note": note})
+                self.assertEqual(rejected.status_code, 200, rejected.text)
+                body = rejected.json()
+                self.assertEqual(body["status"], "REJECTED")
+                self.assertEqual(body["decision"]["reject_note"], note)
+                self.assertFalse(body["can_edit"] or body["can_reject"])
+
+    def test_decision_guards(self):
+        detail = self.extracted("demo-normal.pdf")
+        version = detail["version"]
+
+        # Role: Intake cannot decide (403 by role), even on its own assigned client.
+        self.assertEqual(self.decide(detail["id"], "approve", {"version": version}, user=self.intake_a).status_code, 403)
+        self.assertEqual(
+            self.decide(detail["id"], "reject", {"version": version, "note": "x" * 20}, user=self.intake_a).status_code, 403
+        )
+
+        # Optimistic locking: a stale version is rejected and nothing changes.
+        self.correct(detail["id"], self.payload(detail, vendor_name="PT Sinar Abadi"), user=self.reviewer)
+        stale = self.decide(detail["id"], "approve", {"version": version})
+        self.assertEqual(stale.status_code, 409)
+        self.assertEqual(stale.json()["detail"], "Data sudah diubah user lain, muat ulang.")
+
+        # Client isolation: the reviewer is not assigned to client B.
+        other = self.extracted("demo-normal.pdf", user=self.intake_b, client=self.client_b)
+        self.assertEqual(self.decide(other["id"], "approve", {"version": other["version"]}).status_code, 403)
+
+        # SoD backstop: test data where the reviewer is the uploader.
+        with self.Session() as db:
+            db.execute(text("UPDATE invoices SET uploaded_by=:r WHERE id=:i"), {"r": self.reviewer.id, "i": detail["id"]})
+            db.commit()
+        current = self.detail(detail["id"], user=self.reviewer)
+        self.assertFalse(current["can_approve"] or current["can_reject"])
+        sod = self.decide(detail["id"], "approve", {"version": current["version"]})
+        self.assertEqual(sod.status_code, 403)
+        self.assertEqual(sod.json()["detail"], "Anda tidak dapat meninjau dokumen yang Anda unggah.")
+        self.assertEqual(self.detail(detail["id"], user=self.reviewer)["status"], "READY_FOR_REVIEW")
+
     def test_manual_fill_of_failed_extraction(self):
         body = self.upload_ok("demo-multiline.pdf")
         self.extractor.failures["demo-multiline.pdf"] = 2

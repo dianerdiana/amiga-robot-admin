@@ -9,12 +9,12 @@ from models.user import User
 
 
 # Rows written in one transaction share created_at; show them in a logical order (newest first):
-# the correction reason, then the field changes, then the resulting validation and status.
+# the correction/decision note, then the field changes, then the resulting validation and status.
 _ACTION_ORDER = case(
-    (AuditLog.action == "CORRECTION_NOTE", 0),
+    (AuditLog.action.in_(("CORRECTION_NOTE", "APPROVAL_NOTE", "REJECT_NOTE")), 0),
     (AuditLog.action.in_(("FIELD_UPDATED", "ITEM_ADDED", "ITEM_REMOVED")), 1),
     (AuditLog.action == "EXCEPTIONS_DETECTED", 2),
-    (AuditLog.action == "STATUS_CHANGED", 3),
+    (AuditLog.action.in_(("STATUS_CHANGED", "APPROVED", "REJECTED")), 3),
     else_=4,
 )
 

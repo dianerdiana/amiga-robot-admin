@@ -5,6 +5,8 @@ export function homeForRole(role: string | undefined | null): string {
       return "/users";
     case "INTAKE":
       return "/invoices";
+    case "FINANCE_REVIEWER":
+      return "/reviews";
     default:
       return "/dashboard";
   }

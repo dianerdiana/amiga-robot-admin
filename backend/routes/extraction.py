@@ -13,10 +13,11 @@ from workers.extraction_worker import extraction_worker
 
 router = APIRouter(prefix="/invoices/{invoice_id}/extraction", tags=["Extraction"])
 intake_only = require_roles(UserRole.INTAKE)
+intake_or_reviewer = require_roles(UserRole.INTAKE, UserRole.FINANCE_REVIEWER)
 
 
 @router.get("", response_model=ExtractionStatus)
-def get_extraction(invoice_id: uuid.UUID, db: Session = Depends(get_db), user: User = Depends(intake_only)):
+def get_extraction(invoice_id: uuid.UUID, db: Session = Depends(get_db), user: User = Depends(intake_or_reviewer)):
     """Status and structured AI extraction result (ExtractedInvoice), polled by the frontend."""
     return InvoiceService.get_extraction(db, user, invoice_id)
 

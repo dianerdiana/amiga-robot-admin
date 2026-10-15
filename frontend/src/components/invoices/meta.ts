@@ -130,6 +130,8 @@ export const AUDIT_ACTION_LABELS: Record<string, string> = {
   ITEM_ADDED: "Tambah Baris",
   ITEM_REMOVED: "Hapus Baris",
   CORRECTION_NOTE: "Alasan Koreksi",
+  APPROVAL_NOTE: "Catatan Persetujuan",
+  REJECT_NOTE: "Catatan Penolakan",
 };
 
 /** Quick-pick reasons for the correction dialog; they only pre-fill the editable text. */

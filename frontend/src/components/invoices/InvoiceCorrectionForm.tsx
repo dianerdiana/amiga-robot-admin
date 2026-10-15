@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, ReactNode, useEffect, useMemo, useState } from "react";
 import {
   ApiError,
   InvoiceCorrectionPayload,
@@ -88,18 +88,30 @@ const issueKey = (issue: ValidationIssue) => issue.loc.filter((part) => part !==
 /**
  * Editable form for correcting extracted invoice data, styled after templates/invoice-review.html.
  * The backend is the source of truth for validation; this form only shows its verdict per field.
+ *
+ * - `variant="page"` (Intake detail): opened by "Koreksi Data"; Batal leaves edit mode via `onCancel`.
+ * - `variant="pane"` (reviewer split-screen): always editable; Batal only discards local changes, and
+ *   `renderActions` adds the decision buttons to the same sticky bar. Remount with `key={invoice.version}`
+ *   after a save so the form starts from the saved data.
  */
 export default function InvoiceCorrectionForm({
   invoice,
   onSaved,
   onCancel,
   onConflict,
+  variant = "page",
+  onDirtyChange,
+  renderActions,
 }: {
   invoice: InvoiceDetail;
   onSaved: (detail: InvoiceDetail) => void;
-  onCancel: () => void;
+  onCancel?: () => void;
   onConflict: (message: string) => void;
+  variant?: "page" | "pane";
+  onDirtyChange?: (dirty: boolean) => void;
+  renderActions?: (state: { dirty: boolean; saving: boolean }) => ReactNode;
 }) {
+  const pane = variant === "pane";
   const initial = useMemo(() => initialState(invoice), [invoice]);
   const [form, setForm] = useState<FormState>(initial);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -110,6 +122,9 @@ export default function InvoiceCorrectionForm({
   const [saving, setSaving] = useState(false);
 
   const dirty = snapshot(form) !== snapshot(initial);
+  useEffect(() => {
+    onDirtyChange?.(dirty);
+  }, [dirty, onDirtyChange]);
 
   const changedFields = useMemo(() => {
     const now = JSON.parse(snapshot(form));
@@ -146,7 +161,14 @@ export default function InvoiceCorrectionForm({
   };
 
   const cancel = () => {
-    if (!dirty || window.confirm("Batalkan koreksi? Perubahan yang belum disimpan akan hilang.")) onCancel();
+    if (dirty && !window.confirm("Batalkan koreksi? Perubahan yang belum disimpan akan hilang.")) return;
+    if (pane) {
+      setForm(initial);
+      setErrors({});
+      setBannerErrors([]);
+    } else {
+      onCancel?.();
+    }
   };
 
   const submit = async () => {
@@ -352,15 +374,21 @@ export default function InvoiceCorrectionForm({
       </section>
 
       {/* Sticky action bar */}
-      <div className="sticky bottom-0 z-20 -mx-4 flex items-center justify-between gap-3 border-t border-border bg-surface px-4 py-3 shadow-lg sm:-mx-8 sm:px-8">
+      <div
+        className={`sticky bottom-0 z-20 flex items-center justify-between gap-3 border-t border-border bg-surface px-4 py-3 shadow-lg ${
+          pane ? "-mx-4 sm:-mx-6 sm:px-6" : "-mx-4 sm:-mx-8 sm:px-8"
+        }`}
+      >
         <span className="flex items-center gap-2 text-xs">
           <span className={`h-2 w-2 rounded-full ${dirty ? "bg-warning" : "bg-border-strong"}`} />
           <span className="font-medium text-text-secondary">{dirty ? "Ada perubahan belum disimpan" : "Tidak ada perubahan"}</span>
         </span>
-        <div className="flex gap-2">
-          <button type="button" onClick={cancel} className="h-9 rounded border border-border px-4 text-xs font-semibold hover:bg-surface-muted">
-            Batal
-          </button>
+        <div className="flex flex-wrap justify-end gap-2">
+          {(!pane || dirty) && (
+            <button type="button" onClick={cancel} className="h-9 rounded border border-border px-4 text-xs font-semibold hover:bg-surface-muted">
+              Batal
+            </button>
+          )}
           <button
             type="button"
             disabled={!dirty}
@@ -374,6 +402,7 @@ export default function InvoiceCorrectionForm({
             <span aria-hidden="true" className="material-symbols-outlined text-[18px]">save</span>
             Simpan
           </button>
+          {renderActions?.({ dirty, saving })}
         </div>
       </div>
 
@@ -388,7 +417,9 @@ export default function InvoiceCorrectionForm({
           >
             <h4 id="reason-dialog-title" className="text-base font-bold">Alasan Koreksi</h4>
             <p className="mt-1 text-xs text-text-secondary">
-              Jelaskan alasan perubahan. Alasan dicatat di riwayat dan terlihat oleh Finance Reviewer.
+              {pane
+                ? "Jelaskan alasan perubahan. Alasan dicatat di riwayat dan terlihat oleh Intake."
+                : "Jelaskan alasan perubahan. Alasan dicatat di riwayat dan terlihat oleh Finance Reviewer."}
             </p>
             <div className="mt-3 rounded border border-border bg-surface-muted px-3 py-2 text-xs">
               <span className="font-semibold">Isian yang diubah: </span>

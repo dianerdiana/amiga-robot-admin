@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export function ForbiddenState({ message }: { message?: string }) {
+export function ForbiddenState({ message, backHref = "/invoices" }: { message?: string; backHref?: string }) {
   return (
     <div className="flex flex-col items-center rounded-lg border border-border bg-surface px-6 py-14 text-center shadow-sm">
       <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-danger-subtle text-danger">
@@ -12,7 +12,7 @@ export function ForbiddenState({ message }: { message?: string }) {
           "Anda tidak memiliki akses ke dokumen ini. Request ditugaskan pada klien di luar wewenang akun Anda."}
       </p>
       <Link
-        href="/invoices"
+        href={backHref}
         className="mt-5 inline-flex h-9 items-center gap-1.5 rounded border border-border px-4 text-xs font-semibold text-text-primary no-underline hover:bg-surface-muted"
       >
         <span aria-hidden="true" className="material-symbols-outlined text-[16px]">arrow_back</span>
