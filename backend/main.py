@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import text
+from fastapi.middleware.cors import CORSMiddleware
 from database import get_db
 from routes import auth_router
 
@@ -8,6 +9,15 @@ app = FastAPI(
     title="AMIGA Robot Admin Backend",
     version="1.0.0",
     description="API Backend untuk platform AMIGA Robot Admin (Invoice ke Voucher)",
+)
+
+# CORS Middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Registrasi Router
