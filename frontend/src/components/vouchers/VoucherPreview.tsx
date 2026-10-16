@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { AssignedClient, EligibleInvoice, InvoiceDetail, invoiceService } from "@/lib/api";
+import { AssignedClient, EligibleInvoice, InvoiceDetail, VoucherSigner, invoiceService } from "@/lib/api";
 import { formatDate, formatQuantity, formatRupiah, todayIso } from "@/lib/format";
+import SignatureBlock from "./SignatureBlock";
 
 /**
  * Step 2 of Buat Voucher (VCH-06), following templates/voucher-create-preview.html: the selected
@@ -15,6 +16,8 @@ export default function VoucherPreview({
   vendorName,
   invoices,
   purpose,
+  submitter,
+  approvers,
   banner,
   creating,
   onBack,
@@ -26,6 +29,8 @@ export default function VoucherPreview({
   vendorName: string;
   invoices: EligibleInvoice[];
   purpose: string;
+  submitter: VoucherSigner;
+  approvers: VoucherSigner[];
   banner: React.ReactNode;
   creating: boolean;
   onBack: () => void;
@@ -163,9 +168,6 @@ export default function VoucherPreview({
         {/* Right: read-only A4 preview */}
         <div className="lg:col-span-7">
           <article aria-label="Pratinjau voucher" className="relative overflow-hidden rounded-sm border border-border bg-white p-6 shadow-md sm:p-8">
-            <span className="absolute right-0 top-4 rounded-l bg-warning-subtle px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-warning">
-              Template sementara
-            </span>
             <p className="text-[11px] text-text-secondary">{client.name}</p>
             <h2 className="mt-1 border-b-2 border-primary pb-2 text-lg font-bold text-primary">VOUCHER PEMBAYARAN</h2>
 
@@ -231,6 +233,8 @@ export default function VoucherPreview({
                 </table>
               </div>
             )}
+
+            <SignatureBlock submitter={submitter} approvers={approvers} />
           </article>
         </div>
       </div>

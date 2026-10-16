@@ -31,6 +31,9 @@ class Voucher(Base):
     vendor_name = Column(String(255), nullable=False)
     bank_account = Column(String(100), nullable=False)
     purpose = Column(String(255), nullable=False)
+    # Signature snapshot ("Diajukan oleh"); NULL on vouchers created before signatures existed.
+    submitter_name = Column(String(255), nullable=True)
+    submitter_role = Column(String(100), nullable=True)
     total_amount = Column(Numeric(18, 2), nullable=False)
     file_key = Column(String(1024), nullable=False)
     status = Column(SQLEnum(VoucherStatus, name="voucher_status"), nullable=False)
@@ -40,3 +43,6 @@ class Voucher(Base):
     client = relationship("Client")
     creator = relationship("User", foreign_keys=[created_by])
     invoices = relationship("Invoice", back_populates="voucher", order_by="Invoice.created_at")
+    approvers = relationship(
+        "VoucherApprover", order_by="VoucherApprover.position", cascade="all, delete-orphan", passive_deletes=True
+    )

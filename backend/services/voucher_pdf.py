@@ -1,7 +1,8 @@
 """Voucher PDF (VCH-10, PRD 5.8 minimum template), rendered with ReportLab.
 
 Pure function of the data passed in: no database or S3 access, so it can be tested on its own.
-The official AMIGA template is still pending, so the page carries a "Template sementara" marker.
+The page ends with a signature section: "Diajukan oleh" (the creator) and one or more
+"Disetujui oleh" approvers, laid out by `signature_rows`.
 """
 
 import io
@@ -11,11 +12,11 @@ from decimal import Decimal
 from xml.sax.saxutils import escape
 
 from reportlab.lib import colors
-from reportlab.lib.enums import TA_RIGHT
+from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import mm
-from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+from reportlab.platypus import KeepTogether, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 from services.validation_service import format_rupiah
 
@@ -25,8 +26,11 @@ TEXT = colors.HexColor("#0F172A")
 MUTED = colors.HexColor("#475569")
 BORDER = colors.HexColor("#CBD5E1")
 SURFACE_MUTED = colors.HexColor("#F1F5F9")
-WARNING = colors.HexColor("#92400E")
-WARNING_BG = colors.HexColor("#FEF3C7")
+
+SUBMITTED_BY = "Diajukan oleh"
+APPROVED_BY = "Disetujui oleh"
+SIGNATURES_PER_ROW = 3
+SIGNING_SPACE = 22 * mm
 
 
 @dataclass
@@ -49,6 +53,12 @@ class VoucherPdfInvoice:
 
 
 @dataclass
+class VoucherPdfSigner:
+    name: str
+    role: str
+
+
+@dataclass
 class VoucherPdfData:
     voucher_number: str
     client_name: str
@@ -58,6 +68,8 @@ class VoucherPdfData:
     created_date: date
     total_amount: Decimal
     invoices: list[VoucherPdfInvoice]
+    submitter: VoucherPdfSigner
+    approvers: list[VoucherPdfSigner] = field(default_factory=list)
 
 
 def format_date(value: date | None) -> str:
@@ -87,13 +99,78 @@ def _styles() -> dict[str, ParagraphStyle]:
         "head_right": ParagraphStyle("head_right", parent=base, fontName="Helvetica-Bold", textColor=colors.white, alignment=TA_RIGHT),
         "right": ParagraphStyle("right", parent=base, alignment=TA_RIGHT),
         "right_bold": ParagraphStyle("right_bold", parent=base, fontName="Helvetica-Bold", alignment=TA_RIGHT),
-        "note": ParagraphStyle("note", parent=base, fontSize=7.5, leading=9.5, textColor=MUTED),
-        "marker": ParagraphStyle("marker", parent=base, fontName="Helvetica-Bold", fontSize=8, textColor=WARNING, alignment=TA_RIGHT),
+        "sign_label": ParagraphStyle("sign_label", parent=base, textColor=MUTED, alignment=TA_CENTER),
+        "sign_name": ParagraphStyle("sign_name", parent=base, fontName="Helvetica-Bold", fontSize=9.5, leading=12, alignment=TA_CENTER),
+        "sign_role": ParagraphStyle("sign_role", parent=base, textColor=MUTED, alignment=TA_CENTER),
     }
 
 
 def _p(text: str | None, style: ParagraphStyle) -> Paragraph:
     return Paragraph(escape(text or "-"), style)
+
+
+def signature_rows(
+    submitter: VoucherPdfSigner, approvers: list[VoucherPdfSigner], per_row: int = SIGNATURES_PER_ROW
+) -> list[list[tuple[str, VoucherPdfSigner]]]:
+    """Signature layout. One approver: a single row, submitter left and approver right.
+    More: the submitter alone on the first row, then approvers `per_row` at a time, left to right."""
+    first = (SUBMITTED_BY, submitter)
+    if len(approvers) <= 1:
+        return [[first, *((APPROVED_BY, approver) for approver in approvers)]]
+    return [[first]] + [
+        [(APPROVED_BY, approver) for approver in approvers[start : start + per_row]]
+        for start in range(0, len(approvers), per_row)
+    ]
+
+
+def _signature_cell(label: str, signer: VoucherPdfSigner, width: float, s: dict[str, ParagraphStyle]) -> Table:
+    """Label, blank space to sign in, then the name over a thin line and the role below it."""
+    inset = 6 * mm
+    cell = Table(
+        [[_p(label, s["sign_label"])], [""], [_p(signer.name, s["sign_name"])], [_p(signer.role, s["sign_role"])]],
+        colWidths=[width - 2 * inset],
+        rowHeights=[None, SIGNING_SPACE, None, None],
+    )
+    cell.setStyle(
+        TableStyle(
+            [
+                ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+                ("TOPPADDING", (0, 0), (-1, -1), 1),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 1),
+                ("LINEBELOW", (0, 2), (0, 2), 0.75, TEXT),
+            ]
+        )
+    )
+    return cell
+
+
+def _signature_section(data: VoucherPdfData, width: float, s: dict[str, ParagraphStyle]) -> list:
+    rows = signature_rows(data.submitter, data.approvers)
+    column = width / SIGNATURES_PER_ROW
+    tables: list = []
+    for row in rows:
+        cells = [_signature_cell(label, signer, column, s) for label, signer in row]
+        if len(rows) == 1 and len(cells) == 2:
+            # One approver: submitter at the left edge, approver at the right edge.
+            table = Table([[cells[0], "", cells[1]]], colWidths=[column] * 3)
+        else:
+            # A narrower table is centered, so a short last row sits in the middle.
+            table = Table([cells], colWidths=[column] * len(cells), hAlign="CENTER")
+        table.setStyle(
+            TableStyle(
+                [
+                    ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                    ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                    ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                    ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 4 * mm),
+                ]
+            )
+        )
+        tables.append(table)
+    # Never leave the section's first rows stranded apart from each other at a page bottom.
+    return [KeepTogether([Spacer(1, 10 * mm), *tables[:2]]), *tables[2:]]
 
 
 def render_voucher_pdf(data: VoucherPdfData, *, compress: bool = True) -> bytes:
@@ -114,13 +191,10 @@ def render_voucher_pdf(data: VoucherPdfData, *, compress: bool = True) -> bytes:
     width = doc.width
     story: list = []
 
-    # Header: title on the left, temporary-template marker on the right.
+    # Header: title and client name over a navy rule.
     header = Table(
-        [
-            [_p("VOUCHER PEMBAYARAN", s["title"]), _p("TEMPLATE SEMENTARA", s["marker"])],
-            [_p(data.client_name, s["subtitle"]), _p("Template resmi AMIGA belum tersedia", s["note"])],
-        ],
-        colWidths=[width * 0.65, width * 0.35],
+        [[_p("VOUCHER PEMBAYARAN", s["title"])], [_p(data.client_name, s["subtitle"])]],
+        colWidths=[width],
     )
     header.setStyle(
         TableStyle(
@@ -130,8 +204,6 @@ def render_voucher_pdf(data: VoucherPdfData, *, compress: bool = True) -> bytes:
                 ("RIGHTPADDING", (0, 0), (-1, -1), 0),
                 ("LINEBELOW", (0, 1), (-1, 1), 1.5, NAVY),
                 ("BOTTOMPADDING", (0, 1), (-1, 1), 6),
-                ("BACKGROUND", (1, 0), (1, 0), WARNING_BG),
-                ("RIGHTPADDING", (1, 0), (1, 0), 4),
             ]
         )
     )
@@ -218,6 +290,7 @@ def render_voucher_pdf(data: VoucherPdfData, *, compress: bool = True) -> bytes:
     items_table = Table(rows, colWidths=col_widths, repeatRows=1)
     items_table.setStyle(TableStyle(style_cmds))
     story.append(items_table)
+    story += _signature_section(data, width, s)
 
     def footer(canvas, _doc):
         canvas.saveState()

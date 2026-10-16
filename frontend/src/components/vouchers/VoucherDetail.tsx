@@ -8,6 +8,7 @@ import { ErrorBanner, ForbiddenState, PageSpinner } from "@/components/invoices/
 import { StatusBadge } from "@/components/invoices/StatusBadge";
 import DownloadVoucherButton from "./DownloadVoucherButton";
 import { VoucherStatusChip } from "./meta";
+import SignatureBlock from "./SignatureBlock";
 
 /**
  * Voucher detail (UC-10 step 3): read-only data, every invoice with its line items, and the
@@ -154,6 +155,16 @@ export default function VoucherDetailView({ voucherId }: { voucherId: string }) 
           <span className="font-mono font-bold text-primary">{formatRupiah(voucher.total_amount)}</span>
         </div>
       </section>
+
+      {voucher.submitter && (
+        <section className="rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5">
+          <h2 className="flex items-center gap-2 text-sm font-semibold">
+            <span aria-hidden="true" className="material-symbols-outlined text-[20px] text-primary">draw</span>
+            Tanda Tangan
+          </h2>
+          <SignatureBlock submitter={voucher.submitter} approvers={voucher.approvers} />
+        </section>
+      )}
     </div>
   );
 }
