@@ -1,13 +1,16 @@
-# AMIGA Robot Admin - Docker Compose
+# AMIGA Robot Admin - Docker Compose (production stack; used as-is on EC2)
 #
-# Lives at the repo root so every service can reference its own folder
-# (./backend, ./frontend) without this file ever needing to move.
+#   Browser -> :WEB_PORT caddy -> /api, /auth, /docs, /health -> backend:8000 -> db:5432
+#                              -> everything else             -> frontend:3000
 #
 # Usage:
-#   cp .env.example .env
-#   docker compose up -d db
+#   cp .env.example .env && cp backend/.env.example backend/.env   # then fill both in
+#   docker compose up -d --build
+# Local hot reload: docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+# Full runbook: docs/DEPLOYMENT.md
 #
-# Variables come from the root .env file (see .env.example).
+# STRICT CONFIG: every variable is required (${VAR:?...}); there are no defaults, so an
+# incomplete .env stops `docker compose` before anything starts.
 
 name: amiga-robot-admin
 
@@ -17,12 +20,11 @@ services:
     container_name: amiga-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
-      POSTGRES_DB: ${DB_NAME:-amiga_robot_admin}
-    ports:
-      # Bound to localhost only; host port is configurable in case 5432 is taken.
-      - "127.0.0.1:${DB_HOST_PORT:-5432}:5432"
+      POSTGRES_USER: ${DB_USER:?DB_USER is required in .env}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required in .env}
+      POSTGRES_DB: ${DB_NAME:?DB_NAME is required in .env}
+    # No published port: only the backend reaches the DB over the internal network.
+    # (docker-compose.dev.yml publishes it on 127.0.0.1 for local tools.)
     volumes:
       # postgres 18+ keeps data under /var/lib/postgresql/<major>/docker,
       # so the volume is mounted one level up.
@@ -32,47 +34,79 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    mem_limit: 256m
     networks:
       - amiga
 
-  # --- Planned services (uncomment once their Dockerfiles exist) ---------
-  #
-  # backend:
-  #   build: ./backend
-  #   container_name: amiga-backend
-  #   restart: unless-stopped
-  #   env_file: ./backend/.env
-  #   environment:
-  #     # Inside the compose network the DB is reached by service name.
-  #     DB_HOST: db
-  #     DB_PORT: 5432
-  #     DB_USER: ${DB_USER:-postgres}
-  #     DB_PASSWORD: ${DB_PASSWORD:-postgres}
-  #     DB_NAME: ${DB_NAME:-amiga_robot_admin}
-  #   ports:
-  #     - "${BACKEND_HOST_PORT:-8000}:8000"
-  #   depends_on:
-  #     db:
-  #       condition: service_healthy
-  #   networks:
-  #     - amiga
-  #
-  # frontend:
-  #   build: ./frontend
-  #   container_name: amiga-frontend
-  #   restart: unless-stopped
-  #   environment:
-  #     NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
-  #   ports:
-  #     - "${FRONTEND_HOST_PORT:-3000}:3000"
-  #   depends_on:
-  #     - backend
-  #   networks:
-  #     - amiga
+  backend:
+    build: ./backend
+    image: amiga-robot-admin-backend
+    container_name: amiga-backend
+    restart: unless-stopped
+    # App settings (JWT, AWS region, Bedrock, ...). The backend validates every key at startup.
+    env_file: ./backend/.env
+    environment:
+      # Overrides backend/.env: inside the compose network the DB is reached by service
+      # name, and the credentials have one source of truth (root .env).
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: ${DB_USER:?DB_USER is required in .env}
+      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required in .env}
+      DB_NAME: ${DB_NAME:?DB_NAME is required in .env}
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    mem_limit: 384m
+    networks:
+      - amiga
+
+  frontend:
+    build:
+      context: ./frontend
+      target: runner
+      args:
+        # `?` without `:` - must be defined, but an empty value (same-origin) is allowed.
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL?NEXT_PUBLIC_API_URL must be defined in .env (empty = same-origin)}
+    image: amiga-robot-admin-frontend
+    container_name: amiga-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    mem_limit: 256m
+    networks:
+      - amiga
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: amiga-caddy
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:?WEB_PORT is required in .env}:80"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_started
+    mem_limit: 64m
+    networks:
+      - amiga
 
 volumes:
   # Resolves to "amiga-robot-admin_postgres-data" (project name prefix).
   postgres-data:
+  caddy-data:
+  caddy-config:
 
 networks:
   amiga:

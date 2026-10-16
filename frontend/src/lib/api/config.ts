@@ -1,3 +1,13 @@
-/** Backend base URL; override with NEXT_PUBLIC_API_URL. */
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+/**
+ * Backend base URL from NEXT_PUBLIC_API_URL (inlined at build time). Required, no fallback:
+ * an empty value is an explicit choice meaning same-origin requests through the reverse proxy.
+ */
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+if (apiUrl === undefined) {
+  throw new Error(
+    "NEXT_PUBLIC_API_URL is not set. Set it in frontend/.env.local (see .env.example), or to an empty value for same-origin."
+  );
+}
+
+export const API_BASE_URL = apiUrl.replace(/\/+$/, "");

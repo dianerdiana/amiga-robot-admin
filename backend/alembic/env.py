@@ -19,9 +19,9 @@ from models import Base
 # access to the values within the .ini file in use.
 config = context.config
 
-# Set sqlalchemy.url secara dinamis dari database.py (membaca .env)
-if DATABASE_URL:
-    config.set_main_option("sqlalchemy.url", DATABASE_URL)
+# Set sqlalchemy.url secara dinamis dari database.py (membaca .env).
+# '%' di-escape karena nilai ini melewati interpolasi ConfigParser (password ter-URL-encode).
+config.set_main_option("sqlalchemy.url", DATABASE_URL.replace("%", "%%"))
 
 # Interpret the config file for Python logging.
 if config.config_file_name is not None:

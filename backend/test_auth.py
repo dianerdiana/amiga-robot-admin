@@ -11,7 +11,7 @@ def seed_test_users():
     """Seed akun contoh untuk pengujian autentikasi & role middleware."""
     # Development users are defined once in scripts/seed_dev.py.
     with Session(engine) as session:
-        seed_users(session, verbose=False)
+        seed_users(session, "Password123!", verbose=False)
         session.commit()
     print(" [OK] Seed user berhasil disiapkan.")
 

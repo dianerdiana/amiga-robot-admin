@@ -41,12 +41,16 @@ app = FastAPI(
     version="1.0.0",
     description="API Backend untuk platform AMIGA Robot Admin (Invoice ke Voucher)",
     lifespan=lifespan,
+    docs_url="/docs" if settings.API_DOCS_ENABLED else None,
+    redoc_url="/redoc" if settings.API_DOCS_ENABLED else None,
+    openapi_url="/openapi.json" if settings.API_DOCS_ENABLED else None,
 )
 
-# CORS Middleware
+# CORS Middleware: only explicitly configured origins. Behind the reverse proxy the
+# frontend is same-origin, so production leaves CORS_ALLOW_ORIGINS empty.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.cors_allow_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -69,7 +73,7 @@ app.include_router(vouchers_router, prefix="/api/v1")
 def read_root():
     return {
         "message": "Halo, FastAPI backend AMIGA Robot Admin berhasil dijalankan!",
-        "docs_url": "/docs",
+        "docs_url": "/docs" if settings.API_DOCS_ENABLED else None,
     }
 
 

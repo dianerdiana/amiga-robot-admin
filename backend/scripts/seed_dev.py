@@ -2,12 +2,16 @@
 
 Run from the backend folder after `alembic upgrade head` (the migration already
 creates the AMIGA Robot system user):
-    python -m scripts.seed_dev
+    python -m scripts.seed_dev --password 'S3cret!'
     python -m scripts.seed_dev --password 'S3cret!' --skip-clients
 
+Inside docker compose (database host "db"), --force is required as well:
+    docker compose exec backend python -m scripts.seed_dev --password 'S3cret!' --force
+
 Idempotent: existing users (and their passwords), clients, and assignments are left
-untouched. Refuses to run against a non-local database unless --force is given, so demo
-accounts with a known password never reach a deployed environment.
+untouched. There is no default password, and the script refuses to run against any
+database host other than localhost unless --force is given: the compose host "db" is the
+same locally and on the deployed server, so it is never assumed to be local.
 """
 
 import argparse
@@ -23,8 +27,7 @@ from models.client import Client
 from models.user import User, UserRole
 from models.user_client import UserClient
 
-DEFAULT_PASSWORD = "Password123!"
-LOCAL_DB_HOSTS = {"localhost", "127.0.0.1", "::1", "db"}
+LOCAL_DB_HOSTS = {"localhost", "127.0.0.1", "::1"}
 
 DEV_USERS = [
     ("Budi Intake", "intake@amiga.com", UserRole.INTAKE),
@@ -39,7 +42,7 @@ DEV_CLIENTS = [
 ]
 
 
-def seed_users(db: Session, password: str = DEFAULT_PASSWORD, verbose: bool = True) -> None:
+def seed_users(db: Session, password: str, verbose: bool = True) -> None:
     """Create the development login users; existing users are never modified."""
     for name, email, role in DEV_USERS:
         if db.query(User).filter(User.email == email).first():
@@ -91,7 +94,7 @@ def _log(verbose: bool, message: str) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Seed development users, demo clients, and assignments.")
-    parser.add_argument("--password", default=DEFAULT_PASSWORD, help="Password for newly created users.")
+    parser.add_argument("--password", required=True, help="Password for newly created users.")
     parser.add_argument("--skip-clients", action="store_true", help="Seed login users only.")
     parser.add_argument("--force", action="store_true", help="Allow seeding a non-local database.")
     args = parser.parse_args()
@@ -109,8 +112,6 @@ def main() -> int:
         db.commit()
 
     print("\nDone. Login accounts:", ", ".join(email for _, email, _ in DEV_USERS))
-    if args.password == DEFAULT_PASSWORD:
-        print(f"Default password for newly created users: {DEFAULT_PASSWORD}")
     return 0
 
 

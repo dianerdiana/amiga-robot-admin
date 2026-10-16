@@ -119,7 +119,7 @@ def main() -> int:
     parser.add_argument("--pdf", type=Path, help="PDF contoh untuk uji input dokumen ke Bedrock.")
     args = parser.parse_args()
 
-    print(f"Region: {settings.AWS_REGION} | Bucket: {settings.S3_BUCKET_NAME}")
+    print(f"Region: {settings.AWS_REGION} | Bucket: {settings.S3_BUCKET_NAME} ({settings.S3_REGION}) | Bedrock: {settings.BEDROCK_REGION}")
     results = [check_identity(), check_s3(), check_bedrock_text()]
     if args.pdf:
         results.append(check_bedrock_pdf(args.pdf))

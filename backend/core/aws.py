@@ -9,7 +9,7 @@ from core.config import settings
 @lru_cache
 def get_s3_client():
     """Client S3 bersama; kredensial diambil dari default chain boto3."""
-    return boto3.client("s3", region_name=settings.AWS_REGION)
+    return boto3.client("s3", region_name=settings.S3_REGION)
 
 
 @lru_cache

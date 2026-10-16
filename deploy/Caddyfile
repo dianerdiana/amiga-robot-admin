@@ -1,0 +1,13 @@
+# Single public entry point (HTTP only; access by IP on EC2).
+# To serve a domain with automatic HTTPS later, replace ":80" with the domain name
+# and publish port 443 as well.
+:80 {
+	encode gzip
+
+	# FastAPI. The frontend calls /auth/refresh-token without the /api/v1 prefix.
+	@backend path /api/* /auth/* /docs /docs/* /redoc /openapi.json /health /health/*
+	reverse_proxy @backend backend:8000
+
+	# Everything else is the Next.js app.
+	reverse_proxy frontend:3000
+}
