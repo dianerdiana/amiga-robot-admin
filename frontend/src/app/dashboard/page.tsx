@@ -23,10 +23,13 @@ function DashboardContent() {
 
   useEffect(() => {
     if (user?.role === "SYSTEM_ADMIN") router.replace("/users");
-    // The reviewer queue and split-screen live under /reviews.
     if (user?.role === "FINANCE_REVIEWER") router.replace("/reviews");
     if (user?.role === "INTAKE") router.replace(INTAKE_ROUTES[tabParam ?? ""] ?? "/invoices");
   }, [router, tabParam, user?.role]);
+
+  if (user?.role === "SYSTEM_ADMIN" || user?.role === "INTAKE" || user?.role === "FINANCE_REVIEWER") {
+    return null;
+  }
 
   return (
     <DashboardLayout

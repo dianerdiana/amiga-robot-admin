@@ -70,6 +70,7 @@ class InvoiceSummary(BaseModel):
     created_at: datetime
     exception_codes: list[str]
     has_reviewer: bool
+    version: int
 
 
 class InvoicePage(BaseModel):

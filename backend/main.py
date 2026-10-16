@@ -1,13 +1,15 @@
 import logging
 from contextlib import asynccontextmanager
 
+logger = logging.getLogger(__name__)
+
 from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from fastapi.middleware.cors import CORSMiddleware
 from core.config import settings
 from database import get_db
-from routes import auth_router, clients_router, extraction_router, invoices_router, me_router, users_router, vouchers_router
+from routes import auth_router, chat_router, clients_router, extraction_router, invoices_router, me_router, users_router, vouchers_router
 from workers.extraction_worker import extraction_worker
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -15,9 +17,18 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    # The extraction worker runs inside the API process unless run separately (EXTRACTION_RUN_IN_API=false).
     if settings.EXTRACTION_RUN_IN_API:
         extraction_worker.start()
+    if settings.REVIEWER_AUTO_ASSIGN_ON_UPLOAD:
+        try:
+            from database import SessionLocal
+            from services.invoice_service import InvoiceService
+
+            with SessionLocal() as db:
+                InvoiceService.ensure_reviewer_assignments_for_all_clients(db)
+                db.commit()
+        except Exception:  # pragma: no cover - startup helper must not block app boot
+            logger.exception("Failed to backfill temporary reviewer assignments")
     try:
         yield
     finally:
@@ -39,11 +50,13 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["X-Total-Count"],
 )
 
 # Registrasi Router
 app.include_router(auth_router, prefix="/api/v1")
-app.include_router(auth_router)  # Memungkinkan akses langsung /auth/login dsb.
+app.include_router(auth_router)
+app.include_router(chat_router, prefix="/api/v1")
 app.include_router(users_router, prefix="/api/v1")
 app.include_router(clients_router, prefix="/api/v1")
 app.include_router(me_router, prefix="/api/v1")
@@ -60,11 +73,16 @@ def read_root():
     }
 
 
+@app.get("/health")
+def health():
+    return {
+        "status": "ok",
+        "service": "AMIGA Robot Admin Backend",
+    }
+
+
 @app.get("/health/db")
 def check_db_health(db: Session = Depends(get_db)):
-    """
-    Endpoint untuk menguji koneksi ke database PostgreSQL.
-    """
     try:
         result = db.execute(text("SELECT 1")).scalar()
         return {

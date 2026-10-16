@@ -15,6 +15,7 @@ from models.client import Client
 from models.invoice import Invoice, InvoiceStatus
 from models.invoice_item import InvoiceItem
 from models.user import User, UserRole
+from models.user_client import UserClient
 from schemas.invoice import (
     APPROVAL_NOTE_LABEL,
     DEFAULT_REQUEST_TYPE,
@@ -161,6 +162,10 @@ class InvoiceService:
             db.rollback()
             raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=STORAGE_FAILED_MESSAGE)
 
+        # Temporary operating mode: intake-created invoices become visible in the
+        # reviewer queue through explicit client assignments, not global access.
+        InvoiceService.ensure_reviewer_assignments(db, client_id)
+
         AuditService.log(
             db,
             entity_type="invoice",
@@ -193,6 +198,76 @@ class InvoiceService:
             request_date=invoice.request_date,
             uploaded_by=_user_ref(user),
             created_at=invoice.created_at,
+        )
+
+    @staticmethod
+    def ensure_reviewer_assignments(db: Session, client_id: uuid.UUID) -> None:
+        # Temporary operating mode requested for the current reviewer workflow:
+        # Intake uploads make the selected client visible to every active Finance
+        # Reviewer through explicit user_clients assignments. This is idempotent.
+        if not settings.REVIEWER_AUTO_ASSIGN_ON_UPLOAD:
+            return
+        client = db.get(Client, client_id)
+        if client is None or not client.is_active:
+            return
+        reviewers = (
+            db.query(User)
+            .filter(User.role == UserRole.FINANCE_REVIEWER, User.is_active.is_(True))
+            .all()
+        )
+        for reviewer in reviewers:
+            assignment = (
+                db.query(UserClient)
+                .filter(
+                    UserClient.user_id == reviewer.id,
+                    UserClient.client_id == client_id,
+                )
+                .first()
+            )
+            if assignment is None:
+                db.add(UserClient(user_id=reviewer.id, client_id=client_id))
+
+    @staticmethod
+    def ensure_reviewer_assignments_for_all_clients(db: Session) -> None:
+        if not settings.REVIEWER_AUTO_ASSIGN_ON_UPLOAD:
+            return
+        active_clients = db.query(Client).filter(Client.is_active.is_(True)).all()
+        for client in active_clients:
+            InvoiceService.ensure_reviewer_assignments(db, client.id)
+
+    # ------------------------------------------------------------------
+    # Reviewer queue with global pagination across multiple statuses (ACC-03)
+    # ------------------------------------------------------------------
+    @staticmethod
+    def list_review_queue(
+        db: Session,
+        user: User,
+        *,
+        statuses: list[InvoiceStatus] | None = None,
+        skip: int = 0,
+        limit: int = 20,
+    ) -> InvoicePage:
+        client_ids = assigned_client_ids(db, user)
+        if not client_ids:
+            return InvoicePage(items=[], total=0, skip=skip, limit=limit)
+        reviewed = clients_with_reviewer(db, client_ids)
+
+        query = db.query(Invoice).filter(Invoice.client_id.in_(client_ids))
+        if statuses:
+            query = query.filter(Invoice.status.in_(statuses))
+        total = query.with_entities(func.count(Invoice.id)).scalar() or 0
+        rows = (
+            query.options(joinedload(Invoice.client))
+            .order_by(Invoice.created_at.desc(), Invoice.id)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+        return InvoicePage(
+            items=[_summary(invoice, invoice.client_id in reviewed) for invoice in rows],
+            total=total,
+            skip=skip,
+            limit=limit,
         )
 
     # ------------------------------------------------------------------
@@ -314,7 +389,6 @@ class InvoiceService:
             is_draft=invoice.status in DRAFT_STATUSES,
             decision=_decision(db, invoice),
             previous_request=previous,
-            version=invoice.version,
             can_edit=user.role in EDITOR_ROLES and invoice.status in EDITABLE_STATUSES,
             can_approve=decides and invoice.status in APPROVABLE_STATUSES,
             can_reject=decides and invoice.status in EDITABLE_STATUSES,
@@ -585,6 +659,7 @@ def _summary(invoice: Invoice, has_reviewer: bool) -> InvoiceSummary:
         created_at=invoice.created_at,
         exception_codes=list(invoice.exception_codes or []),
         has_reviewer=has_reviewer,
+        version=invoice.version,
     )
 
 

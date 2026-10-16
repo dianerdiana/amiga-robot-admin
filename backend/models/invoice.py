@@ -44,7 +44,6 @@ class Invoice(Base):
         ),
         CheckConstraint("extraction_attempts >= 0", name="ck_invoices_extraction_attempts_nonnegative"),
         Index("ix_invoices_duplicate_detection", "client_id", "vendor_name", "invoice_number"),
-        # Extraction worker queue claims (see workers/extraction_worker.py).
         Index("ix_invoices_queued", "created_at", postgresql_where=text("status = 'QUEUED'")),
     )
 
@@ -86,6 +85,7 @@ class Invoice(Base):
         back_populates="invoice",
         order_by="InvoiceItem.line_no",
         cascade="all, delete-orphan",
+        lazy="selectin",
     )
     client = relationship("Client")
     uploader = relationship("User", foreign_keys=[uploaded_by])
