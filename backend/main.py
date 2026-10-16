@@ -7,7 +7,7 @@ from sqlalchemy import text
 from fastapi.middleware.cors import CORSMiddleware
 from core.config import settings
 from database import get_db
-from routes import auth_router, clients_router, extraction_router, invoices_router, me_router, users_router
+from routes import auth_router, clients_router, extraction_router, invoices_router, me_router, users_router, vouchers_router
 from workers.extraction_worker import extraction_worker
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -49,6 +49,7 @@ app.include_router(clients_router, prefix="/api/v1")
 app.include_router(me_router, prefix="/api/v1")
 app.include_router(invoices_router, prefix="/api/v1")
 app.include_router(extraction_router, prefix="/api/v1")
+app.include_router(vouchers_router, prefix="/api/v1")
 
 
 @app.get("/")

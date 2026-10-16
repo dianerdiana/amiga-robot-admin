@@ -28,9 +28,10 @@ EXCEPTION_MESSAGES = {
     NO_LINE_ITEMS: "Baris barang tidak ditemukan.",
     EXTRACTION_FAILED: "Ekstraksi otomatis gagal. Isi data secara manual atau tolak dokumen.",
     UNREADABLE_DOCUMENT: "Dokumen tidak terbaca jelas.",
+    # POSSIBLE_DUPLICATE is a warning: the data can be corrected and the reviewer may still approve manually.
     POSSIBLE_DUPLICATE: (
         "Invoice dengan nomor dan vendor yang sama sudah ada (Request ID {request_id}). "
-        "Dokumen hanya dapat ditolak."
+        "Periksa kembali; reviewer dapat menolak atau menyetujui secara manual."
     ),
 }
 

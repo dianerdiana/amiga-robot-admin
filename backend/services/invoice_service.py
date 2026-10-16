@@ -13,19 +13,25 @@ from core.config import settings
 from models.audit_log import AuditLog
 from models.client import Client
 from models.invoice import Invoice, InvoiceStatus
+from models.invoice_item import InvoiceItem
 from models.user import User, UserRole
 from schemas.invoice import (
+    APPROVAL_NOTE_LABEL,
     DEFAULT_REQUEST_TYPE,
     AssignedClient,
     AuditEntry,
     ClientRef,
+    CorrectionNote,
     ExtractionStatus,
     FileUrlResponse,
+    InvoiceApproval,
     InvoiceChannel,
+    InvoiceCorrection,
     InvoiceDecision,
     InvoiceDetail,
     InvoiceItemResponse,
     InvoicePage,
+    InvoiceRejection,
     InvoiceSummary,
     InvoiceUploadResponse,
     PreviousRequestRef,
@@ -34,13 +40,31 @@ from schemas.invoice import (
 from services.access import assert_client_access, assigned_client_ids, clients_with_reviewer
 from services.audit_service import AuditService
 from services.extraction.schema import ExtractedInvoice
-from services.validation_service import EXTRACTION_FAILURE_CODES, describe_exceptions
+from services.validation_service import EXTRACTION_FAILURE_CODES, describe_exceptions, run_validation
 
 logger = logging.getLogger(__name__)
 
 NO_REVIEWER_ISSUE = "NO_REVIEWER"
 DRAFT_STATUSES = (InvoiceStatus.READY_FOR_REVIEW, InvoiceStatus.EXCEPTION, InvoiceStatus.POSSIBLE_DUPLICATE)
 DECISION_STATUSES = (InvoiceStatus.AMIGA_REVIEWED, InvoiceStatus.REJECTED)
+# Statuses where Intake and Finance Reviewer may correct extracted data. POSSIBLE_DUPLICATE is a warning, not a lock.
+EDITABLE_STATUSES = (InvoiceStatus.READY_FOR_REVIEW, InvoiceStatus.EXCEPTION, InvoiceStatus.POSSIBLE_DUPLICATE)
+EDITOR_ROLES = (UserRole.INTAKE, UserRole.FINANCE_REVIEWER)
+# Approval is allowed from READY_FOR_REVIEW, and manually (with a justification note) from POSSIBLE_DUPLICATE.
+APPROVABLE_STATUSES = (InvoiceStatus.READY_FOR_REVIEW, InvoiceStatus.POSSIBLE_DUPLICATE)
+CORRECTABLE_FIELDS = (
+    "vendor_name",
+    "invoice_number",
+    "invoice_date",
+    "bank_account",
+    "tax_amount",
+    "discount_amount",
+    "total_amount",
+)
+ITEM_FIELDS = ("description", "quantity", "unit_price", "amount")
+CONFLICT_MESSAGE = "Data sudah diubah user lain, muat ulang."
+NOT_READY_MESSAGE = "Dokumen belum siap disetujui."
+SOD_MESSAGE = "Anda tidak dapat meninjau dokumen yang Anda unggah."
 
 # UPL-02: the file type is detected from the content (magic bytes), not the extension.
 _HEIC_BRANDS = {b"heic", b"heix", b"hevc", b"hevx", b"heim", b"heis", b"hevm", b"hevs", b"mif1", b"msf1"}
@@ -269,6 +293,8 @@ class InvoiceService:
                 )
 
         summary = _summary(invoice, has_reviewer)
+        # SoD (ACC-04): the uploader never decides; the backend re-checks this on approve/reject.
+        decides = user.role == UserRole.FINANCE_REVIEWER and invoice.uploaded_by != user.id
         return InvoiceDetail(
             **summary.model_dump(),
             request_type=invoice.request_type,
@@ -289,7 +315,153 @@ class InvoiceService:
             decision=_decision(db, invoice),
             previous_request=previous,
             version=invoice.version,
+            can_edit=user.role in EDITOR_ROLES and invoice.status in EDITABLE_STATUSES,
+            can_approve=decides and invoice.status in APPROVABLE_STATUSES,
+            can_reject=decides and invoice.status in EDITABLE_STATUSES,
+            approve_requires_note=invoice.status == InvoiceStatus.POSSIBLE_DUPLICATE,
+            last_correction=_last_correction(db, invoice.id),
         )
+
+    # ------------------------------------------------------------------
+    # Data correction (Intake and Finance Reviewer)
+    # ------------------------------------------------------------------
+    @staticmethod
+    def correct_invoice(db: Session, user: User, invoice_id: uuid.UUID, data: InvoiceCorrection) -> InvoiceDetail:
+        """Apply corrections (Intake or Finance Reviewer) with per-field audit, re-validation, and optimistic locking."""
+        InvoiceService.get_accessible_invoice(db, user, invoice_id)
+        # Plain row lock (no outer joins) so FOR UPDATE is valid in PostgreSQL.
+        invoice = (
+            db.query(Invoice).filter(Invoice.id == invoice_id).with_for_update().populate_existing().one()
+        )
+        if invoice.version != data.version:
+            db.rollback()
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=CONFLICT_MESSAGE)
+        if invoice.status not in EDITABLE_STATUSES:
+            db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=f"Dokumen berstatus {invoice.status.value} tidak dapat dikoreksi.",
+            )
+
+        changed = False
+
+        def log(action: str, field: str, old: object, new: object) -> None:
+            nonlocal changed
+            changed = True
+            AuditService.log(
+                db,
+                entity_type="invoice",
+                entity_id=invoice.id,
+                action=action,
+                user_id=user.id,
+                field_name=field,
+                old_value=old,
+                new_value=new,
+            )
+
+        for field in CORRECTABLE_FIELDS:
+            old, new = getattr(invoice, field), getattr(data, field)
+            if _differs(old, new):
+                log("FIELD_UPDATED", field, old, new)
+                setattr(invoice, field, new)
+
+        old_items = sorted(invoice.items, key=lambda item: item.line_no)
+        items_changed = False
+        for index in range(max(len(old_items), len(data.items))):
+            line_no = index + 1
+            old_item = old_items[index] if index < len(old_items) else None
+            new_item = data.items[index] if index < len(data.items) else None
+            if old_item is not None and new_item is not None:
+                for attr in ITEM_FIELDS:
+                    if _differs(getattr(old_item, attr), getattr(new_item, attr)):
+                        log("FIELD_UPDATED", f"items[{line_no}].{attr}", getattr(old_item, attr), getattr(new_item, attr))
+                        items_changed = True
+            elif new_item is not None:
+                log("ITEM_ADDED", f"items[{line_no}]", None, _item_summary(new_item))
+                items_changed = True
+            else:
+                log("ITEM_REMOVED", f"items[{line_no}]", _item_summary(old_item), None)
+                items_changed = True
+
+        # UC-7 A5: a save without real changes writes no audit and keeps the version.
+        if not changed:
+            db.rollback()
+            return InvoiceService.get_detail(db, user, invoice_id)
+
+        if items_changed:
+            # Delete old rows first so unique (invoice_id, line_no) does not clash with the new rows.
+            invoice.items.clear()
+            db.flush()
+            invoice.items = [
+                InvoiceItem(
+                    line_no=line_no,
+                    description=item.description,
+                    quantity=item.quantity,
+                    unit_price=item.unit_price,
+                    amount=item.amount,
+                )
+                for line_no, item in enumerate(data.items, start=1)
+            ]
+
+        AuditService.log(
+            db,
+            entity_type="invoice",
+            entity_id=invoice.id,
+            action="CORRECTION_NOTE",
+            user_id=user.id,
+            new_value=data.reason,
+        )
+        db.flush()
+        # Re-validate as the correcting user; this sets status/exception codes and bumps the version once.
+        run_validation(db, invoice, user.id)
+        db.commit()
+        db.expire_all()
+        return InvoiceService.get_detail(db, user, invoice_id)
+
+    # ------------------------------------------------------------------
+    # Reviewer decision (UC-8, REV-04 to REV-06, ACC-04)
+    # ------------------------------------------------------------------
+    @staticmethod
+    def approve(db: Session, user: User, invoice_id: uuid.UUID, data: InvoiceApproval) -> InvoiceDetail:
+        invoice = _lock_for_decision(db, user, invoice_id, data.version)
+        if invoice.status not in APPROVABLE_STATUSES:
+            db.rollback()
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=NOT_READY_MESSAGE)
+        # 2026-10: a POSSIBLE_DUPLICATE may be approved manually, but only with a justification.
+        if invoice.status == InvoiceStatus.POSSIBLE_DUPLICATE and not data.note:
+            db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                detail=[
+                    {
+                        "loc": ["body", "note"],
+                        "msg": f"{APPROVAL_NOTE_LABEL} wajib diisi untuk menyetujui dokumen POSSIBLE_DUPLICATE.",
+                        "type": "invalid_value",
+                    }
+                ],
+            )
+        if data.note:
+            _log_decision(db, invoice, user, "APPROVAL_NOTE", "approval_note", None, data.note)
+        _decide(db, invoice, user, InvoiceStatus.AMIGA_REVIEWED, "APPROVED")
+        db.commit()
+        db.expire_all()
+        return InvoiceService.get_detail(db, user, invoice_id)
+
+    @staticmethod
+    def reject(db: Session, user: User, invoice_id: uuid.UUID, data: InvoiceRejection) -> InvoiceDetail:
+        invoice = _lock_for_decision(db, user, invoice_id, data.version)
+        if invoice.status not in EDITABLE_STATUSES:
+            db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=f"Dokumen berstatus {invoice.status.value} tidak dapat ditolak.",
+            )
+        invoice.reject_note = data.note
+        _log_decision(db, invoice, user, "REJECT_NOTE", "reject_note", None, data.note)
+        _decide(db, invoice, user, InvoiceStatus.REJECTED, "REJECTED")
+        db.commit()
+        db.expire_all()
+        return InvoiceService.get_detail(db, user, invoice_id)
 
     @staticmethod
     def get_history(db: Session, user: User, invoice_id: uuid.UUID) -> list[AuditEntry]:
@@ -414,6 +586,79 @@ def _summary(invoice: Invoice, has_reviewer: bool) -> InvoiceSummary:
         exception_codes=list(invoice.exception_codes or []),
         has_reviewer=has_reviewer,
     )
+
+
+def _lock_for_decision(db: Session, user: User, invoice_id: uuid.UUID, version: int) -> Invoice:
+    """Client access (ACC-03/05), row lock, SoD (ACC-04), and optimistic version check (REV-06)."""
+    InvoiceService.get_accessible_invoice(db, user, invoice_id)
+    invoice = db.query(Invoice).filter(Invoice.id == invoice_id).with_for_update().populate_existing().one()
+    if invoice.uploaded_by == user.id:
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=SOD_MESSAGE)
+    if invoice.version != version:
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=CONFLICT_MESSAGE)
+    return invoice
+
+
+def _log_decision(db: Session, invoice: Invoice, user: User, action: str, field: str, old: object, new: object) -> None:
+    AuditService.log(
+        db,
+        entity_type="invoice",
+        entity_id=invoice.id,
+        action=action,
+        user_id=user.id,
+        field_name=field,
+        old_value=old,
+        new_value=new,
+    )
+
+
+def _decide(db: Session, invoice: Invoice, user: User, new_status: InvoiceStatus, action: str) -> None:
+    # reviewed_by is set together with the status (ck_invoices_decision_has_reviewer).
+    old_status = invoice.status
+    invoice.reviewed_by = user.id
+    invoice.status = new_status
+    invoice.version = invoice.version + 1
+    _log_decision(db, invoice, user, action, "status", old_status, new_status)
+
+
+def _differs(old: object, new: object) -> bool:
+    """Compare stored and submitted values; decimals compare numerically (1250000 == 1250000.00)."""
+    if old is None or new is None:
+        return old is not new
+    if isinstance(old, Decimal) or isinstance(new, Decimal):
+        return Decimal(str(old)) != Decimal(str(new))
+    return old != new
+
+
+def _item_summary(item: object) -> str:
+    def fmt(value: object) -> str:
+        return "-" if value is None else str(value)
+
+    return (
+        f"{getattr(item, 'description', None) or '-'} | "
+        f"{fmt(getattr(item, 'quantity', None))} x {fmt(getattr(item, 'unit_price', None))} = "
+        f"{fmt(getattr(item, 'amount', None))}"
+    )
+
+
+def _last_correction(db: Session, invoice_id: uuid.UUID) -> CorrectionNote | None:
+    row = (
+        db.query(AuditLog, User)
+        .join(User, User.id == AuditLog.user_id)
+        .filter(
+            AuditLog.entity_type == "invoice",
+            AuditLog.entity_id == invoice_id,
+            AuditLog.action == "CORRECTION_NOTE",
+        )
+        .order_by(AuditLog.created_at.desc())
+        .first()
+    )
+    if row is None:
+        return None
+    entry, author = row
+    return CorrectionNote(by=_user_ref(author), at=entry.created_at, reason=entry.new_value or "")
 
 
 def _decision(db: Session, invoice: Invoice) -> InvoiceDecision | None:

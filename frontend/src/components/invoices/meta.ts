@@ -127,7 +127,20 @@ export const AUDIT_ACTION_LABELS: Record<string, string> = {
   APPROVED: "Setujui Request",
   REJECTED: "Tolak Request",
   FIELD_UPDATED: "Koreksi Data",
+  ITEM_ADDED: "Tambah Baris",
+  ITEM_REMOVED: "Hapus Baris",
+  CORRECTION_NOTE: "Alasan Koreksi",
+  APPROVAL_NOTE: "Catatan Persetujuan",
+  REJECT_NOTE: "Catatan Penolakan",
 };
+
+/** Quick-pick reasons for the correction dialog; they only pre-fill the editable text. */
+export const CORRECTION_REASON_PRESETS = [
+  "Salah baca AI",
+  "Data dari dokumen pendukung",
+  "Dokumen tidak terbaca",
+  "Koreksi pembulatan",
+];
 
 export const CHANNEL_LABELS: Record<string, string> = {
   WhatsApp: "WhatsApp",

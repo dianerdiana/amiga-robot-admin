@@ -14,9 +14,29 @@ const POLL_INTERVAL_MS = 3000;
 const COLUMNS = ["Request ID", "Klien", "Vendor", "No. Invoice", "Total", "Status", "Tanggal", "Kendala", "Aksi"];
 
 type FilterKey = "client" | "status" | "issue" | "from" | "to";
+export type QueueMode = "intake" | "reviewer";
 
-/** Invoice queue for Intake (QUE-01, QUE-02), following templates/invoioce-list.html. */
-export default function InvoiceQueue() {
+/** Per-role copy and routes; the queue data and filters are the same for both roles (QUE-01). */
+const MODES: Record<QueueMode, { basePath: string; menu: string; description: string; empty: string; forbidden: string }> = {
+  intake: {
+    basePath: "/invoices",
+    menu: "Menu Intake",
+    description: "Pantau status ekstraksi dan hasil review invoice dari klien yang ditugaskan kepada Anda.",
+    empty: "Invoice yang Anda unggah akan muncul di sini beserta status ekstraksinya.",
+    forbidden: "Anda tidak memiliki izin untuk membuka antrean klien ini. Silakan hubungi koordinator Intake.",
+  },
+  reviewer: {
+    basePath: "/reviews",
+    menu: "Konsol Finance Reviewer",
+    description: "Daftar invoice dari klien yang ditugaskan kepada Anda untuk diverifikasi dan diproses.",
+    empty: "Invoice dari klien yang ditugaskan kepada Anda akan muncul di sini setelah diunggah Intake.",
+    forbidden: "Anda tidak memiliki izin untuk membuka antrean klien ini. Silakan hubungi Service Lead.",
+  },
+};
+
+/** Invoice queue for Intake and Finance Reviewer (QUE-01, QUE-02), following templates/invoioce-list.html. */
+export default function InvoiceQueue({ mode = "intake" }: { mode?: QueueMode }) {
+  const config = MODES[mode];
   const router = useRouter();
   const searchParams = useSearchParams();
   const [clients, setClients] = useState<AssignedClient[]>([]);
@@ -61,9 +81,9 @@ export default function InvoiceQueue() {
       });
       if (resetPage) next.delete("page");
       const qs = next.toString();
-      router.replace(qs ? `/invoices?${qs}` : "/invoices", { scroll: false });
+      router.replace(qs ? `${config.basePath}?${qs}` : config.basePath, { scroll: false });
     },
-    [router, searchParams],
+    [config.basePath, router, searchParams],
   );
 
   /** Fetch one queue page; state is only updated in callbacks so stale responses are ignored. */
@@ -131,7 +151,7 @@ export default function InvoiceQueue() {
   return (
     <div className="flex w-full flex-col pb-8">
       <nav aria-label="Breadcrumb" className="mb-3 flex items-center gap-2 text-xs text-text-secondary">
-        <span>Menu Intake</span>
+        <span>{config.menu}</span>
         <span aria-hidden="true" className="material-symbols-outlined text-[14px] text-text-disabled">chevron_right</span>
         <span className="font-semibold text-text-primary">Antrean</span>
       </nav>
@@ -144,7 +164,7 @@ export default function InvoiceQueue() {
           <div>
             <h1 className="text-xl font-bold tracking-tight sm:text-2xl">Antrean</h1>
             <p className="mt-0.5 text-xs text-text-secondary sm:text-sm">
-              Pantau status ekstraksi dan hasil review invoice dari klien yang ditugaskan kepada Anda.
+              {config.description}
             </p>
           </div>
         </div>
@@ -157,18 +177,20 @@ export default function InvoiceQueue() {
             <span aria-hidden="true" className={`material-symbols-outlined text-[18px] ${refreshing || (loading && data) ? "animate-spin" : ""}`}>refresh</span>
             Segarkan
           </button>
-          <Link
-            href="/invoices/upload"
-            className="flex h-9 items-center gap-1.5 rounded bg-primary px-4 text-xs font-semibold text-white no-underline shadow-sm hover:bg-primary-hover"
-          >
-            <span aria-hidden="true" className="material-symbols-outlined text-[18px]">upload_file</span>
-            Upload Invoice
-          </Link>
+          {mode === "intake" && (
+            <Link
+              href="/invoices/upload"
+              className="flex h-9 items-center gap-1.5 rounded bg-primary px-4 text-xs font-semibold text-white no-underline shadow-sm hover:bg-primary-hover"
+            >
+              <span aria-hidden="true" className="material-symbols-outlined text-[18px]">upload_file</span>
+              Upload Invoice
+            </Link>
+          )}
         </div>
       </div>
 
       {forbidden ? (
-        <ForbiddenState message="Anda tidak memiliki izin untuk membuka antrean klien ini. Silakan hubungi koordinator Intake." />
+        <ForbiddenState message={config.forbidden} />
       ) : (
         <>
           {error && <ErrorBanner title="Antrean tidak dapat dimuat" message={error} onRetry={refresh} />}
@@ -301,7 +323,7 @@ export default function InvoiceQueue() {
                           <td className="px-3 py-2"><IssueSummary codes={invoice.exception_codes} hasReviewer={invoice.has_reviewer} /></td>
                           <td className="py-2 pl-3 pr-4 text-right">
                             <Link
-                              href={`/invoices/${invoice.id}`}
+                              href={`${config.basePath}/${invoice.id}`}
                               aria-label={`Lihat request ${invoice.request_id}`}
                               className="inline-flex h-8 items-center gap-1 rounded border border-border bg-surface px-3 text-xs font-semibold text-primary no-underline hover:border-primary hover:bg-primary-subtle"
                             >
@@ -343,7 +365,7 @@ export default function InvoiceQueue() {
                         <IssueSummary codes={invoice.exception_codes} hasReviewer={invoice.has_reviewer} />
                       </div>
                       <Link
-                        href={`/invoices/${invoice.id}`}
+                        href={`${config.basePath}/${invoice.id}`}
                         className="mt-3 flex h-10 w-full items-center justify-center rounded border border-border text-xs font-semibold text-primary no-underline hover:bg-primary-subtle"
                       >
                         Periksa Dokumen
@@ -359,7 +381,7 @@ export default function InvoiceQueue() {
                 <p className="mt-1 max-w-sm text-xs text-text-secondary">
                   {activeChips.length
                     ? "Tidak ada dokumen invoice yang cocok dengan kriteria filter aktif saat ini."
-                    : "Invoice yang Anda unggah akan muncul di sini beserta status ekstraksinya."}
+                    : config.empty}
                 </p>
                 {activeChips.length > 0 ? (
                   <button
@@ -369,11 +391,11 @@ export default function InvoiceQueue() {
                   >
                     Reset Semua Filter
                   </button>
-                ) : (
+                ) : mode === "intake" ? (
                   <Link href="/invoices/upload" className="mt-4 inline-flex h-9 items-center rounded bg-primary px-4 text-xs font-semibold text-white no-underline hover:bg-primary-hover">
                     Upload Invoice
                   </Link>
-                )}
+                ) : null}
               </div>
             )}
 
@@ -432,7 +454,7 @@ export default function InvoiceQueue() {
   );
 }
 
-function FilterSelect({
+export function FilterSelect({
   id,
   label,
   value,
@@ -473,7 +495,7 @@ function MobileField({ label, value, mono = false }: { label: string; value: str
   );
 }
 
-function PageButton({
+export function PageButton({
   children,
   onClick,
   disabled = false,
@@ -500,7 +522,7 @@ function PageButton({
 }
 
 /** 1 … 4 5 6 … 12 */
-function pageNumbers(current: number, count: number): (number | null)[] {
+export function pageNumbers(current: number, count: number): (number | null)[] {
   const pages = new Set([1, count, current - 1, current, current + 1].filter((p) => p >= 1 && p <= count));
   const sorted = [...pages].sort((a, b) => a - b);
   return sorted.flatMap((value, index) => (index > 0 && value - sorted[index - 1] > 1 ? [null, value] : [value]));
