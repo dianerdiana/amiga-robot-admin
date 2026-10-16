@@ -29,10 +29,20 @@ export interface EligibleInvoice {
   mime_type: string;
 }
 
+/** A signer on the voucher PDF ("Diajukan oleh" / "Disetujui oleh"). */
+export interface VoucherSigner {
+  name: string;
+  role: string;
+}
+
 export interface VoucherCreatePayload {
   client_id: string;
   invoice_ids: string[];
   purpose: string;
+  /** Role printed under the creator's name in "Diajukan oleh". */
+  submitter_role: string;
+  /** "Disetujui oleh", at least one; typed in by hand because approvers can be outside AMIGA. */
+  approvers: VoucherSigner[];
 }
 
 /** Invoice inside a voucher, with its line items (UC-10 step 3). */
@@ -61,6 +71,9 @@ export interface VoucherDetail {
   created_at: string;
   sent_at: string | null;
   invoices: VoucherInvoiceRef[];
+  /** Null/empty on vouchers created before the signature section existed. */
+  submitter: VoucherSigner | null;
+  approvers: VoucherSigner[];
 }
 
 /** Row of the voucher list (UC-10). */
