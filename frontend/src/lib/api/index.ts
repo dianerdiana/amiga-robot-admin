@@ -10,5 +10,6 @@ export * from "./client";
 export * from "./auth";
 export * from "./users";
 export * from "./clients";
+export * from "./chat";
 export * from "./invoices";
 export * from "./vouchers";

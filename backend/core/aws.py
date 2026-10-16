@@ -25,6 +25,16 @@ def get_bedrock_runtime_client():
     )
 
 
+@lru_cache
+def get_bedrock_agent_runtime_client():
+    """Client Bedrock Agent Runtime untuk Bedrock Knowledge Base retrieval."""
+    return boto3.client(
+        "bedrock-agent-runtime",
+        region_name=settings.BEDROCK_KNOWLEDGE_BASE_REGION,
+        config=Config(retries={"max_attempts": 2, "mode": "standard"}),
+    )
+
+
 def s3_key(*parts: str) -> str:
     """Gabungkan bagian path menjadi object key S3, mis. clients/{id}/invoices/{id}.pdf."""
     return "/".join(p.strip("/") for p in parts if p.strip("/"))
