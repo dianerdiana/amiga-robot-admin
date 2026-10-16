@@ -40,6 +40,18 @@ class Settings:
     TOTAL_TOLERANCE: str = os.getenv("TOTAL_TOLERANCE", "0")
     ROBOT_ADMIN_EMAIL: str = os.getenv("ROBOT_ADMIN_EMAIL", "robot@amiga.system")
 
+    # ===== Chatbot (AI assistant, read-only) =====
+    BEDROCK_CHAT_MODEL_ID: str = os.getenv("BEDROCK_CHAT_MODEL_ID", os.getenv("BEDROCK_MODEL_ID", "apac.amazon.nova-lite-v1:0"))
+    BEDROCK_KNOWLEDGE_BASE_ID: str = os.getenv("BEDROCK_KNOWLEDGE_BASE_ID", "YHZIWDET4V").strip()
+    BEDROCK_KNOWLEDGE_BASE_REGION: str = os.getenv("BEDROCK_KNOWLEDGE_BASE_REGION", os.getenv("BEDROCK_REGION", os.getenv("AWS_REGION", "ap-southeast-1")))
+    BEDROCK_GUARDRAIL_ID: str = os.getenv("BEDROCK_GUARDRAIL_ID", "").strip()
+    BEDROCK_GUARDRAIL_VERSION: str = os.getenv("BEDROCK_GUARDRAIL_VERSION", "").strip()
+    CHAT_RETRIEVE_TOP_K: int = int(os.getenv("CHAT_RETRIEVE_TOP_K", "5"))
+    CHAT_MAX_HISTORY_MESSAGES: int = int(os.getenv("CHAT_MAX_HISTORY_MESSAGES", "12"))
+    CHAT_MAX_MESSAGE_CHARS: int = int(os.getenv("CHAT_MAX_MESSAGE_CHARS", "2000"))
+    CHAT_MAX_OUTPUT_TOKENS: int = int(os.getenv("CHAT_MAX_OUTPUT_TOKENS", "1000"))
+    CHAT_RATE_LIMIT_PER_MINUTE: int = int(os.getenv("CHAT_RATE_LIMIT_PER_MINUTE", "10"))
+
     # Temporary operational mode requested for the reviewer workflow: an intake upload
     # creates reviewer assignments for every active Finance Reviewer automatically.
     REVIEWER_AUTO_ASSIGN_ON_UPLOAD: bool = os.getenv(

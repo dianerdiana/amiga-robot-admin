@@ -51,7 +51,7 @@ UC-5 dan UC-6 sama-sama read-only untuk Intake. Keduanya tetap dipisah di sini m
 
 - Satu file per request. Invoice fisik multi-halaman digabung dulu menjadi satu PDF oleh Intake.
 - JPG dan PNG hanya aktif bila F14 masuk MVP (Should). PDF selalu didukung.
-- Hasil ekstraksi selalu draf. Intake tidak dapat mengeditnya.
+- Hasil ekstraksi selalu draf. Intake tidak dapat mengeditnya. **[Perubahan 2026-10]** Intake dapat mengoreksi draf (lihat UC-5); persetujuan tetap oleh Finance Reviewer.
 - Dokumen tidak boleh hilang dari antrean pada kondisi apa pun.
 
 **Pasca-kondisi:** invoice tersimpan dengan status akhir hasil validasi, file ada di S3, dan upload serta perubahan status tercatat di audit trail.
@@ -120,7 +120,7 @@ UC-5 dan UC-6 sama-sama read-only untuk Intake. Keduanya tetap dipisah di sini m
 
 - Normalisasi: huruf kecil, spasi dan tanda baca dibuang. Rekening dinormalisasi menjadi angka saja.
 - POSSIBLE\_DUPLICATE mengalahkan EXCEPTION, dan EXCEPTION mengalahkan READY\_FOR\_REVIEW.
-- Dokumen POSSIBLE\_DUPLICATE tidak dievaluasi ulang otomatis bila dokumen pembandingnya kemudian ditolak. Jalur satu-satunya adalah menolak dokumen itu.
+- Dokumen POSSIBLE\_DUPLICATE tidak dievaluasi ulang otomatis bila dokumen pembandingnya kemudian ditolak. Jalur satu-satunya adalah menolak dokumen itu. **[Perubahan 2026-10]** POSSIBLE\_DUPLICATE adalah peringatan: data dapat dikoreksi (validasi ulang dapat menghapus temuan), dan Finance Reviewer dapat menyetujui secara manual.
 - Pesan penyebab mengikuti tabel kode pada VAL-06.
 
 **Pasca-kondisi:** status dan exception\_codes mutakhir, dan semua temuan terlihat sebagai indikator di layar review.
@@ -168,7 +168,7 @@ UC-5 dan UC-6 sama-sama read-only untuk Intake. Keduanya tetap dipisah di sini m
 - A1: status masih QUEUED atau PROCESSING. Sistem menampilkan status dan pesan “Dokumen sedang diproses” tanpa data.
 - A2: invoice milik klien yang tidak ditugaskan. Akses ditolak (403).
 
-**Aturan bisnis:** semua field read-only untuk Intake. Tindakan melihat tidak dicatat di audit trail.
+**Aturan bisnis:** semua field read-only untuk Intake. Tindakan melihat tidak dicatat di audit trail. **[Perubahan 2026-10]** Intake dapat mengoreksi field dan baris barang pada status READY\_FOR\_REVIEW, EXCEPTION, atau POSSIBLE\_DUPLICATE, dengan alasan wajib, validasi ulang, dan optimistic locking. Koreksi dicatat per field.
 
 **Pasca-kondisi:** tidak ada perubahan data.
 
@@ -215,7 +215,7 @@ UC-5 dan UC-6 sama-sama read-only untuk Intake. Keduanya tetap dipisah di sini m
 
 **Alur alternatif**
 
-- A1: status POSSIBLE\_DUPLICATE. Semua field read-only dan hanya aksi Tolak (UC-8) yang tersedia.
+- A1: status POSSIBLE\_DUPLICATE. Semua field read-only dan hanya aksi Tolak (UC-8) yang tersedia. **[Perubahan 2026-10]** Field dapat dikoreksi; Setujui dan Tolak tersedia.
 - A2 (langkah 6): version atau status sudah berubah. Pesan “Data sudah diubah user lain, muat ulang”. Perubahan lokal tidak disimpan.
 - A3 (langkah 6): penugasan dicabut. Aksi ditolak dengan pesan jelas.
 - A4 (langkah 4): input tidak valid (angka non-numerik, tanggal salah format). Sistem menandai field dan tidak menyimpan.
@@ -225,7 +225,7 @@ UC-5 dan UC-6 sama-sama read-only untuk Intake. Keduanya tetap dipisah di sini m
 
 **Aturan bisnis**
 
-- Hanya Finance Reviewer yang dapat mengedit. Intake tidak pernah dapat mengedit.
+- Hanya Finance Reviewer yang dapat mengedit. Intake tidak pernah dapat mengedit. **[Perubahan 2026-10]** Intake juga dapat mengoreksi data (bukan menyetujui/menolak), dengan alasan wajib.
 - Setiap penyimpanan memicu validasi ulang.
 - Membuka file asli tidak dicatat di audit trail.
 
@@ -258,7 +258,7 @@ UC-5 dan UC-6 sama-sama read-only untuk Intake. Keduanya tetap dipisah di sini m
 - A2: Setujui dipilih pada status selain READY\_FOR\_REVIEW. Tombol nonaktif, dan API menolak dengan pesan “Dokumen belum siap disetujui”.
 - A3: version atau status berubah. Pesan “Data sudah diubah user lain, muat ulang”.
 - A4: pengaman SoD gagal. Ditolak dengan pesan “Anda tidak dapat meninjau dokumen yang Anda unggah”.
-- A5: status POSSIBLE\_DUPLICATE. Hanya Tolak yang tersedia, tanpa override.
+- A5: status POSSIBLE\_DUPLICATE. Hanya Tolak yang tersedia, tanpa override. **[Perubahan 2026-10]** Setujui juga tersedia secara manual; usulan: wajib catatan justifikasi.
 
 **Aturan bisnis**
 

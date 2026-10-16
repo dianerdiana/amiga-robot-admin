@@ -16,9 +16,12 @@ from schemas.invoice import (
     AssignedClient,
     AuditEntry,
     FileUrlResponse,
+    InvoiceApproval,
     InvoiceChannel,
+    InvoiceCorrection,
     InvoiceDetail,
     InvoicePage,
+    InvoiceRejection,
     InvoiceUploadResponse,
 )
 from services.access import assert_client_access
@@ -33,13 +36,15 @@ router = APIRouter(prefix="/invoices", tags=["Invoices"])
 me_router = APIRouter(prefix="/me", tags=["Invoices"])
 intake_only = require_roles(UserRole.INTAKE)
 reviewer_only = require_roles(UserRole.FINANCE_REVIEWER)
+# Keep one alias shared by Intake and Reviewer endpoints; invoice_access retains our previous semantic name.
 invoice_access = require_roles(UserRole.INTAKE, UserRole.FINANCE_REVIEWER)
+intake_or_reviewer = invoice_access
 
 IssueFilter = Enum("IssueFilter", {code: code for code in [NO_REVIEWER_ISSUE, *EXCEPTION_MESSAGES]}, type=str)
 
 
 @me_router.get("/clients", response_model=list[AssignedClient])
-def list_my_clients(db: Session = Depends(get_db), user: User = Depends(intake_only)):
+def list_my_clients(db: Session = Depends(get_db), user: User = Depends(intake_or_reviewer)):
     """Clients assigned to the user, for the upload dropdown and queue filter."""
     return InvoiceService.list_assigned_clients(db, user)
 
@@ -81,7 +86,7 @@ def list_invoices(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=20, ge=1, le=100),
     db: Session = Depends(get_db),
-    user: User = Depends(intake_only),
+    user: User = Depends(intake_or_reviewer),
 ):
     return InvoiceService.list_invoices(
         db,
@@ -115,17 +120,50 @@ def list_review_queue(
 
 
 @router.get("/{invoice_id}", response_model=InvoiceDetail)
-def get_invoice(invoice_id: uuid.UUID, db: Session = Depends(get_db), user: User = Depends(invoice_access)):
+def get_invoice(invoice_id: uuid.UUID, db: Session = Depends(get_db), user: User = Depends(intake_or_reviewer)):
     return InvoiceService.get_detail(db, user, invoice_id)
 
 
+@router.put("/{invoice_id}", response_model=InvoiceDetail)
+def correct_invoice(
+    invoice_id: uuid.UUID,
+    request: InvoiceCorrection,
+    db: Session = Depends(get_db),
+    user: User = Depends(intake_or_reviewer),
+):
+    """Correct extracted data (Intake or Finance Reviewer). Requires the loaded version and a reason; re-runs validation."""
+    return InvoiceService.correct_invoice(db, user, invoice_id, request)
+
+
+@router.post("/{invoice_id}/approve", response_model=InvoiceDetail)
+def approve_invoice(
+    invoice_id: uuid.UUID,
+    request: InvoiceApproval,
+    db: Session = Depends(get_db),
+    user: User = Depends(reviewer_only),
+):
+    """Approve (UC-8): READY_FOR_REVIEW, or POSSIBLE_DUPLICATE with a justification note."""
+    return InvoiceService.approve(db, user, invoice_id, request)
+
+
+@router.post("/{invoice_id}/reject", response_model=InvoiceDetail)
+def reject_invoice(
+    invoice_id: uuid.UUID,
+    request: InvoiceRejection,
+    db: Session = Depends(get_db),
+    user: User = Depends(reviewer_only),
+):
+    """Reject with a required note (UC-8). REJECTED is final."""
+    return InvoiceService.reject(db, user, invoice_id, request)
+
+
 @router.get("/{invoice_id}/file-url", response_model=FileUrlResponse)
-def get_invoice_file_url(invoice_id: uuid.UUID, db: Session = Depends(get_db), user: User = Depends(invoice_access)):
+def get_invoice_file_url(invoice_id: uuid.UUID, db: Session = Depends(get_db), user: User = Depends(intake_or_reviewer)):
     return InvoiceService.get_file_url(db, user, invoice_id)
 
 
 @router.get("/{invoice_id}/history", response_model=list[AuditEntry])
-def get_invoice_history(invoice_id: uuid.UUID, db: Session = Depends(get_db), user: User = Depends(intake_only)):
+def get_invoice_history(invoice_id: uuid.UUID, db: Session = Depends(get_db), user: User = Depends(intake_or_reviewer)):
     return InvoiceService.get_history(db, user, invoice_id)
 
 
