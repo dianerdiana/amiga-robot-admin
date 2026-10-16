@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from database import get_db
 from middlewares.auth_middleware import require_roles
 from models.user import User, UserRole
-from schemas.user import UserAdminResponse, UserCreate, UserUpdate
+from schemas.user import UserAdminResponse, UserCreate, UserListResponse, UserUpdate
 from services.user_service import UserService
 
 
@@ -14,14 +14,24 @@ router = APIRouter(prefix="/users", tags=["User Management"])
 system_admin_only = require_roles(UserRole.SYSTEM_ADMIN)
 
 
-@router.get("", response_model=list[UserAdminResponse])
+@router.get("", response_model=UserListResponse)
 def list_users(
-    skip: int = Query(default=0, ge=0),
-    limit: int = Query(default=100, ge=1, le=100),
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=10, ge=1, le=100),
+    search: str | None = Query(default=None, max_length=255),
+    role: UserRole | None = Query(default=None),
+    is_active: bool | None = Query(default=None),
     db: Session = Depends(get_db),
     _: User = Depends(system_admin_only),
 ):
-    return UserService.list_users(db, skip=skip, limit=limit)
+    return UserService.list_users(
+        db,
+        page=page,
+        page_size=page_size,
+        search=search,
+        role=role.value if role else None,
+        is_active=is_active,
+    )
 
 
 @router.get("/{user_id}", response_model=UserAdminResponse)

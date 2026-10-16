@@ -60,7 +60,7 @@ export default function ClientManagement() {
       const assignments = await clientService.listAssignments(client.id);
       setAssignedUsers(assignments.users);
       if (mode === "assign") {
-        const users = await userService.list();
+        const { items: users } = await userService.list({ pageSize: 100 });
         setAssignableUsers(users.filter((user) => user.role === "INTAKE" && user.is_active && !assignments.users.some((assigned) => assigned.id === user.id)));
         setSelectedUserId("");
       }

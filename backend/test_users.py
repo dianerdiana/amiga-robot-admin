@@ -8,7 +8,9 @@ from sqlalchemy.pool import StaticPool
 from core.security import hash_password
 from database import Base, get_db
 from main import app
+from models.client import Client
 from models.user import User, UserRole
+from models.user_client import UserClient
 
 
 class UserApiTestCase(unittest.TestCase):
@@ -20,7 +22,8 @@ class UserApiTestCase(unittest.TestCase):
             poolclass=StaticPool,
         )
         cls.Session = sessionmaker(autocommit=False, autoflush=False, bind=cls.engine)
-        Base.metadata.create_all(bind=cls.engine, tables=[User.__table__])
+        cls.tables = [User.__table__, Client.__table__, UserClient.__table__]
+        Base.metadata.create_all(bind=cls.engine, tables=cls.tables)
 
         def override_get_db():
             db = cls.Session()
@@ -36,11 +39,13 @@ class UserApiTestCase(unittest.TestCase):
     def tearDownClass(cls):
         cls.client.close()
         app.dependency_overrides.clear()
-        Base.metadata.drop_all(bind=cls.engine, tables=[User.__table__])
+        Base.metadata.drop_all(bind=cls.engine, tables=list(reversed(cls.tables)))
         cls.engine.dispose()
 
     def setUp(self):
         with self.Session() as db:
+            db.query(UserClient).delete()
+            db.query(Client).delete()
             db.query(User).delete()
             db.add_all(
                 [
@@ -109,7 +114,8 @@ class UserApiTestCase(unittest.TestCase):
 
         listed = self.client.get("/api/v1/users", headers=admin_headers)
         self.assertEqual(listed.status_code, 200, listed.text)
-        self.assertEqual(len(listed.json()), 3)
+        self.assertEqual(listed.json()["total"], 3)
+        self.assertEqual(len(listed.json()["items"]), 3)
 
         updated = self.client.put(
             f"/api/v1/users/{user_id}",
@@ -171,6 +177,30 @@ class UserApiTestCase(unittest.TestCase):
             },
         )
         self.assertEqual(response.status_code, 422, response.text)
+
+    def test_user_list_is_filtered_paginated_and_includes_client_assignments(self):
+        with self.Session() as db:
+            intake = db.query(User).filter(User.email == "intake@amiga.local").one()
+            client = Client(code="CLI-001", name="PT Contoh", is_active=True)
+            db.add(client)
+            db.flush()
+            db.add(UserClient(user_id=intake.id, client_id=client.id))
+            db.commit()
+
+        admin_headers = self.auth(self.token_for("admin@amiga.local"))
+        response = self.client.get(
+            "/api/v1/users?page=1&page_size=1&search=intake&role=INTAKE&is_active=true",
+            headers=admin_headers,
+        )
+        self.assertEqual(response.status_code, 200, response.text)
+        payload = response.json()
+        self.assertEqual(payload["total"], 1)
+        self.assertEqual(payload["page"], 1)
+        self.assertEqual(payload["page_size"], 1)
+        self.assertEqual(payload["total_pages"], 1)
+        self.assertEqual(payload["active_count"], 2)
+        self.assertEqual(payload["inactive_count"], 0)
+        self.assertEqual(payload["items"][0]["assigned_clients"][0]["name"], "PT Contoh")
 
 
 if __name__ == "__main__":

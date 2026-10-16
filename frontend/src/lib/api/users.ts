@@ -14,8 +14,33 @@ export interface ManagedUser {
   email: string;
   role: ManageableUserRole;
   is_active: boolean;
+  assigned_clients: UserClientSummary[];
   created_at: string;
   updated_at: string;
+}
+
+export interface UserClientSummary {
+  id: string;
+  code: string;
+  name: string;
+}
+
+export interface UserListResponse {
+  items: ManagedUser[];
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+  active_count: number;
+  inactive_count: number;
+}
+
+export interface UserListParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  role?: ManageableUserRole | "";
+  isActive?: boolean;
 }
 
 export interface CreateUserPayload {
@@ -35,8 +60,14 @@ export interface UpdateUserPayload {
 }
 
 export const userService = {
-  list(skip = 0, limit = 100): Promise<ManagedUser[]> {
-    return apiFetch<ManagedUser[]>(withQuery("/api/v1/users", { skip, limit }));
+  list(params: UserListParams = {}): Promise<UserListResponse> {
+    return apiFetch<UserListResponse>(withQuery("/api/v1/users", {
+      page: params.page ?? 1,
+      page_size: params.pageSize ?? 10,
+      search: params.search,
+      role: params.role,
+      is_active: params.isActive,
+    }));
   },
 
   create(payload: CreateUserPayload): Promise<ManagedUser> {

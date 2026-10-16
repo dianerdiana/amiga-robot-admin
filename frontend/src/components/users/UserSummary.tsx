@@ -6,9 +6,9 @@ export default function UserSummary({ total, active }: { total: number; active: 
   ];
 
   return (
-    <div className="grid shrink-0 grid-cols-3 gap-2 rounded-lg border border-border bg-surface p-1.5 text-center shadow-sm">
+    <div className="grid shrink-0 grid-cols-3 rounded-xl border border-border bg-surface p-1.5 text-center shadow-sm">
       {items.map((item) => (
-        <div key={item.label} className="px-3 py-1.5 sm:px-4">
+        <div key={item.label} className="border-r border-surface-sunken px-3 py-1.5 last:border-r-0 sm:px-5">
           <span className={`block text-[11px] ${item.color}`}>{item.label}</span>
           <span className={`font-mono text-lg font-bold ${item.color}`}>{item.value}</span>
         </div>
