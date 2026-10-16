@@ -196,7 +196,7 @@ export default function InvoiceQueue({ mode = "intake" }: { mode?: QueueMode }) 
           {error && <ErrorBanner title="Antrean tidak dapat dimuat" message={error} onRetry={refresh} />}
 
           {/* Filter bar */}
-          <div className="mb-3 grid grid-cols-1 gap-3 rounded-lg border border-border bg-surface p-4 shadow-sm sm:grid-cols-2 xl:grid-cols-4">
+          <div className="mb-3 grid grid-cols-1 gap-3 rounded-lg border border-border bg-surface p-4 shadow-sm sm:grid-cols-2 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,0.75fr)_minmax(0,0.9fr)_minmax(0,1.55fr)]">
             <FilterSelect
               id="filterKlien"
               label="Klien Ditugaskan"
@@ -230,9 +230,9 @@ export default function InvoiceQueue({ mode = "intake" }: { mode?: QueueMode }) 
                 ...ISSUE_FILTERS.map((code) => ({ value: code, label: ISSUE_FILTER_LABELS[code] })),
               ]}
             />
-            <fieldset>
+            <fieldset className="min-w-0">
               <legend className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-text-secondary">Rentang Tanggal</legend>
-              <div className="flex items-center gap-1.5">
+              <div className="flex min-w-0 items-center gap-1.5">
                 <input
                   type="date"
                   aria-label="Tanggal mulai"
@@ -468,13 +468,13 @@ export function FilterSelect({
   onChange: (value: string) => void;
 }) {
   return (
-    <label htmlFor={id} className="block">
+    <label htmlFor={id} className="block min-w-0">
       <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-text-secondary">{label}</span>
       <select
         id={id}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="h-9 w-full rounded border border-border-strong bg-white px-2.5 text-xs focus:ring-2 focus:ring-focus-ring"
+        className="h-9 w-full min-w-0 rounded border border-border-strong bg-white px-2.5 text-xs focus:ring-2 focus:ring-focus-ring"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
