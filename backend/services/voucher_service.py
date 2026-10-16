@@ -18,6 +18,7 @@ from models.invoice import Invoice, InvoiceStatus
 from models.invoice_item import InvoiceItem
 from models.user import User
 from models.voucher import Voucher, VoucherStatus
+from models.voucher_approver import VoucherApprover
 from schemas.invoice import ClientRef, InvoiceItemResponse, UserRef
 from schemas.voucher import (
     EligibleInvoice,
@@ -26,6 +27,7 @@ from schemas.voucher import (
     VoucherDownload,
     VoucherInvoiceRef,
     VoucherPage,
+    VoucherSigner,
     VoucherSummary,
     VoucherVendor,
 )
@@ -33,7 +35,7 @@ from services.access import assert_client_access, assigned_client_ids
 from services.audit_service import AuditService
 from services.invoice_service import _delete_object_quietly
 from services.validation_service import normalize_bank_account, normalize_key
-from services.voucher_pdf import VoucherPdfData, VoucherPdfInvoice, VoucherPdfItem, render_voucher_pdf
+from services.voucher_pdf import VoucherPdfData, VoucherPdfInvoice, VoucherPdfItem, VoucherPdfSigner, render_voucher_pdf
 
 logger = logging.getLogger(__name__)
 
@@ -230,6 +232,12 @@ class VoucherService:
             purpose=data.purpose,
             total_amount=total,
             status=VoucherStatus.CREATED,
+            submitter_name=user.name,
+            submitter_role=data.submitter_role,
+            approvers=[
+                VoucherApprover(position=position, name=approver.name, role=approver.role)
+                for position, approver in enumerate(data.approvers)
+            ],
         )
         voucher.file_key = s3_key("clients", str(client.id), "vouchers", f"{voucher.id}.pdf")
         db.add(voucher)
@@ -398,6 +406,7 @@ class VoucherService:
                 selectinload(Voucher.invoices).selectinload(Invoice.items),
                 selectinload(Voucher.client),
                 selectinload(Voucher.creator),
+                selectinload(Voucher.approvers),
             )
             .filter(Voucher.id == voucher_id)
             .first()
@@ -431,6 +440,12 @@ class VoucherService:
                 )
                 for invoice in sorted(voucher.invoices, key=lambda i: (i.invoice_date is None, i.invoice_date, i.created_at))
             ],
+            submitter=(
+                VoucherSigner(name=voucher.submitter_name, role=voucher.submitter_role)
+                if voucher.submitter_name and voucher.submitter_role
+                else None
+            ),
+            approvers=[VoucherSigner(name=approver.name, role=approver.role) for approver in voucher.approvers],
         )
 
 
@@ -456,6 +471,8 @@ def _pdf_data(voucher: Voucher, client: Client, invoices: list[Invoice], now: da
         purpose=voucher.purpose,
         created_date=now.date(),
         total_amount=voucher.total_amount,
+        submitter=VoucherPdfSigner(name=voucher.submitter_name, role=voucher.submitter_role),
+        approvers=[VoucherPdfSigner(name=approver.name, role=approver.role) for approver in voucher.approvers],
         invoices=[
             VoucherPdfInvoice(
                 invoice_number=invoice.invoice_number,

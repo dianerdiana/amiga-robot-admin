@@ -12,6 +12,17 @@ from schemas.invoice import ClientRef, InvoiceItemResponse, UserRef
 
 PURPOSE_MAX_LENGTH = 255
 MAX_VOUCHER_INVOICES = 100
+SIGNER_NAME_MAX_LENGTH = 255
+SIGNER_ROLE_MAX_LENGTH = 100
+
+
+def _signer_text(value: object, *, required: str, label: str, max_length: int) -> str:
+    text = " ".join(str(value or "").split())
+    if not text:
+        raise PydanticCustomError("invalid_value", required)
+    if len(text) > max_length:
+        raise PydanticCustomError("invalid_value", f"{label} maksimal {max_length} karakter.")
+    return text
 
 
 class VoucherVendor(BaseModel):
@@ -41,11 +52,31 @@ class EligibleInvoice(BaseModel):
     mime_type: str
 
 
+class VoucherSigner(BaseModel):
+    """A "Disetujui oleh" entry, typed in by hand because approvers can be outside the system."""
+
+    name: str = Field(default="", validate_default=True)
+    role: str = Field(default="", validate_default=True)
+
+    @field_validator("name", mode="before")
+    @classmethod
+    def _name(cls, value: object) -> str:
+        return _signer_text(value, required="Nama penyetuju wajib diisi.", label="Nama penyetuju", max_length=SIGNER_NAME_MAX_LENGTH)
+
+    @field_validator("role", mode="before")
+    @classmethod
+    def _role(cls, value: object) -> str:
+        return _signer_text(value, required="Jabatan wajib diisi.", label="Jabatan", max_length=SIGNER_ROLE_MAX_LENGTH)
+
+
 class VoucherCreate(BaseModel):
     client_id: uuid.UUID
     invoice_ids: list[uuid.UUID] = Field(min_length=1, max_length=MAX_VOUCHER_INVOICES)
     # Validated even when omitted, so a missing purpose yields the Indonesian 422 message.
     purpose: str = Field(default="", validate_default=True)
+    # "Diajukan oleh": the name is the creator's; the role is editable (defaults to "Intake Support" in the form).
+    submitter_role: str = Field(default="", validate_default=True)
+    approvers: list[VoucherSigner] = Field(default_factory=list, validate_default=True)
 
     @field_validator("invoice_ids")
     @classmethod
@@ -63,6 +94,20 @@ class VoucherCreate(BaseModel):
         if len(text) > PURPOSE_MAX_LENGTH:
             raise PydanticCustomError("invalid_value", f"Peruntukan maksimal {PURPOSE_MAX_LENGTH} karakter.")
         return text
+
+    @field_validator("submitter_role", mode="before")
+    @classmethod
+    def _submitter_role(cls, value: object) -> str:
+        return _signer_text(
+            value, required="Jabatan pengaju wajib diisi.", label="Jabatan pengaju", max_length=SIGNER_ROLE_MAX_LENGTH
+        )
+
+    @field_validator("approvers")
+    @classmethod
+    def _approvers(cls, value: list[VoucherSigner]) -> list[VoucherSigner]:
+        if not value:
+            raise PydanticCustomError("invalid_value", "Minimal satu penyetuju wajib diisi.")
+        return value
 
 
 class VoucherInvoiceRef(BaseModel):
@@ -92,6 +137,9 @@ class VoucherDetail(BaseModel):
     created_at: datetime
     sent_at: datetime | None
     invoices: list[VoucherInvoiceRef]
+    # None/empty on vouchers created before the signature section existed.
+    submitter: VoucherSigner | None = None
+    approvers: list[VoucherSigner] = []
 
 
 class VoucherSummary(BaseModel):

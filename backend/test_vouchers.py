@@ -23,13 +23,23 @@ from models.user import User
 from models.user_client import UserClient
 from models.voucher import Voucher
 from schemas.voucher import VoucherCreate
-from services.voucher_pdf import VoucherPdfData, VoucherPdfInvoice, VoucherPdfItem, format_quantity, render_voucher_pdf
+from services.voucher_pdf import (
+    VoucherPdfData,
+    VoucherPdfInvoice,
+    VoucherPdfItem,
+    VoucherPdfSigner,
+    format_quantity,
+    render_voucher_pdf,
+    signature_rows,
+)
 from services.voucher_service import VoucherService
 from test_invoices import InvoiceTestBase
 
 VENDOR = "PT Sinar Abadi Perkasa"
 BANK = "Bank Mandiri 137-00-1928371-2"
 PURPOSE = "Pembayaran ATK kantor cabang Sudirman"
+SUBMITTER_ROLE = "Admin"
+APPROVERS = [{"name": "Muhammad Arief Rahman", "role": "BOD"}, {"name": "Ali Budi Cecep", "role": "Head of Marketing"}]
 
 
 class VoucherTestBase(InvoiceTestBase):
@@ -74,7 +84,7 @@ class VoucherTestBase(InvoiceTestBase):
             db.expunge(invoice)
             return invoice
 
-    def create(self, invoices, user=None, client=None, purpose=PURPOSE):
+    def create(self, invoices, user=None, client=None, purpose=PURPOSE, submitter_role=SUBMITTER_ROLE, approvers=APPROVERS):
         return self.client.post(
             "/api/v1/vouchers",
             headers=self.auth(user or self.intake_a),
@@ -82,6 +92,8 @@ class VoucherTestBase(InvoiceTestBase):
                 "client_id": str((client or self.client_a).id),
                 "invoice_ids": [str(invoice.id) for invoice in invoices],
                 "purpose": purpose,
+                "submitter_role": submitter_role,
+                "approvers": approvers,
             },
         )
 
@@ -221,6 +233,28 @@ class VoucherCreateTestCase(VoucherTestBase):
         self.assertEqual(self.create([]).status_code, 422)
         self.assertEqual(self.create([invoice, invoice]).status_code, 422)
 
+    def test_signer_validation(self):
+        invoice = self.reviewed()
+        cases = [
+            ({"approvers": []}, "Minimal satu penyetuju wajib diisi."),
+            ({"approvers": [{"name": "  ", "role": "BOD"}]}, "Nama penyetuju wajib diisi."),
+            ({"approvers": [{"name": "Ali", "role": ""}]}, "Jabatan wajib diisi."),
+            ({"submitter_role": " "}, "Jabatan pengaju wajib diisi."),
+            ({"approvers": [{"name": "Ali", "role": "x" * 101}]}, "Jabatan maksimal 100 karakter."),
+        ]
+        for override, message in cases:
+            with self.subTest(message=message):
+                response = self.create([invoice], **override)
+                self.assertEqual(response.status_code, 422)
+                self.assertEqual(response.json()["detail"][0]["msg"], message)
+        self.assertEqual(self.invoice_row(invoice.id).status, InvoiceStatus.AMIGA_REVIEWED)
+
+    def test_signers_are_stored_in_order(self):
+        approvers = [{"name": f"Penyetuju  {n}", "role": f"Jabatan {n}"} for n in range(1, 8)]
+        body = self.create([self.reviewed()], submitter_role="  Admin ", approvers=approvers).json()
+        self.assertEqual(body["submitter"], {"name": self.intake_a.name, "role": "Admin"})
+        self.assertEqual(body["approvers"], [{"name": f"Penyetuju {n}", "role": f"Jabatan {n}"} for n in range(1, 8)])
+
     def test_access_and_role_guards(self):
         invoice = self.reviewed()
         self.assertEqual(self.create([invoice], user=self.reviewer).status_code, 403)
@@ -254,6 +288,7 @@ class VoucherCreateTestCase(VoucherTestBase):
                 try:
                     results.append(VoucherService.create(db, user, VoucherCreate(
                         client_id=self.client_a.id, invoice_ids=[shared.id], purpose=PURPOSE,
+                        submitter_role=SUBMITTER_ROLE, approvers=APPROVERS,
                     )).voucher_number)
                 except HTTPException as exc:
                     results.append(exc.status_code)
@@ -422,13 +457,43 @@ class VoucherPdfTestCase(unittest.TestCase):
                 VoucherPdfInvoice("INV/1", date(2026, 2, 18), Decimal("0"), Decimal("0"), Decimal("7500"), items),
                 VoucherPdfInvoice("INV/2", None, None, Decimal("500"), Decimal("1242500"), []),
             ],
+            submitter=VoucherPdfSigner("Fahmi Faturachman", "Admin"),
+            approvers=[VoucherPdfSigner("Muhammad Arief Rahman", "BOD"), VoucherPdfSigner("Ali Budi Cecep", "Head of Marketing")],
         )
         started = time.perf_counter()
         pdf = render_voucher_pdf(data, compress=False)
         self.assertLess(time.perf_counter() - started, 3)  # VCH-11
         self.assertTrue(pdf.startswith(b"%PDF-"))
-        for text in (b"VCH-CL-A-2026-00007", b"16/10/2026", b"Rp1.250.000,00", b"Peruntukan", b"TEMPLATE SEMENTARA"):
+        for text in (
+            b"VCH-CL-A-2026-00007",
+            b"16/10/2026",
+            b"Rp1.250.000,00",
+            b"Peruntukan",
+            b"Diajukan oleh",
+            b"Disetujui oleh",
+            b"Fahmi Faturachman",
+            b"Ali Budi Cecep",
+            b"Head of Marketing",
+        ):
             self.assertIn(text, pdf)
+        self.assertNotIn(b"TEMPLATE SEMENTARA", pdf)
+
+    def test_signature_rows(self):
+        submitter = VoucherPdfSigner("Pengaju", "Admin")
+
+        def shape(count):
+            approvers = [VoucherPdfSigner(f"P{n}", "BOD") for n in range(count)]
+            rows = signature_rows(submitter, approvers)
+            self.assertEqual(rows[0][0], ("Diajukan oleh", submitter))
+            self.assertEqual([signer for row in rows for _, signer in row][1:], approvers)
+            return [len(row) for row in rows]
+
+        # One approver shares the submitter's row; otherwise the submitter is alone above rows of three.
+        self.assertEqual(shape(1), [2])
+        self.assertEqual(shape(2), [1, 2])
+        self.assertEqual(shape(3), [1, 3])
+        self.assertEqual(shape(4), [1, 3, 1])
+        self.assertEqual(shape(7), [1, 3, 3, 1])
 
     def test_quantity_format(self):
         self.assertEqual(format_quantity(Decimal("1250.5000")), "1.250,5")

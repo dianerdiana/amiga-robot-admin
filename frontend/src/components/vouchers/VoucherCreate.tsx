@@ -11,14 +11,23 @@ import {
   invoiceService,
   voucherService,
 } from "@/lib/api";
+import { useAuth } from "@/contexts/AuthContext";
 import { formatDate, formatRupiah } from "@/lib/format";
 import FileViewerModal from "@/components/invoices/FileViewerModal";
 import { StatusBadge } from "@/components/invoices/StatusBadge";
 import DownloadVoucherButton from "./DownloadVoucherButton";
 import { VoucherStatusChip } from "./meta";
+import SignatureBlock from "./SignatureBlock";
 import VoucherPreview from "./VoucherPreview";
 
 export const PURPOSE_MAX = 255;
+export const SIGNER_NAME_MAX = 255;
+export const SIGNER_ROLE_MAX = 100;
+const DEFAULT_SUBMITTER_ROLE = "Intake Support";
+
+type ApproverDraft = { key: number; name: string; role: string };
+let approverKey = 0;
+const blankApprover = (): ApproverDraft => ({ key: ++approverKey, name: "", role: "" });
 
 type Step = "select" | "preview" | "done";
 type Banner = { kind: "conflict" | "revoked" | "failed"; message: string } | null;
@@ -43,6 +52,7 @@ function disabledReason(invoice: EligibleInvoice, lockKey: string | null): strin
  * "Ubah pilihan" returns with the selection intact (UC-2 A1). The backend re-checks every rule.
  */
 export default function VoucherCreate() {
+  const { user } = useAuth();
   const [clients, setClients] = useState<AssignedClient[] | null>(null);
   const [clientId, setClientId] = useState("");
   const [vendors, setVendors] = useState<VoucherVendor[] | null>(null);
@@ -51,6 +61,10 @@ export default function VoucherCreate() {
   const [selected, setSelected] = useState<string[]>([]);
   const [purpose, setPurpose] = useState("");
   const [purposeTouched, setPurposeTouched] = useState(false);
+  const [submitterRole, setSubmitterRole] = useState(DEFAULT_SUBMITTER_ROLE);
+  const [approvers, setApprovers] = useState<ApproverDraft[]>(() => [blankApprover()]);
+  // Field ids that were blurred; "all" once the user tried to continue to the preview.
+  const [signersTouched, setSignersTouched] = useState<Set<string>>(() => new Set());
   const [loadError, setLoadError] = useState<string | null>(null);
   const [banner, setBanner] = useState<Banner>(null);
   const [step, setStep] = useState<Step>("select");
@@ -153,7 +167,15 @@ export default function VoucherCreate() {
   const vendor = vendors?.find((item) => item.key === vendorKey) ?? null;
   const purposeText = purpose.trim();
   const purposeError = purposeTouched && !purposeText ? "Peruntukan wajib diisi sebelum melanjutkan ke pratinjau." : null;
-  const canPreview = selectedInvoices.length > 0 && purposeText.length > 0;
+  const submitter = { name: user?.name ?? "", role: submitterRole.trim() };
+  const approverList = approvers.map((approver) => ({ name: approver.name.trim(), role: approver.role.trim() }));
+  const signersComplete = submitter.role.length > 0 && approverList.every((approver) => approver.name && approver.role);
+  const showSignerError = (id: string) => signersTouched.has("all") || signersTouched.has(id);
+  const touchSigner = (id: string) => setSignersTouched((current) => new Set(current).add(id));
+  const canPreview = selectedInvoices.length > 0 && purposeText.length > 0 && signersComplete;
+
+  const updateApprover = (key: number, field: "name" | "role", value: string) =>
+    setApprovers((current) => current.map((approver) => (approver.key === key ? { ...approver, [field]: value } : approver)));
 
   const selectable = (invoices ?? []).filter((invoice) => !disabledReason(invoice, lockKey));
   const allSelected = selectable.length > 0 && selectable.every((invoice) => selected.includes(invoice.id));
@@ -168,6 +190,7 @@ export default function VoucherCreate() {
 
   const goPreview = () => {
     setPurposeTouched(true);
+    touchSigner("all");
     if (!canPreview) return;
     setBanner(null);
     setStep("preview");
@@ -183,6 +206,8 @@ export default function VoucherCreate() {
         client_id: client.id,
         invoice_ids: selectedInvoices.map((invoice) => invoice.id),
         purpose: purposeText,
+        submitter_role: submitter.role,
+        approvers: approverList,
       });
       setCreated(voucher);
       setStep("done");
@@ -210,6 +235,8 @@ export default function VoucherCreate() {
     setSelected([]);
     setPurpose("");
     setPurposeTouched(false);
+    // Approvers usually repeat between vouchers, so they are kept; only the error state resets.
+    setSignersTouched(new Set());
     setStep("select");
     void reloadList();
   };
@@ -243,6 +270,8 @@ export default function VoucherCreate() {
         vendorName={vendor.name}
         invoices={selectedInvoices}
         purpose={purposeText}
+        submitter={submitter}
+        approvers={approverList}
         banner={bannerView}
         creating={creating}
         onBack={() => {
@@ -348,6 +377,88 @@ export default function VoucherCreate() {
             </p>
           </div>
         </div>
+      </section>
+
+      {/* Signatures printed at the bottom of the voucher */}
+      <section className="max-w-[720px] rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5">
+        <h2 className="mb-1 flex items-center gap-2 text-sm font-semibold">
+          <span aria-hidden="true" className="material-symbols-outlined text-[20px] text-primary">draw</span>
+          Tanda Tangan
+        </h2>
+        <p className="mb-3 text-[11px] text-text-secondary">Dicetak di bagian bawah voucher. Penyetuju boleh dari luar sistem AMIGA.</p>
+
+        <h3 className="mb-2 text-xs font-semibold text-text-secondary">Diajukan oleh</h3>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div>
+            <label htmlFor="voucher-submitter-name" className="mb-1 block text-xs font-semibold text-text-primary">Nama</label>
+            <input
+              id="voucher-submitter-name"
+              value={submitter.name}
+              readOnly
+              className="h-10 w-full rounded border border-border bg-surface-muted px-3 text-sm text-text-secondary"
+            />
+          </div>
+          <SignerInput
+            id="voucher-submitter-role"
+            label="Jabatan"
+            value={submitterRole}
+            maxLength={SIGNER_ROLE_MAX}
+            placeholder="Contoh: Admin"
+            error={showSignerError("submitter-role") && !submitter.role ? "Jabatan pengaju wajib diisi." : null}
+            onChange={setSubmitterRole}
+            onBlur={() => touchSigner("submitter-role")}
+          />
+        </div>
+
+        <h3 className="mb-2 mt-4 text-xs font-semibold text-text-secondary">Disetujui oleh</h3>
+        <ol className="flex flex-col gap-3">
+          {approvers.map((approver, index) => {
+            const nameId = `voucher-approver-name-${approver.key}`;
+            const roleId = `voucher-approver-role-${approver.key}`;
+            return (
+              <li key={approver.key} className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
+                <SignerInput
+                  id={nameId}
+                  label={`Nama penyetuju ${index + 1}`}
+                  value={approver.name}
+                  maxLength={SIGNER_NAME_MAX}
+                  placeholder="Contoh: Muhammad Arief Rahman"
+                  error={showSignerError(nameId) && !approver.name.trim() ? "Nama penyetuju wajib diisi." : null}
+                  onChange={(value) => updateApprover(approver.key, "name", value)}
+                  onBlur={() => touchSigner(nameId)}
+                />
+                <SignerInput
+                  id={roleId}
+                  label="Jabatan"
+                  value={approver.role}
+                  maxLength={SIGNER_ROLE_MAX}
+                  placeholder="Contoh: BOD"
+                  error={showSignerError(roleId) && !approver.role.trim() ? "Jabatan wajib diisi." : null}
+                  onChange={(value) => updateApprover(approver.key, "role", value)}
+                  onBlur={() => touchSigner(roleId)}
+                />
+                <button
+                  type="button"
+                  disabled={approvers.length === 1}
+                  onClick={() => setApprovers((current) => current.filter((item) => item.key !== approver.key))}
+                  aria-label={`Hapus penyetuju ${index + 1}`}
+                  title={approvers.length === 1 ? "Minimal satu penyetuju" : "Hapus penyetuju"}
+                  className="flex h-10 w-10 items-center justify-center self-end rounded border border-border text-text-secondary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-40 sm:mt-5 sm:self-start"
+                >
+                  <span aria-hidden="true" className="material-symbols-outlined text-[18px]">delete</span>
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+        <button
+          type="button"
+          onClick={() => setApprovers((current) => [...current, blankApprover()])}
+          className="mt-3 flex h-9 items-center gap-1.5 rounded border border-dashed border-border-strong px-3 text-xs font-semibold text-primary hover:bg-primary-subtle"
+        >
+          <span aria-hidden="true" className="material-symbols-outlined text-[18px]">person_add</span>
+          Tambah penyetuju
+        </button>
       </section>
 
       {/* Invoice picker (VCH-02, VCH-03) */}
@@ -485,7 +596,7 @@ export default function VoucherCreate() {
               type="button"
               disabled={selectedInvoices.length === 0}
               onClick={goPreview}
-              title={!purposeText ? "Isi Peruntukan terlebih dahulu" : undefined}
+              title={!purposeText ? "Isi Peruntukan terlebih dahulu" : !signersComplete ? "Lengkapi tanda tangan terlebih dahulu" : undefined}
               className="flex h-10 items-center gap-1.5 rounded bg-primary px-5 text-xs font-semibold text-white shadow-sm hover:bg-primary-hover disabled:cursor-not-allowed disabled:bg-border-strong"
             >
               Lanjut ke Preview Voucher
@@ -508,6 +619,46 @@ function Field({ id, label, hint, children }: { id: string; label: string; hint:
       </label>
       {children}
       <p className="mt-1 text-[11px] text-text-secondary">{hint}</p>
+    </div>
+  );
+}
+
+function SignerInput({
+  id,
+  label,
+  value,
+  maxLength,
+  placeholder,
+  error,
+  onChange,
+  onBlur,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  maxLength: number;
+  placeholder: string;
+  error: string | null;
+  onChange: (value: string) => void;
+  onBlur: () => void;
+}) {
+  return (
+    <div>
+      <label htmlFor={id} className="mb-1 block text-xs font-semibold text-text-primary">
+        {label} <span className="text-danger">*</span>
+      </label>
+      <input
+        id={id}
+        value={value}
+        maxLength={maxLength}
+        placeholder={placeholder}
+        onChange={(event) => onChange(event.target.value)}
+        onBlur={onBlur}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `${id}-error` : undefined}
+        className={`h-10 w-full rounded border bg-white px-3 text-sm focus:ring-2 focus:ring-focus-ring ${error ? "border-danger" : "border-border-strong"}`}
+      />
+      {error && <p id={`${id}-error`} className="mt-1 text-[11px] font-medium text-danger">{error}</p>}
     </div>
   );
 }
@@ -558,6 +709,11 @@ function VoucherCreated({ voucher: created, onStartOver }: { voucher: VoucherDet
           <Meta label="Nominal" value={formatRupiah(voucher.total_amount)} mono />
           <div className="sm:col-span-2"><Meta label="Peruntukan" value={voucher.purpose} /></div>
         </dl>
+        {voucher.submitter && (
+          <div className="mt-4 rounded-lg border border-border px-4 pb-4">
+            <SignatureBlock submitter={voucher.submitter} approvers={voucher.approvers} />
+          </div>
+        )}
         <div className="mt-6 flex flex-col-reverse gap-3 border-t border-border pt-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex flex-wrap gap-2">
             <Link href={`/vouchers/${voucher.id}`} className="flex h-10 items-center rounded border border-border px-4 text-xs font-semibold text-text-primary no-underline hover:bg-surface-muted">
