@@ -40,27 +40,57 @@ const HEADER_FIELDS: { field: HeaderField; label: string; type: "text" | "date" 
 let rowKey = 0;
 const toText = (value: string | null | undefined) => value ?? "";
 
+/** Remove insignificant trailing zeroes without converting through a JS number. */
+const normalizeDecimalText = (value: string | null | undefined) => {
+  const text = toText(value);
+  const match = /^(\d+)\.(\d+)$/.exec(text);
+  if (!match) return text;
+
+  const fraction = match[2].replace(/0+$/, "");
+  return fraction ? `${match[1]}.${fraction}` : match[1];
+};
+
+/** Format the canonical API decimal for editing with Indonesian separators, without an Rp prefix. */
+const formatDecimalInput = (value: string) => {
+  if (!value) return "";
+  const [integer, fraction] = value.split(".");
+  const grouped = integer.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return fraction === undefined ? grouped : `${grouped},${fraction}`;
+};
+
+/** Convert an Indonesian-formatted edit value back to the canonical decimal used by the API. */
+const parseDecimalInput = (value: string, decimalPlaces: number) => {
+  const filtered = value.replace(/[^0-9.,]/g, "");
+  if (!filtered) return "";
+
+  const commaIndex = filtered.indexOf(",");
+  const integerSource = commaIndex >= 0 ? filtered.slice(0, commaIndex) : filtered;
+  const integer = integerSource.replace(/\D/g, "") || "0";
+  if (commaIndex < 0) return integer;
+
+  const fraction = filtered.slice(commaIndex + 1).replace(/\D/g, "").slice(0, decimalPlaces);
+  return `${integer}.${fraction}`;
+};
+
 function initialState(invoice: InvoiceDetail): FormState {
   return {
     vendor_name: toText(invoice.vendor_name),
     invoice_number: toText(invoice.invoice_number),
     invoice_date: toText(invoice.invoice_date),
     bank_account: toText(invoice.bank_account),
-    tax_amount: toText(invoice.tax_amount),
-    discount_amount: toText(invoice.discount_amount),
-    total_amount: toText(invoice.total_amount),
+    tax_amount: normalizeDecimalText(invoice.tax_amount),
+    discount_amount: normalizeDecimalText(invoice.discount_amount),
+    total_amount: normalizeDecimalText(invoice.total_amount),
     items: invoice.items.map((item) => ({
       key: ++rowKey,
       description: toText(item.description),
-      quantity: toText(item.quantity),
-      unit_price: toText(item.unit_price),
-      amount: toText(item.amount),
+      quantity: normalizeDecimalText(item.quantity),
+      unit_price: normalizeDecimalText(item.unit_price),
+      amount: normalizeDecimalText(item.amount),
     })),
   };
 }
 
-/** Light client-side input filter only: digits and one decimal point. The backend validates the value. */
-const numericInput = (value: string) => value.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1");
 const nullable = (value: string) => (value.trim() === "" ? null : value.trim());
 const toNumber = (value: string) => (value.trim() === "" || Number.isNaN(Number(value)) ? 0 : Number(value));
 
@@ -139,13 +169,17 @@ export default function InvoiceCorrectionForm({
   const difference = form.total_amount.trim() === "" ? null : expected - toNumber(form.total_amount);
 
   const setField = (field: HeaderField, value: string, type: string) => {
-    setForm((current) => ({ ...current, [field]: type === "number" ? numericInput(value) : value }));
+    setForm((current) => ({ ...current, [field]: type === "number" ? parseDecimalInput(value, 2) : value }));
     setErrors((current) => withoutKeys(current, (key) => key === field));
   };
   const setRow = (index: number, field: keyof Omit<Row, "key">, value: string) => {
     setForm((current) => ({
       ...current,
-      items: current.items.map((row, i) => (i === index ? { ...row, [field]: field === "description" ? value : numericInput(value) } : row)),
+      items: current.items.map((row, i) =>
+        i === index
+          ? { ...row, [field]: field === "description" ? value : parseDecimalInput(value, field === "quantity" ? 4 : 2) }
+          : row,
+      ),
     }));
     setErrors((current) => withoutKeys(current, (key) => key === `items.${index}.${field}` || key === `items.${index}`));
   };
@@ -259,8 +293,8 @@ export default function InvoiceCorrectionForm({
               <input
                 type={type === "date" ? "date" : "text"}
                 inputMode={type === "number" ? "decimal" : undefined}
-                value={form[field]}
-                placeholder={type === "number" ? "0.00" : "Tidak ditemukan"}
+                value={type === "number" ? formatDecimalInput(form[field]) : form[field]}
+                placeholder={type === "number" ? "0,00" : "Tidak ditemukan"}
                 onChange={(event) => setField(field, event.target.value, type)}
                 aria-invalid={Boolean(errors[field])}
                 className={inputClass(field, mono)}
@@ -314,7 +348,7 @@ export default function InvoiceCorrectionForm({
                         <input
                           aria-label={`Baris ${index + 1} ${field}`}
                           inputMode={field === "description" ? undefined : "decimal"}
-                          value={row[field]}
+                          value={field === "description" ? row[field] : formatDecimalInput(row[field])}
                           onChange={(event) => setRow(index, field, event.target.value)}
                           aria-invalid={Boolean(errors[key])}
                           className={`${inputClass(key, field !== "description")} ${field === "description" ? "" : "text-right"}`}
