@@ -1,24 +1,10 @@
-import os
-from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-# Muat file konfigurasi .env
-load_dotenv()
+from core.config import settings
 
-# Ambil konfigurasi dari environment variable
-DB_USER = os.getenv("DB_USER", "postgres")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "postgres")
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = os.getenv("DB_PORT", "5432")
-DB_NAME = os.getenv("DB_NAME", "amiga_robot_admin")
-
-DEFAULT_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-DATABASE_URL = os.getenv("DATABASE_URL", DEFAULT_DATABASE_URL)
-
-# SQLAlchemy 1.4+ / 2.0+ mewajibkan skema 'postgresql://' alih-alih 'postgres://'
-if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+# Semua nilai koneksi wajib diset secara eksplisit (lihat core/config.py); tidak ada default.
+DATABASE_URL = settings.database_url
 
 # Buat SQLAlchemy Engine
 # pool_pre_ping=True memeriksa koneksi sebelum digunakan agar koneksi stale otomatis di-refresh

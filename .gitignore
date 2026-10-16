@@ -11,3 +11,5 @@ ENV/
 # IDE
 .vscode/
 .idea/
+
+prod/

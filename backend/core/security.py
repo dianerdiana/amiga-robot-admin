@@ -43,7 +43,7 @@ def create_token(
 
     encoded_jwt = jwt.encode(
         payload,
-        settings.JWT_SECRET_KEY,
+        settings.JWT_SECRET_KEY.get_secret_value(),
         algorithm=settings.JWT_ALGORITHM
     )
     return encoded_jwt
@@ -66,7 +66,7 @@ def decode_token(token: str) -> Optional[dict[str, Any]]:
     try:
         payload = jwt.decode(
             token,
-            settings.JWT_SECRET_KEY,
+            settings.JWT_SECRET_KEY.get_secret_value(),
             algorithms=[settings.JWT_ALGORITHM]
         )
         return payload
