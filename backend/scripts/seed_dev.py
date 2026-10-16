@@ -1,8 +1,8 @@
 """Seed all development data: login users, demo clients, and user-client assignments.
 
-Run from the backend folder after `alembic upgrade head` (the migration already
-creates the AMIGA Robot system user):
-    python -m scripts.seed_dev --password 'S3cret!'
+Run from the backend folder after `alembic upgrade head`. The seed also restores
+the non-login AMIGA Robot system user if its row was removed:
+    python -m scripts.seed_dev
     python -m scripts.seed_dev --password 'S3cret!' --skip-clients
 
 Inside docker compose (database host "db"), --force is required as well:
@@ -21,6 +21,7 @@ from sqlalchemy import or_
 from sqlalchemy.engine import make_url
 from sqlalchemy.orm import Session
 
+from core.config import settings
 from core.security import hash_password
 from database import DATABASE_URL, SessionLocal
 from models.client import Client
@@ -42,8 +43,23 @@ DEV_CLIENTS = [
 ]
 
 
-def seed_users(db: Session, password: str, verbose: bool = True) -> None:
-    """Create the development login users; existing users are never modified."""
+def seed_users(db: Session, password: str = DEFAULT_PASSWORD, verbose: bool = True) -> None:
+    """Create the system robot and development login users; existing users are never modified."""
+    robot_email = settings.ROBOT_ADMIN_EMAIL
+    if db.query(User).filter(User.email == robot_email).first():
+        _log(verbose, f"[SKIP] system user {robot_email} already exists")
+    else:
+        db.add(
+            User(
+                name="AMIGA Robot",
+                email=robot_email,
+                password_hash=None,
+                role=UserRole.ROBOT_ADMIN,
+                is_active=True,
+            )
+        )
+        _log(verbose, f"[NEW]  system user {robot_email} ({UserRole.ROBOT_ADMIN.value})")
+
     for name, email, role in DEV_USERS:
         if db.query(User).filter(User.email == email).first():
             _log(verbose, f"[SKIP] user {email} already exists")
