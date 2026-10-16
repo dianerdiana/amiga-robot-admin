@@ -3,13 +3,46 @@
 import { apiFetch, withQuery } from "./client";
 import type { ManagedUser } from "./users";
 
-export interface ManagedClient {
+export interface ClientRecord {
   id: string;
   code: string;
   name: string;
   is_active: boolean;
   created_at: string;
   updated_at: string;
+}
+
+export interface ManagedClient extends ClientRecord {
+  active_reviewers: ClientAssignedUser[];
+  assigned_intake: ClientAssignedUser[];
+}
+
+export interface ClientAssignedUser {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface ClientListResponse {
+  items: ManagedClient[];
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+  active_count: number;
+  inactive_count: number;
+  clients_with_reviewer: number;
+  clients_without_reviewer: number;
+  active_intake_staff: number;
+}
+
+export interface ClientListParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  isActive?: boolean;
+  reviewerStatus?: "assigned" | "unassigned" | "";
+  intakeStatus?: "none" | "single" | "complete" | "";
 }
 
 export interface CreateClientPayload {
@@ -30,26 +63,33 @@ export interface ClientAssignmentList {
 }
 
 export const clientService = {
-  list(skip = 0, limit = 100): Promise<ManagedClient[]> {
-    return apiFetch<ManagedClient[]>(withQuery("/api/v1/clients", { skip, limit }));
+  list(params: ClientListParams = {}): Promise<ClientListResponse> {
+    return apiFetch<ClientListResponse>(withQuery("/api/v1/clients", {
+      page: params.page ?? 1,
+      page_size: params.pageSize ?? 10,
+      search: params.search,
+      is_active: params.isActive,
+      reviewer_status: params.reviewerStatus,
+      intake_status: params.intakeStatus,
+    }));
   },
 
-  create(payload: CreateClientPayload): Promise<ManagedClient> {
-    return apiFetch<ManagedClient>("/api/v1/clients", {
+  create(payload: CreateClientPayload): Promise<ClientRecord> {
+    return apiFetch<ClientRecord>("/api/v1/clients", {
       method: "POST",
       body: JSON.stringify(payload),
     });
   },
 
-  update(clientId: string, payload: UpdateClientPayload): Promise<ManagedClient> {
-    return apiFetch<ManagedClient>(`/api/v1/clients/${clientId}`, {
+  update(clientId: string, payload: UpdateClientPayload): Promise<ClientRecord> {
+    return apiFetch<ClientRecord>(`/api/v1/clients/${clientId}`, {
       method: "PUT",
       body: JSON.stringify(payload),
     });
   },
 
-  deactivate(clientId: string): Promise<ManagedClient> {
-    return apiFetch<ManagedClient>(`/api/v1/clients/${clientId}`, {
+  deactivate(clientId: string): Promise<ClientRecord> {
+    return apiFetch<ClientRecord>(`/api/v1/clients/${clientId}`, {
       method: "DELETE",
     });
   },

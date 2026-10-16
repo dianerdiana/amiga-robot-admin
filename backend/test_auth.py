@@ -93,7 +93,9 @@ def run_tests():
     # Kasus C: Reviewer mengakses endpoint finance-reviewer -> Harus 200 OK
     res_role3 = client.get("/auth/test-role/finance-reviewer", headers=headers_reviewer)
     assert res_role3.status_code == 200
-    print(" [OK] FINANCE_REVIEWER mengakses endpoint FINANCE_REVIEWER: DIIZINKAN (200 OK).")
+    print(
+        " [OK] FINANCE_REVIEWER mengakses endpoint FINANCE_REVIEWER: DIIZINKAN (200 OK)."
+    )
 
     # Kasus D: Reviewer mencoba mengakses endpoint admin -> Harus 403 Forbidden!
     res_role4 = client.get("/auth/test-role/admin-only", headers=headers_reviewer)
@@ -110,9 +112,13 @@ def run_tests():
     assert res_multi_admin.status_code == 200
     print(" [OK] SYSTEM_ADMIN mengakses endpoint multi-role: DIIZINKAN (200 OK).")
 
-    res_multi_intake = client.get("/auth/test-role/lead-or-admin", headers=headers_intake)
+    res_multi_intake = client.get(
+        "/auth/test-role/lead-or-admin", headers=headers_intake
+    )
     assert res_multi_intake.status_code == 403
-    print(" [OK] INTAKE mengakses endpoint multi-role (Lead/Admin): DITOLAK (403 Forbidden).")
+    print(
+        " [OK] INTAKE mengakses endpoint multi-role (Lead/Admin): DITOLAK (403 Forbidden)."
+    )
 
     print("\n SEMUA PENGUJIAN OTENTIKASI & ROLE MIDDLEWARE BERHASIL 100%!")
 

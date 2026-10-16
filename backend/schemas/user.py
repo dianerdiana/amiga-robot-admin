@@ -71,6 +71,23 @@ class UserAdminResponse(BaseModel):
     email: InternalEmail
     role: UserRole
     is_active: bool
+    assigned_clients: list["UserClientSummary"] = Field(default_factory=list)
     created_at: datetime
     updated_at: datetime
+
+
+class UserClientSummary(BaseModel):
+    id: uuid.UUID
+    code: str
+    name: str
+
+
+class UserListResponse(BaseModel):
+    items: list[UserAdminResponse]
+    total: int
+    page: int
+    page_size: int
+    total_pages: int
+    active_count: int
+    inactive_count: int
 
