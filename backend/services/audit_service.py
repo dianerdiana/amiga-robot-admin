@@ -1,10 +1,22 @@
 import uuid
 
+from sqlalchemy import case
 from sqlalchemy.orm import Session
 
 from core.config import settings
 from models.audit_log import AuditLog
 from models.user import User
+
+
+# Rows written in one transaction share created_at; show them in a logical order (newest first):
+# the correction/decision note, then the field changes, then the resulting validation and status.
+_ACTION_ORDER = case(
+    (AuditLog.action.in_(("CORRECTION_NOTE", "APPROVAL_NOTE", "REJECT_NOTE")), 0),
+    (AuditLog.action.in_(("FIELD_UPDATED", "ITEM_ADDED", "ITEM_REMOVED")), 1),
+    (AuditLog.action == "EXCEPTIONS_DETECTED", 2),
+    (AuditLog.action.in_(("STATUS_CHANGED", "APPROVED", "REJECTED")), 3),
+    else_=4,
+)
 
 
 class AuditService:
@@ -42,7 +54,7 @@ class AuditService:
             db.query(AuditLog, User)
             .join(User, User.id == AuditLog.user_id)
             .filter(AuditLog.entity_type == entity_type, AuditLog.entity_id == entity_id)
-            .order_by(AuditLog.created_at.desc(), AuditLog.id)
+            .order_by(AuditLog.created_at.desc(), _ACTION_ORDER, AuditLog.id)
             .all()
         )
 

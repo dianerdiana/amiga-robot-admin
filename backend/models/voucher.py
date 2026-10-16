@@ -3,6 +3,7 @@ from enum import Enum
 
 from sqlalchemy import CheckConstraint, Column, DateTime, Enum as SQLEnum, ForeignKey, Numeric, String, func
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 from database import Base
 
@@ -35,3 +36,7 @@ class Voucher(Base):
     status = Column(SQLEnum(VoucherStatus, name="voucher_status"), nullable=False)
     sent_at = Column(DateTime(timezone=True), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+    client = relationship("Client")
+    creator = relationship("User", foreign_keys=[created_by])
+    invoices = relationship("Invoice", back_populates="voucher", order_by="Invoice.created_at")

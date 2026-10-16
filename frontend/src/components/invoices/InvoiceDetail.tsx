@@ -3,11 +3,16 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { AuditEntry, InvoiceDetail as InvoiceDetailData, errorStatus, invoiceService } from "@/lib/api";
-import { formatBytes, formatDate, formatDateTime, formatQuantity, formatRupiah } from "@/lib/format";
+import { formatBytes, formatDateTime } from "@/lib/format";
+import DecisionBlock from "./DecisionBlock";
+import ExtractedData from "./ExtractedData";
 import FileViewerModal from "./FileViewerModal";
+import FindingsList from "./FindingsList";
+import HistoryPanel from "./HistoryPanel";
+import InvoiceCorrectionForm from "./InvoiceCorrectionForm";
 import { ErrorBanner, ForbiddenState, PageSpinner } from "./States";
-import { IssueChip, StatusBadge } from "./StatusBadge";
-import { AUDIT_ACTION_LABELS, CHANNEL_LABELS, EXTRACTION_FAILURE_CODES, isProcessing } from "./meta";
+import { StatusBadge } from "./StatusBadge";
+import { CHANNEL_LABELS, EXTRACTION_FAILURE_CODES, isProcessing } from "./meta";
 
 const POLL_INTERVAL_MS = 3000;
 
@@ -18,9 +23,11 @@ export default function InvoiceDetail({ invoiceId }: { invoiceId: string }) {
   const [status, setStatus] = useState<"loading" | "ready" | "forbidden" | "missing" | "error">("loading");
   const [error, setError] = useState<string | null>(null);
   const [viewerOpen, setViewerOpen] = useState(false);
-  const [historyOpen, setHistoryOpen] = useState(false);
   const [requeueing, setRequeueing] = useState(false);
   const [requeueError, setRequeueError] = useState<string | null>(null);
+  const [editing, setEditing] = useState(false);
+  const [conflict, setConflict] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
 
   /** Load detail and history; state is only updated in promise callbacks. */
   const load = useCallback(
@@ -87,7 +94,6 @@ export default function InvoiceDetail({ invoiceId }: { invoiceId: string }) {
     return <ErrorBanner title="Detail request tidak dapat dimuat" message={error ?? "Terjadi kesalahan."} onRetry={() => void load()} />;
   }
 
-  const missingBank = invoice.exception_codes.includes("MISSING_EVIDENCE");
   const canRequeue = invoice.status === "EXCEPTION" && invoice.exception_codes.some((code) => EXTRACTION_FAILURE_CODES.includes(code));
 
   return (
@@ -99,11 +105,34 @@ export default function InvoiceDetail({ invoiceId }: { invoiceId: string }) {
           Kembali ke Antrean
         </Link>
         <span className="flex items-center gap-1.5 text-text-secondary">
-          Peran: <span className="rounded bg-primary-subtle px-1.5 py-0.5 font-semibold text-primary">Staf Intake (Read-Only)</span>
+          Peran:{" "}
+          <span className="rounded bg-primary-subtle px-1.5 py-0.5 font-semibold text-primary">
+            {invoice.can_edit ? "Staf Intake" : "Staf Intake (Read-Only)"}
+          </span>
         </span>
       </div>
 
       {error && <ErrorBanner title="Data terbaru belum dapat dimuat" message={error} onRetry={() => void load()} />}
+
+      {conflict && (
+        <div role="alert" className="flex flex-col gap-3 rounded-lg border-l-4 border-danger bg-danger-subtle p-4 text-status-rejected-fg sm:flex-row sm:items-center sm:justify-between">
+          <span className="flex items-start gap-2 text-sm">
+            <span aria-hidden="true" className="material-symbols-outlined">sync_problem</span>
+            {conflict} Perubahan lokal tidak disimpan.
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              setConflict(null);
+              setEditing(false);
+              void load();
+            }}
+            className="h-9 shrink-0 rounded bg-danger px-4 text-xs font-semibold text-white hover:opacity-90"
+          >
+            Muat Ulang
+          </button>
+        </div>
+      )}
 
       {/* Header card */}
       <section className="rounded-lg border border-border bg-surface shadow-sm">
@@ -118,15 +147,30 @@ export default function InvoiceDetail({ invoiceId }: { invoiceId: string }) {
               </span>
             )}
           </div>
-          <button
-            type="button"
-            aria-label="Lihat file asli dokumen invoice"
-            onClick={() => setViewerOpen(true)}
-            className="flex h-9 items-center justify-center gap-1.5 rounded border border-primary px-4 text-xs font-semibold text-primary hover:bg-primary-subtle"
-          >
-            <span aria-hidden="true" className="material-symbols-outlined text-[18px]">visibility</span>
-            Lihat file asli
-          </button>
+          <div className="flex flex-wrap gap-2">
+            {invoice.can_edit && !editing && (
+              <button
+                type="button"
+                onClick={() => {
+                  setConflict(null);
+                  setEditing(true);
+                }}
+                className="flex h-9 items-center justify-center gap-1.5 rounded bg-primary px-4 text-xs font-semibold text-white hover:bg-primary-hover"
+              >
+                <span aria-hidden="true" className="material-symbols-outlined text-[18px]">edit</span>
+                Koreksi Data
+              </button>
+            )}
+            <button
+              type="button"
+              aria-label="Lihat file asli dokumen invoice"
+              onClick={() => setViewerOpen(true)}
+              className="flex h-9 items-center justify-center gap-1.5 rounded border border-primary px-4 text-xs font-semibold text-primary hover:bg-primary-subtle"
+            >
+              <span aria-hidden="true" className="material-symbols-outlined text-[18px]">visibility</span>
+              Lihat file asli
+            </button>
+          </div>
         </div>
         <dl className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-4">
           <Fact label="Klien Entitas" value={invoice.client.name} hint={invoice.has_reviewer ? undefined : "Belum ada reviewer"} />
@@ -143,6 +187,18 @@ export default function InvoiceDetail({ invoiceId }: { invoiceId: string }) {
             (ditolak).
           </p>
         )}
+        {invoice.last_correction && (
+          <details className="group border-t border-border px-4 py-2.5 text-xs sm:px-5">
+            <summary className="flex cursor-pointer list-none items-center gap-1.5 text-warning">
+              <span aria-hidden="true" className="material-symbols-outlined text-[16px]">edit_note</span>
+              <span>
+                Dikoreksi oleh <strong>{invoice.last_correction.by.name}</strong> · {formatDateTime(invoice.last_correction.at)}
+              </span>
+              <span aria-hidden="true" className="material-symbols-outlined text-[16px] transition-transform group-open:rotate-180">expand_more</span>
+            </summary>
+            <p className="mt-1.5 rounded bg-warning-subtle px-3 py-2 italic text-text-primary">“{invoice.last_correction.reason}”</p>
+          </details>
+        )}
       </section>
 
       {processing ? (
@@ -158,236 +214,41 @@ export default function InvoiceDetail({ invoiceId }: { invoiceId: string }) {
         <>
           <DecisionBlock invoice={invoice} />
 
-          {invoice.exceptions.length > 0 && (
-            <section className="rounded-lg border border-status-exception-border bg-surface shadow-sm">
-              <div className="border-b border-status-exception-border bg-warning-subtle px-4 py-3 sm:px-5">
-                <h3 className="flex items-center gap-2 text-sm font-semibold text-warning">
-                  <span aria-hidden="true" className="material-symbols-outlined text-[20px]">report</span>
-                  Daftar Temuan Kendala
-                </h3>
-                <p className="text-xs text-text-secondary">Robot AMIGA mendeteksi ketidaksesuaian data berikut saat validasi otomatis.</p>
-              </div>
-              <ul className="divide-y divide-surface-muted">
-                {invoice.exceptions.map((finding) => (
-                  <li key={finding.code} className="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
-                    <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-3">
-                      <span className="shrink-0"><IssueChip code={finding.code} /></span>
-                      <span className="text-xs text-text-primary">{finding.message}</span>
-                    </div>
-                    {canRequeue && EXTRACTION_FAILURE_CODES.includes(finding.code) && (
-                      <button
-                        type="button"
-                        disabled={requeueing}
-                        onClick={() => void requeue()}
-                        className="flex h-8 shrink-0 items-center justify-center gap-1 rounded border border-border bg-surface px-3 text-xs font-semibold text-primary hover:bg-primary-subtle disabled:opacity-50"
-                      >
-                        <span aria-hidden="true" className={`material-symbols-outlined text-[16px] ${requeueing ? "animate-spin" : ""}`}>refresh</span>
-                        Ekstrak ulang
-                      </button>
-                    )}
-                  </li>
-                ))}
-              </ul>
-              {requeueError && <p className="px-5 pb-3 text-xs text-danger">{requeueError}</p>}
-            </section>
-          )}
+          <FindingsList
+            exceptions={invoice.exceptions}
+            requeue={canRequeue ? { busy: requeueing, error: requeueError, onRequeue: () => void requeue() } : undefined}
+          />
 
-          {/* Read-only extracted data */}
-          <section className="rounded-lg border border-border bg-surface shadow-sm">
-            <SectionHeader icon="text_snippet" title="Data Ekstraksi Invoice" note="Read-only • Hasil AI berstatus draf" />
-            <dl className="grid grid-cols-1 gap-x-6 gap-y-4 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-3">
-              <DataField label="Vendor" value={invoice.vendor_name} />
-              <DataField label="Nomor Invoice" value={invoice.invoice_number} mono />
-              <DataField label="Rekening Tujuan (Bank & No. Rek)" value={invoice.bank_account} mono warn={missingBank} />
-              <DataField label="Tanggal Invoice" value={invoice.invoice_date ? formatDate(invoice.invoice_date) : null} />
-              <DataField label="Tanggal Penerimaan" value={formatDate(invoice.request_date)} />
-              <DataField label="Diskon" value={formatRupiah(invoice.discount_amount)} mono />
-              <DataField label="Pajak (PPN)" value={invoice.tax_amount !== null ? formatRupiah(invoice.tax_amount) : null} mono />
-              <DataField label="Subtotal Baris" value={invoice.subtotal_amount !== null ? formatRupiah(invoice.subtotal_amount) : null} mono />
-              <DataField label="Total Invoice Akhir" value={invoice.total_amount !== null ? formatRupiah(invoice.total_amount) : null} mono strong />
-            </dl>
-          </section>
-
-          {/* Line items */}
-          <section className="rounded-lg border border-border bg-surface shadow-sm">
-            <SectionHeader
-              icon="format_list_bulleted"
-              title="Daftar Baris Barang / Jasa"
-              badge={`${invoice.items.length} Item`}
-              note="Satuan Rupiah (IDR)"
+          {editing ? (
+            <InvoiceCorrectionForm
+              invoice={invoice}
+              onCancel={() => setEditing(false)}
+              onConflict={setConflict}
+              onSaved={(saved) => {
+                setInvoice(saved);
+                setEditing(false);
+                setToast("Perubahan berhasil disimpan.");
+                window.setTimeout(() => setToast(null), 3500);
+                void load();
+              }}
             />
-            {invoice.items.length === 0 ? (
-              <p className="px-5 py-8 text-center text-xs italic text-text-disabled">Baris barang tidak ditemukan.</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse text-left text-xs">
-                  <thead>
-                    <tr className="h-10 border-b border-border bg-surface-muted text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
-                      <th className="w-12 px-4">No</th>
-                      <th className="px-3">Deskripsi Barang / Jasa</th>
-                      <th className="px-3 text-right">Qty</th>
-                      <th className="px-3 text-right">Harga Satuan</th>
-                      <th className="px-4 text-right">Jumlah</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-surface-muted">
-                    {invoice.items.map((item) => (
-                      <tr key={item.line_no} className="h-11">
-                        <td className="px-4 font-mono text-text-secondary">{item.line_no}</td>
-                        <td className="px-3">{item.description ?? <Missing />}</td>
-                        <td className="px-3 text-right font-mono tabular-nums">{formatQuantity(item.quantity)}</td>
-                        <td className="whitespace-nowrap px-3 text-right font-mono tabular-nums">{formatRupiah(item.unit_price)}</td>
-                        <td className="whitespace-nowrap px-4 text-right font-mono font-semibold tabular-nums">{formatRupiah(item.amount)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                  <tfoot className="border-t border-border bg-surface-muted/60 font-mono tabular-nums">
-                    <SummaryRow label="Subtotal Baris Barang" value={formatRupiah(invoice.subtotal_amount)} />
-                    <SummaryRow label="Pajak (PPN)" value={formatRupiah(invoice.tax_amount)} />
-                    <SummaryRow label="Potongan Diskon" value={`-${formatRupiah(invoice.discount_amount)}`} />
-                    <SummaryRow label="Total Tagihan Final" value={formatRupiah(invoice.total_amount)} strong />
-                  </tfoot>
-                </table>
-              </div>
-            )}
-          </section>
+          ) : (
+            <ExtractedData invoice={invoice} />
+          )}
         </>
       )}
 
       {/* Change history (AUD-05) */}
-      <section className="rounded-lg border border-border bg-surface shadow-sm">
-        <button
-          type="button"
-          aria-expanded={historyOpen}
-          onClick={() => setHistoryOpen((open) => !open)}
-          className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left hover:bg-surface-muted sm:px-5"
-        >
-          <span className="flex items-center gap-2.5">
-            <span aria-hidden="true" className="material-symbols-outlined text-[22px] text-primary">history_edu</span>
-            <span>
-              <span className="block text-sm font-semibold text-text-primary">Riwayat Perubahan & Audit Trail</span>
-              <span className="block text-xs text-text-secondary">Rekaman perubahan data otomatis dan manual secara kronologis</span>
-            </span>
-          </span>
-          <span className="flex items-center gap-2">
-            <span className="hidden rounded bg-surface-muted px-2 py-0.5 text-[11px] font-semibold text-text-secondary sm:inline">
-              Hanya aksi mutasi dicatat
-            </span>
-            <span aria-hidden="true" className={`material-symbols-outlined transition-transform ${historyOpen ? "rotate-180" : ""}`}>expand_more</span>
-          </span>
-        </button>
-        {historyOpen && (
-          <div className="border-t border-border">
-            <p className="flex items-center gap-1.5 bg-info-subtle px-4 py-2 text-[11px] text-info sm:px-5">
-              <span aria-hidden="true" className="material-symbols-outlined text-[14px]">info</span>
-              Aktivitas membuka halaman dan melihat file asli tidak dicatat dalam riwayat.
-            </p>
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-left text-xs">
-                <thead>
-                  <tr className="h-10 border-b border-border bg-surface-muted text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
-                    {["Waktu", "Pengguna", "Aksi", "Field Target", "Nilai Lama", "Nilai Baru"].map((heading) => (
-                      <th key={heading} className="whitespace-nowrap px-4">{heading}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-surface-muted">
-                  {(history ?? []).map((entry) => (
-                    <tr key={entry.id} className="h-11">
-                      <td className="whitespace-nowrap px-4 font-mono text-text-secondary">{formatDateTime(entry.created_at, true)}</td>
-                      <td className="whitespace-nowrap px-4">
-                        <span className="inline-flex items-center gap-1.5 font-medium">
-                          {entry.user.is_system && <span aria-hidden="true" className="material-symbols-outlined text-[16px] text-primary">smart_toy</span>}
-                          {entry.user.name}
-                        </span>
-                      </td>
-                      <td className="whitespace-nowrap px-4">{AUDIT_ACTION_LABELS[entry.action] ?? entry.action}</td>
-                      <td className="whitespace-nowrap px-4 font-mono text-text-secondary">{entry.field_name ?? "-"}</td>
-                      <td className="px-4">
-                        <AuditValue value={entry.old_value} tone="old" />
-                      </td>
-                      <td className="px-4">
-                        <AuditValue value={entry.new_value} tone="new" />
-                      </td>
-                    </tr>
-                  ))}
-                  {history?.length === 0 && (
-                    <tr>
-                      <td colSpan={6} className="px-4 py-6 text-center text-text-disabled">Belum ada riwayat.</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-      </section>
+      <HistoryPanel history={history} />
 
       {viewerOpen && <FileViewerModal invoiceId={invoice.id} onClose={() => setViewerOpen(false)} />}
-    </div>
-  );
-}
-
-function DecisionBlock({ invoice }: { invoice: InvoiceDetailData }) {
-  const decision = invoice.decision;
-  if (invoice.status === "REJECTED" && decision) {
-    return (
-      <section className="rounded-lg border border-status-rejected-border bg-danger-subtle p-4 sm:p-5">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="space-y-2 text-xs">
-            <p className="flex flex-wrap items-center gap-2 text-sm">
-              <span className="flex items-center gap-1 font-bold text-status-rejected-fg">
-                <span aria-hidden="true" className="material-symbols-outlined text-[20px]">cancel</span>
-                Ditolak
-              </span>
-              <span className="font-semibold">{decision.reviewer?.name ?? "Finance Reviewer"}</span>
-              <span className="text-text-secondary">(Finance Reviewer)</span>
-              {decision.decided_at && <span className="text-text-secondary">• {formatDateTime(decision.decided_at)}</span>}
-            </p>
-            {decision.reject_note && (
-              <div>
-                <p className="font-semibold text-text-secondary">Alasan Penolakan:</p>
-                <p className="italic text-text-primary">“{decision.reject_note}”</p>
-              </div>
-            )}
-            <p className="text-text-secondary">
-              Request lama berstatus final. Perbaikan diunggah sebagai request baru dengan referensi request ini.
-            </p>
-          </div>
-          <Link
-            href={`/invoices/upload?previous=${invoice.id}`}
-            className="flex shrink-0 flex-col items-center justify-center rounded bg-primary px-5 py-2 text-white no-underline hover:bg-primary-hover"
-          >
-            <span className="text-sm font-semibold">Unggah ulang</span>
-            <span className="text-[11px] opacity-80">Buat Request Pengganti</span>
-          </Link>
+      {toast && (
+        <div role="status" className="fixed bottom-6 right-6 z-[60] flex max-w-sm items-center gap-3 rounded-lg bg-text-primary px-4 py-3 text-xs text-white shadow-lg">
+          <span aria-hidden="true" className="material-symbols-outlined text-[20px] text-status-reviewed-border">check_circle</span>
+          {toast}
         </div>
-      </section>
-    );
-  }
-  if (decision?.reviewer && invoice.status !== "REJECTED") {
-    return (
-      <section className="rounded-lg border border-status-reviewed-border bg-success-subtle p-4 text-xs sm:p-5">
-        <p className="flex flex-wrap items-center gap-2 text-sm">
-          <span className="flex items-center gap-1 font-bold text-success">
-            <span aria-hidden="true" className="material-symbols-outlined text-[20px]">verified</span>
-            Disetujui
-          </span>
-          <span className="font-semibold">{decision.reviewer.name}</span>
-          <span className="text-text-secondary">(Finance Reviewer)</span>
-          {decision.decided_at && <span className="text-text-secondary">• {formatDateTime(decision.decided_at)}</span>}
-        </p>
-      </section>
-    );
-  }
-  return (
-    <section className="flex items-center gap-2.5 rounded-lg border border-border bg-surface-muted px-4 py-3 text-xs text-text-secondary sm:px-5">
-      <span aria-hidden="true" className="material-symbols-outlined text-[20px]">hourglass_top</span>
-      <span>
-        Menunggu pemeriksaan oleh Finance Reviewer.
-        {!invoice.has_reviewer && <strong className="ml-1 text-text-primary">Klien ini belum memiliki reviewer aktif.</strong>}
-      </span>
-    </section>
+      )}
+    </div>
   );
 }
 
@@ -400,70 +261,5 @@ function Fact({ label, value, hint, mono = false, muted = false }: { label: stri
       </dd>
       {hint && <dd className="truncate text-[11px] text-text-secondary">{hint}</dd>}
     </div>
-  );
-}
-
-function DataField({
-  label,
-  value,
-  mono = false,
-  strong = false,
-  warn = false,
-}: {
-  label: string;
-  value: string | null;
-  mono?: boolean;
-  strong?: boolean;
-  warn?: boolean;
-}) {
-  return (
-    <div className={`min-w-0 rounded border px-3 py-2.5 ${warn ? "border-status-exception-border bg-warning-subtle" : "border-surface-muted bg-background"}`}>
-      <dt className="text-[11px] font-semibold uppercase tracking-wider text-text-secondary">{label}</dt>
-      <dd className={`mt-0.5 break-words ${mono ? "font-mono tabular-nums" : ""} ${strong ? "text-base font-bold text-primary" : "text-sm font-medium"}`}>
-        {value ?? <Missing />}
-      </dd>
-    </div>
-  );
-}
-
-function Missing() {
-  return <span className="font-sans text-sm font-normal italic text-text-disabled">Tidak ditemukan</span>;
-}
-
-function SectionHeader({ icon, title, note, badge }: { icon: string; title: string; note?: string; badge?: string }) {
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-4 py-3 sm:px-5">
-      <h3 className="flex items-center gap-2 text-sm font-semibold">
-        <span aria-hidden="true" className="material-symbols-outlined text-[20px] text-primary">{icon}</span>
-        {title}
-        {badge && <span className="rounded bg-primary-subtle px-1.5 py-0.5 text-[11px] font-semibold text-primary">{badge}</span>}
-      </h3>
-      {note && <span className="text-[11px] text-text-secondary">{note}</span>}
-    </div>
-  );
-}
-
-function SummaryRow({ label, value, strong = false }: { label: string; value: string; strong?: boolean }) {
-  return (
-    <tr className={strong ? "h-11 border-t border-border" : "h-9"}>
-      <td colSpan={4} className={`px-4 text-right font-sans ${strong ? "text-sm font-bold" : "text-text-secondary"}`}>{label}</td>
-      <td className={`whitespace-nowrap px-4 text-right ${strong ? "text-sm font-bold text-primary" : "font-semibold"}`}>{value}</td>
-    </tr>
-  );
-}
-
-function AuditValue({ value, tone }: { value: string | null; tone: "old" | "new" }) {
-  if (value === null || value === "") return <span className="text-text-disabled">-</span>;
-  // The backend stores finding code lists comma-separated.
-  const label = value.split(",").join(", ");
-  return (
-    <span
-      className={`inline-block max-w-[260px] truncate rounded px-1.5 py-0.5 font-mono text-[11px] ${
-        tone === "old" ? "bg-diff-old-bg text-diff-old-fg" : "bg-diff-new-bg text-diff-new-fg"
-      }`}
-      title={label}
-    >
-      {label}
-    </span>
   );
 }

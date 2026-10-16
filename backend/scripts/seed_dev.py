@@ -13,6 +13,7 @@ accounts with a known password never reach a deployed environment.
 import argparse
 import sys
 
+from sqlalchemy import or_
 from sqlalchemy.engine import make_url
 from sqlalchemy.orm import Session
 
@@ -62,14 +63,16 @@ def seed_clients(
         raise SystemExit(f"[FAIL] INTAKE user {intake_email} not found; run without --skip-users first.")
 
     for code, name, with_reviewer in DEV_CLIENTS:
-        client = db.query(Client).filter(Client.code == code).first()
+        # Code and name are both unique, so an existing client may match on either.
+        client = db.query(Client).filter(or_(Client.code == code, Client.name == name)).first()
         if client is None:
             client = Client(code=code, name=name)
             db.add(client)
             db.flush()
             _log(verbose, f"[NEW]  client {code} - {name}")
         else:
-            _log(verbose, f"[SKIP] client {code} already exists")
+            _log(verbose, f"[SKIP] client {client.code} - {client.name} already exists")
+        code = client.code
 
         members = [intake] + ([reviewer] if with_reviewer and reviewer is not None else [])
         for user in members:

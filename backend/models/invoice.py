@@ -91,3 +91,4 @@ class Invoice(Base):
     uploader = relationship("User", foreign_keys=[uploaded_by])
     reviewer = relationship("User", foreign_keys=[reviewed_by])
     previous_request = relationship("Invoice", remote_side=[id])
+    voucher = relationship("Voucher", back_populates="invoices")
