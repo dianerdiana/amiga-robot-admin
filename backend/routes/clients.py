@@ -9,8 +9,9 @@ from middlewares.auth_middleware import require_roles
 from models.user import User, UserRole
 from schemas.assignment import (
     ClientAssignmentListResponse,
-    ClientReviewerResponse,
+    ClientReviewerListResponse,
     ReviewerAssignmentCreate,
+    ReviewerOptionResponse,
     UserClientAssignmentCreate,
     UserClientAssignmentResponse,
 )
@@ -47,15 +48,32 @@ def list_clients(
     )
 
 
-@router.get("/reviewer-assignments", response_model=list[ClientReviewerResponse])
+@router.get("/reviewer-assignments", response_model=ClientReviewerListResponse)
 def list_client_reviewers(
-    skip: int = Query(default=0, ge=0),
-    limit: int = Query(default=100, ge=1, le=100),
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=10, ge=1, le=100),
+    search: str | None = Query(default=None, max_length=255),
+    assignment_status: Literal["ASSIGNED", "UNASSIGNED"] | None = Query(default=None),
     db: Session = Depends(get_db),
     _: User = Depends(service_lead_only),
 ):
     """Daftar klien beserta reviewer aktif dan status penugasannya."""
-    return AssignmentService.list_client_reviewers(db, skip=skip, limit=limit)
+    return AssignmentService.list_client_reviewers(
+        db,
+        page=page,
+        page_size=page_size,
+        search=search,
+        assignment_status=assignment_status,
+    )
+
+
+@router.get("/reviewer-options", response_model=list[ReviewerOptionResponse])
+def list_reviewer_options(
+    db: Session = Depends(get_db),
+    _: User = Depends(service_lead_only),
+):
+    """Reviewer aktif yang dapat dipilih oleh Service Lead."""
+    return AssignmentService.list_active_reviewers(db)
 
 
 @router.get("/{client_id}", response_model=ClientResponse)

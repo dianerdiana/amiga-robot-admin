@@ -161,17 +161,8 @@ export const ROLE_CONFIGS: Record<string, RoleConfig> = {
         id: 'penugasan-reviewer',
         title: 'Penugasan Reviewer',
         icon: 'manage_accounts',
-        path: '/dashboard',
+        path: '/reviewer-assignments',
         description: 'Alokasi satu atau lebih reviewer untuk tiap klien',
-      },
-      {
-        id: 'klien-reviewer',
-        title: 'Daftar Klien & Reviewer',
-        icon: 'domain_verification',
-        path: '/dashboard?tab=klien-reviewer',
-        badge: '1 Tanpa Reviewer',
-        badgeColor: 'bg-[#FEE2E2] text-[#991B1B]',
-        description: 'Deteksi klien tanpa reviewer aktif',
       },
       {
         id: "assistant",

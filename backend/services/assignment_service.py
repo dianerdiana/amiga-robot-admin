@@ -1,6 +1,8 @@
+import math
 import uuid
 
 from fastapi import HTTPException, status
+from sqlalchemy import func, or_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -50,29 +52,55 @@ class AssignmentService:
         )
 
     @staticmethod
-    def list_client_reviewers(db: Session, skip: int = 0, limit: int = 100) -> list[dict]:
-        clients = (
-            db.query(Client)
-            .order_by(Client.code, Client.id)
-            .offset(skip)
-            .limit(limit)
-            .all()
-        )
-        if not clients:
-            return []
-
-        client_ids = [client.id for client in clients]
-        reviewer_rows = (
-            db.query(UserClient.client_id, User)
+    def list_client_reviewers(
+        db: Session,
+        page: int = 1,
+        page_size: int = 10,
+        search: str | None = None,
+        assignment_status: str | None = None,
+    ) -> dict:
+        active_reviewer_exists = (
+            db.query(UserClient.user_id)
             .join(User, User.id == UserClient.user_id)
             .filter(
-                UserClient.client_id.in_(client_ids),
+                UserClient.client_id == Client.id,
                 User.role == UserRole.FINANCE_REVIEWER,
                 User.is_active.is_(True),
             )
-            .order_by(User.name, User.id)
+            .exists()
+        )
+        query = db.query(Client)
+        keyword = search.strip() if search else ""
+        if keyword:
+            pattern = f"%{keyword}%"
+            query = query.filter(or_(Client.code.ilike(pattern), Client.name.ilike(pattern)))
+        if assignment_status == ReviewerAssignmentStatus.ASSIGNED.value:
+            query = query.filter(active_reviewer_exists)
+        elif assignment_status == ReviewerAssignmentStatus.UNASSIGNED.value:
+            query = query.filter(~active_reviewer_exists)
+
+        total = query.count()
+        clients = (
+            query
+            .order_by(Client.code, Client.id)
+            .offset((page - 1) * page_size)
+            .limit(page_size)
             .all()
         )
+        client_ids = [client.id for client in clients]
+        reviewer_rows = []
+        if client_ids:
+            reviewer_rows = (
+                db.query(UserClient.client_id, User)
+                .join(User, User.id == UserClient.user_id)
+                .filter(
+                    UserClient.client_id.in_(client_ids),
+                    User.role == UserRole.FINANCE_REVIEWER,
+                    User.is_active.is_(True),
+                )
+                .order_by(User.name, User.id)
+                .all()
+            )
         reviewers_by_client: dict[uuid.UUID, list[User]] = {client_id: [] for client_id in client_ids}
         for client_id, reviewer in reviewer_rows:
             reviewers_by_client[client_id].append(reviewer)
@@ -85,6 +113,7 @@ class AssignmentService:
                     "client_id": client.id,
                     "client_code": client.code,
                     "client_name": client.name,
+                    "client_is_active": client.is_active,
                     "active_reviewers": active_reviewers,
                     "assignment_status": (
                         ReviewerAssignmentStatus.ASSIGNED
@@ -93,7 +122,26 @@ class AssignmentService:
                     ),
                 }
             )
-        return result
+        total_clients = db.query(func.count(Client.id)).scalar() or 0
+        assigned_count = db.query(func.count(Client.id)).filter(active_reviewer_exists).scalar() or 0
+        return {
+            "items": result,
+            "total": total,
+            "page": page,
+            "page_size": page_size,
+            "total_pages": math.ceil(total / page_size) if total else 0,
+            "assigned_count": assigned_count,
+            "unassigned_count": total_clients - assigned_count,
+        }
+
+    @staticmethod
+    def list_active_reviewers(db: Session) -> list[User]:
+        return (
+            db.query(User)
+            .filter(User.role == UserRole.FINANCE_REVIEWER, User.is_active.is_(True))
+            .order_by(User.name, User.id)
+            .all()
+        )
 
     @staticmethod
     def assign_user(db: Session, client_id: uuid.UUID, user_id: uuid.UUID, actor: User) -> UserClient:

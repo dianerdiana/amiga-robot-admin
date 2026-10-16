@@ -7,6 +7,8 @@ export function homeForRole(role: string | undefined | null): string {
       return "/invoices";
     case "FINANCE_REVIEWER":
       return "/reviews";
+    case "SERVICE_LEAD":
+      return "/reviewer-assignments";
     default:
       return "/dashboard";
   }

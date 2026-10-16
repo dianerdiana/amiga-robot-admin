@@ -62,6 +62,31 @@ export interface ClientAssignmentList {
   users: ManagedUser[];
 }
 
+export interface ReviewerOption {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface ReviewerAssignmentClient {
+  client_id: string;
+  client_code: string;
+  client_name: string;
+  client_is_active: boolean;
+  active_reviewers: ReviewerOption[];
+  assignment_status: "ASSIGNED" | "UNASSIGNED";
+}
+
+export interface ReviewerAssignmentListResponse {
+  items: ReviewerAssignmentClient[];
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+  assigned_count: number;
+  unassigned_count: number;
+}
+
 export const clientService = {
   list(params: ClientListParams = {}): Promise<ClientListResponse> {
     return apiFetch<ClientListResponse>(withQuery("/api/v1/clients", {
@@ -107,6 +132,32 @@ export const clientService = {
 
   revokeUser(clientId: string, userId: string): Promise<void> {
     return apiFetch<void>(`/api/v1/clients/${clientId}/assignments/${userId}`, {
+      method: "DELETE",
+    });
+  },
+
+  listReviewerAssignments(params: { page?: number; pageSize?: number; search?: string; status?: "ASSIGNED" | "UNASSIGNED" | "" } = {}): Promise<ReviewerAssignmentListResponse> {
+    return apiFetch<ReviewerAssignmentListResponse>(withQuery("/api/v1/clients/reviewer-assignments", {
+      page: params.page ?? 1,
+      page_size: params.pageSize ?? 10,
+      search: params.search,
+      assignment_status: params.status,
+    }));
+  },
+
+  listReviewerOptions(): Promise<ReviewerOption[]> {
+    return apiFetch<ReviewerOption[]>("/api/v1/clients/reviewer-options");
+  },
+
+  assignReviewer(clientId: string, reviewerId: string): Promise<{ user_id: string; client_id: string }> {
+    return apiFetch(`/api/v1/clients/${clientId}/reviewers`, {
+      method: "POST",
+      body: JSON.stringify({ reviewer_id: reviewerId }),
+    });
+  },
+
+  revokeReviewer(clientId: string, reviewerId: string): Promise<void> {
+    return apiFetch<void>(`/api/v1/clients/${clientId}/assignments/${reviewerId}`, {
       method: "DELETE",
     });
   },

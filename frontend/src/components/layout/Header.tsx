@@ -2,12 +2,10 @@
 
 import React, { useState } from "react";
 import { UserProfile } from "@/lib/api";
-import { ROLE_CONFIGS, RoleConfig, UserRoleType } from "./types";
+import { ROLE_CONFIGS, RoleConfig } from "./types";
 
 interface HeaderProps {
   user: UserProfile;
-  currentRole: UserRoleType;
-  onRoleChange?: (role: UserRoleType) => void;
   isSidebarOpen: boolean;
   onToggleSidebar: () => void;
   onLogout: () => void;
@@ -15,17 +13,14 @@ interface HeaderProps {
 
 export default function Header({
   user,
-  currentRole,
-  onRoleChange,
   isSidebarOpen,
   onToggleSidebar,
   onLogout,
 }: HeaderProps) {
-  const [showRoleMenu, setShowRoleMenu] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const roleConfig: RoleConfig =
-    ROLE_CONFIGS[currentRole] || ROLE_CONFIGS.SYSTEM_ADMIN;
+    ROLE_CONFIGS[user.role] || ROLE_CONFIGS.SYSTEM_ADMIN;
 
   const getInitials = (name: string) => {
     if (!name) return "AM";
@@ -70,81 +65,12 @@ export default function Header({
           </div>
         </div>
 
-        {/* Right Section: Role Badge, Role Simulator, Notifications, User Profile */}
+        {/* Right Section: Role Badge, Notifications, User Profile */}
         <div className="flex items-center gap-2 sm:gap-4">
-          {/* Role Badge with Dropdown Switcher for Testing */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setShowRoleMenu(!showRoleMenu)}
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md ${roleConfig.badgeBg} ${roleConfig.badgeText} border ${roleConfig.badgeBorder} text-xs font-semibold tracking-wide transition-all hover:opacity-90 cursor-pointer shadow-xs`}
-              title="Klik untuk mensimulasikan tampilan peran lain"
-            >
-              <span className="material-symbols-outlined text-[15px]">
-                {roleConfig.badgeIcon}
-              </span>
-              <span className="hidden md:inline">{roleConfig.badgeLabel}</span>
-              <span className="material-symbols-outlined text-[14px] opacity-70">
-                arrow_drop_down
-              </span>
-            </button>
-
-            {/* Role Simulator Menu Dropdown */}
-            {showRoleMenu && (
-              <>
-                <div
-                  className="fixed inset-0 z-40"
-                  onClick={() => setShowRoleMenu(false)}
-                />
-                <div className="absolute right-0 mt-1.5 w-60 bg-white rounded-lg border border-[#CBD5E1] shadow-lg py-1.5 z-50 text-xs">
-                  <div className="px-3 py-1.5 border-b border-[#F1F5F9] text-[11px] font-semibold text-[#475569] uppercase tracking-wider">
-                    Simulasi Sidenav Berdasarkan Peran:
-                  </div>
-                  {Object.values(ROLE_CONFIGS).map((cfg) => (
-                    <button
-                      key={cfg.role}
-                      type="button"
-                      onClick={() => {
-                        onRoleChange?.(cfg.role);
-                        setShowRoleMenu(false);
-                      }}
-                      className={`w-full text-left px-3 py-2 flex items-center justify-between hover:bg-[#F1F5F9] transition-colors ${
-                        currentRole === cfg.role
-                          ? "bg-[#E0E7FF] text-[#1E3A8A] font-semibold"
-                          : "text-[#0F172A]"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-[16px]">
-                          {cfg.badgeIcon}
-                        </span>
-                        <span>{cfg.badgeLabel}</span>
-                      </div>
-                      {currentRole === cfg.role && (
-                        <span className="material-symbols-outlined text-[16px] text-[#1E3A8A]">
-                          check
-                        </span>
-                      )}
-                    </button>
-                  ))}
-                  {user.role !== currentRole && (
-                    <div className="px-3 pt-1 border-t border-[#F1F5F9] mt-1">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          onRoleChange?.(user.role);
-                          setShowRoleMenu(false);
-                        }}
-                        className="text-[11px] text-[#1E40AF] hover:underline"
-                      >
-                        Reset ke Peran Akun ({user.role})
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
-          </div>
+          <span className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 ${roleConfig.badgeBg} ${roleConfig.badgeText} ${roleConfig.badgeBorder} text-xs font-semibold tracking-wide shadow-xs`} title={`Peran pengguna: ${roleConfig.badgeLabel}`}>
+            <span className="material-symbols-outlined text-[15px]">{roleConfig.badgeIcon}</span>
+            <span className="hidden md:inline">{roleConfig.badgeLabel}</span>
+          </span>
 
           {/* Notifications Button */}
           <button

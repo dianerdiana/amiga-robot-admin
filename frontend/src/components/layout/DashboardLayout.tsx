@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-import { ROLE_CONFIGS, UserRoleType } from "./types";
+import { UserRoleType } from "./types";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
@@ -30,9 +30,6 @@ export default function DashboardLayout({
   // Sidebar membuka secara default pada desktop dan menjadi drawer tertutup pada mobile.
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  // Active role for testing / preview (defaults to user.role)
-  const [currentRole, setCurrentRole] = useState<UserRoleType>("SYSTEM_ADMIN");
-
   // Active tab state
   const [internalTab, setInternalTab] = useState<string>("pengguna");
 
@@ -42,26 +39,6 @@ export default function DashboardLayout({
       controlledOnTabChange(tabId);
     } else {
       setInternalTab(tabId);
-    }
-  };
-
-  // Sync role with logged-in user
-  useEffect(() => {
-    if (user?.role) {
-      setCurrentRole(user.role);
-      const defaultItem = ROLE_CONFIGS[user.role]?.menuItems[0]?.id;
-      if (defaultItem) {
-        setInternalTab(defaultItem);
-      }
-    }
-  }, [user?.role]);
-
-  // Handle manual role preview change
-  const handleRoleChange = (newRole: UserRoleType) => {
-    setCurrentRole(newRole);
-    const firstItem = ROLE_CONFIGS[newRole]?.menuItems[0]?.id;
-    if (firstItem) {
-      handleSelectTab(firstItem);
     }
   };
 
@@ -109,8 +86,6 @@ export default function DashboardLayout({
       {/* Top Fixed Header */}
       <Header
         user={user}
-        currentRole={currentRole}
-        onRoleChange={handleRoleChange}
         isSidebarOpen={isSidebarOpen}
         onToggleSidebar={handleToggleSidebar}
         onLogout={logout}
@@ -118,7 +93,7 @@ export default function DashboardLayout({
 
       {/* Dynamic Sidenav by Role */}
       <Sidebar
-        currentRole={currentRole}
+        currentRole={user.role}
         isOpen={isSidebarOpen}
         onClose={handleCloseSidebar}
         activeTab={activeTab}
@@ -136,7 +111,7 @@ export default function DashboardLayout({
           {renderContent
             ? renderContent({
                 activeTab,
-                currentRole,
+                currentRole: user.role as UserRoleType,
                 onTabChange: handleSelectTab,
               })
             : children}

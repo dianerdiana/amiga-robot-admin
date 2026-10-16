@@ -41,5 +41,24 @@ class ClientReviewerResponse(BaseModel):
     client_id: uuid.UUID
     client_code: str
     client_name: str
+    client_is_active: bool
     active_reviewers: list[ActiveReviewerResponse]
     assignment_status: ReviewerAssignmentStatus
+
+
+class ClientReviewerListResponse(BaseModel):
+    items: list[ClientReviewerResponse]
+    total: int
+    page: int
+    page_size: int
+    total_pages: int
+    assigned_count: int
+    unassigned_count: int
+
+
+class ReviewerOptionResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    name: str
+    email: str
