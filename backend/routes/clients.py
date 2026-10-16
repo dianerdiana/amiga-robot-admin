@@ -1,4 +1,5 @@
 import uuid
+from typing import Literal
 
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
@@ -13,7 +14,7 @@ from schemas.assignment import (
     UserClientAssignmentCreate,
     UserClientAssignmentResponse,
 )
-from schemas.client import ClientCreate, ClientResponse, ClientUpdate
+from schemas.client import ClientCreate, ClientListResponse, ClientResponse, ClientUpdate
 from services.assignment_service import AssignmentService
 from services.client_service import ClientService
 
@@ -24,14 +25,26 @@ assignment_manager_only = require_roles(UserRole.SYSTEM_ADMIN, UserRole.SERVICE_
 service_lead_only = require_roles(UserRole.SERVICE_LEAD)
 
 
-@router.get("", response_model=list[ClientResponse])
+@router.get("", response_model=ClientListResponse)
 def list_clients(
-    skip: int = Query(default=0, ge=0),
-    limit: int = Query(default=100, ge=1, le=100),
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=10, ge=1, le=100),
+    search: str | None = Query(default=None, max_length=255),
+    is_active: bool | None = Query(default=None),
+    reviewer_status: Literal["assigned", "unassigned"] | None = Query(default=None),
+    intake_status: Literal["none", "single", "complete"] | None = Query(default=None),
     db: Session = Depends(get_db),
     _: User = Depends(system_admin_only),
 ):
-    return ClientService.list_clients(db, skip=skip, limit=limit)
+    return ClientService.list_clients(
+        db,
+        page=page,
+        page_size=page_size,
+        search=search,
+        is_active=is_active,
+        reviewer_status=reviewer_status,
+        intake_status=intake_status,
+    )
 
 
 @router.get("/reviewer-assignments", response_model=list[ClientReviewerResponse])

@@ -61,3 +61,27 @@ class ClientResponse(BaseModel):
     is_active: bool
     created_at: datetime
     updated_at: datetime
+
+
+class ClientAssignedUserSummary(BaseModel):
+    id: uuid.UUID
+    name: str
+    email: str
+
+
+class ClientListItemResponse(ClientResponse):
+    active_reviewers: list[ClientAssignedUserSummary] = Field(default_factory=list)
+    assigned_intake: list[ClientAssignedUserSummary] = Field(default_factory=list)
+
+
+class ClientListResponse(BaseModel):
+    items: list[ClientListItemResponse]
+    total: int
+    page: int
+    page_size: int
+    total_pages: int
+    active_count: int
+    inactive_count: int
+    clients_with_reviewer: int
+    clients_without_reviewer: int
+    active_intake_staff: int

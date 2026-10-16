@@ -10,6 +10,7 @@ from database import Base, get_db
 from main import app
 from models.client import Client
 from models.user import User, UserRole
+from models.user_client import UserClient
 
 
 class ClientApiTestCase(unittest.TestCase):
@@ -21,7 +22,8 @@ class ClientApiTestCase(unittest.TestCase):
             poolclass=StaticPool,
         )
         cls.Session = sessionmaker(autocommit=False, autoflush=False, bind=cls.engine)
-        Base.metadata.create_all(bind=cls.engine, tables=[User.__table__, Client.__table__])
+        cls.tables = [User.__table__, Client.__table__, UserClient.__table__]
+        Base.metadata.create_all(bind=cls.engine, tables=cls.tables)
 
         def override_get_db():
             db = cls.Session()
@@ -37,11 +39,12 @@ class ClientApiTestCase(unittest.TestCase):
     def tearDownClass(cls):
         cls.client.close()
         app.dependency_overrides.clear()
-        Base.metadata.drop_all(bind=cls.engine, tables=[Client.__table__, User.__table__])
+        Base.metadata.drop_all(bind=cls.engine, tables=list(reversed(cls.tables)))
         cls.engine.dispose()
 
     def setUp(self):
         with self.Session() as db:
+            db.query(UserClient).delete()
             db.query(Client).delete()
             db.query(User).delete()
             db.add_all(
@@ -100,7 +103,8 @@ class ClientApiTestCase(unittest.TestCase):
 
         listed = self.client.get("/api/v1/clients", headers=headers)
         self.assertEqual(listed.status_code, 200, listed.text)
-        self.assertEqual(len(listed.json()), 1)
+        self.assertEqual(listed.json()["total"], 1)
+        self.assertEqual(len(listed.json()["items"]), 1)
 
         updated = self.client.put(
             f"/api/v1/clients/{client_id}",
@@ -136,6 +140,40 @@ class ClientApiTestCase(unittest.TestCase):
             json={"code": "CL-002", "name": "pt amiga"},
         )
         self.assertEqual(duplicate_name.status_code, 409, duplicate_name.text)
+
+    def test_client_list_supports_server_filters_pagination_and_assignment_summary(self):
+        with self.Session() as db:
+            intake = db.query(User).filter_by(email="intake@amiga.local").one()
+            reviewer = User(
+                name="Reviewer",
+                email="reviewer@amiga.local",
+                password_hash=hash_password("Password123!"),
+                role=UserRole.FINANCE_REVIEWER,
+            )
+            assigned = Client(code="CL-001", name="PT Assigned")
+            unassigned = Client(code="CL-002", name="PT Unassigned")
+            db.add_all([reviewer, assigned, unassigned])
+            db.flush()
+            db.add_all([
+                UserClient(user_id=intake.id, client_id=assigned.id),
+                UserClient(user_id=reviewer.id, client_id=assigned.id),
+            ])
+            db.commit()
+
+        headers = self.auth(self.token_for("admin@amiga.local"))
+        response = self.client.get(
+            "/api/v1/clients?page=1&page_size=1&reviewer_status=assigned&intake_status=single",
+            headers=headers,
+        )
+        self.assertEqual(response.status_code, 200, response.text)
+        payload = response.json()
+        self.assertEqual(payload["total"], 1)
+        self.assertEqual(payload["total_pages"], 1)
+        self.assertEqual(payload["clients_with_reviewer"], 1)
+        self.assertEqual(payload["clients_without_reviewer"], 1)
+        self.assertEqual(payload["active_intake_staff"], 1)
+        self.assertEqual(payload["items"][0]["active_reviewers"][0]["name"], "Reviewer")
+        self.assertEqual(payload["items"][0]["assigned_intake"][0]["name"], "Intake")
 
 
 if __name__ == "__main__":
