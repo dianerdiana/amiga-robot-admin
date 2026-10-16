@@ -25,9 +25,10 @@ function DashboardContent() {
     if (user?.role === "SYSTEM_ADMIN") router.replace("/users");
     if (user?.role === "FINANCE_REVIEWER") router.replace("/reviews");
     if (user?.role === "INTAKE") router.replace(INTAKE_ROUTES[tabParam ?? ""] ?? "/invoices");
+    if (user?.role === "SERVICE_LEAD") router.replace("/reviewer-assignments");
   }, [router, tabParam, user?.role]);
 
-  if (user?.role === "SYSTEM_ADMIN" || user?.role === "INTAKE" || user?.role === "FINANCE_REVIEWER") {
+  if (user?.role === "SYSTEM_ADMIN" || user?.role === "INTAKE" || user?.role === "FINANCE_REVIEWER" || user?.role === "SERVICE_LEAD") {
     return null;
   }
 

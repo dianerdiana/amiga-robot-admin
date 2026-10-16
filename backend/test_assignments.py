@@ -114,7 +114,10 @@ class AssignmentApiTestCase(unittest.TestCase):
 
         response = self.client.get("/api/v1/clients/reviewer-assignments", headers=lead_headers)
         self.assertEqual(response.status_code, 200, response.text)
-        clients = {item["client_code"]: item for item in response.json()}
+        payload = response.json()
+        clients = {item["client_code"]: item for item in payload["items"]}
+        self.assertEqual(payload["assigned_count"], 1)
+        self.assertEqual(payload["unassigned_count"], 1)
         self.assertEqual(clients["CL-001"]["assignment_status"], "ASSIGNED")
         self.assertEqual(clients["CL-001"]["active_reviewers"][0]["email"], "reviewer@amiga.local")
         self.assertEqual(clients["CL-002"]["assignment_status"], "UNASSIGNED")
@@ -122,6 +125,10 @@ class AssignmentApiTestCase(unittest.TestCase):
 
         forbidden = self.client.get("/api/v1/clients/reviewer-assignments", headers=admin_headers)
         self.assertEqual(forbidden.status_code, 403, forbidden.text)
+
+        options = self.client.get("/api/v1/clients/reviewer-options", headers=lead_headers)
+        self.assertEqual(options.status_code, 200, options.text)
+        self.assertEqual(options.json()[0]["email"], "reviewer@amiga.local")
 
 
 if __name__ == "__main__":
